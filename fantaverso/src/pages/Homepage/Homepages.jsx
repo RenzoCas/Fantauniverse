@@ -17,7 +17,7 @@ export default function Homepage() {
 	};
 
 	return (
-		<main className="flex flex-col items-center justify-center h-screen gap-4 max-w-lg mx-auto">
+		<main className="flex flex-col items-center justify-center h-screen gap-4 max-w-lg mx-auto px-4 lg:px-0">
 			<h1 className="title-h1 text-(--white) font-light">
 				Fanta
 				<span className="text-(--primary) font-bold">UNIVERSE</span>

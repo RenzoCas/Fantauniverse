@@ -1,15 +1,15 @@
 import { useState } from "react";
-import faqsData from "./faqs.json"; // Assicurati che il percorso sia corretto
+import faqsData from "./faqs.json";
 
 export default function FAQPage() {
 	const [openIndex, setOpenIndex] = useState(null);
 
 	const toggleFAQ = (index) => {
-		setOpenIndex(openIndex === index ? null : index); // Toggle tra aperto e chiuso
+		setOpenIndex(openIndex === index ? null : index);
 	};
 
 	return (
-		<main className="max-w-3xl mx-auto py-16 px-6 flex flex-col gap-4">
+		<main className="max-w-3xl mx-auto py-8 px-4 lg:py-16 lg:px-6 flex flex-col gap-4 min-h-[calc(100dvh-64px)]">
 			<h1 className="title-h5 font-regular text-(--primary) text-center">
 				Domande frequenti
 			</h1>
@@ -22,7 +22,7 @@ export default function FAQPage() {
 						}`}
 					>
 						<button
-							className="w-full flex justify-between items-center title-h6 text-(--white)"
+							className="w-full flex justify-between items-center title-h6 text-(--white) text-left"
 							onClick={() => toggleFAQ(index)}
 						>
 							<span>{faq.question}</span>

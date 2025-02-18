@@ -8,6 +8,7 @@ import Regolamento from "./pages/Regolamento/Regolamento";
 import Faq from "./pages/Faq/Faq";
 import NotFound from "./pages/NotFound/NotFound";
 import Navbar from "./components/Navbar";
+import Fantauniverse from "./pages/Fantauniverse/Fantauniverse";
 
 const Login = lazy(() => import("./pages/Login/Login"));
 
@@ -27,7 +28,7 @@ function App() {
 							path="app"
 							element={
 								<ProtectedRoute>
-									<App />
+									<Fantauniverse />
 								</ProtectedRoute>
 							}
 						/>
