@@ -1,7 +1,7 @@
 :root {
 	--background: #071221;
 	--primary: #ffcd66;
-	--secondary: #f26418;
+	--secondary: #f58b51;
 	--white: #ffffff;
 	--black: #000000;
 
@@ -22,7 +22,6 @@ h1,
 	font-family: "Lato";
 	font-size: 56px;
 	line-height: 64px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 32px;
@@ -35,7 +34,6 @@ h2,
 	font-family: "Lato";
 	font-size: 48px;
 	line-height: 56px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 28px;
@@ -48,7 +46,6 @@ h3,
 	font-family: "Lato";
 	font-size: 40px;
 	line-height: 48px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 24px;
@@ -61,7 +58,6 @@ h4,
 	font-family: "Lato";
 	font-size: 32px;
 	line-height: 40px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 20px;
@@ -74,7 +70,6 @@ h5,
 	font-family: "Lato";
 	font-size: 24px;
 	line-height: 32px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 18px;
@@ -87,7 +82,6 @@ h6,
 	font-family: "Lato";
 	font-size: 20px;
 	line-height: 26px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 16px;
@@ -99,7 +93,6 @@ h6,
 	font-family: "Montserrat";
 	font-size: 18px;
 	line-height: 26px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 16px;
@@ -111,7 +104,6 @@ h6,
 	font-family: "Montserrat";
 	font-size: 20px;
 	line-height: 32px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 16px;
@@ -123,7 +115,6 @@ h6,
 	font-family: "Montserrat";
 	font-size: 16px;
 	line-height: 28px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 14px;
@@ -135,7 +126,6 @@ h6,
 	font-family: "Montserrat";
 	font-size: 14px;
 	line-height: 20px;
-	color: var(--primary);
 
 	@media (max-width: var(--tablet)) {
 		font-size: 12px;
@@ -157,4 +147,16 @@ h6,
 
 .cl-secondary {
 	color: var(--secondary);
+}
+
+::-webkit-scrollbar {
+	width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--white);
+}
+
+::-webkit-scrollbar-track {
+	background-color: transparent;
 }
