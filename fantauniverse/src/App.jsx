@@ -8,6 +8,7 @@ import FAQPage from "./pages/Faq";
 import NotFound from "./pages/NotFound";
 import FantaUniverse from "./pages/FantaUniverse";
 import ProtectedRoute from "./guards/ProtectedRoute";
+import Registrazione from "./pages/Registrazione";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -18,6 +19,7 @@ function App() {
 				<BrowserRouter>
 					<Routes>
 						<Route path="/" element={<Homepage />} />
+						<Route path="registrazione" element={<Registrazione />} />
 						<Route path="login" element={<Login />} />
 						<Route path="regolamento" element={<Regolamento />} />
 						<Route path="faq" element={<FAQPage />} />

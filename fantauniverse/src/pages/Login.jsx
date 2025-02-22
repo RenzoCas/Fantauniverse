@@ -1,86 +1,115 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import NormalButton from "../atoms/Buttons/NormalButton";
+import Logo from "../atoms/Logo";
+import GenericInput from "../atoms/Inputs/GenericInput";
+import GhostButton from "../atoms/Buttons/GhostButton";
 
 export default function Login() {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [formData, setFormData] = useState({ email: "", password: "" });
+	const [errors, setErrors] = useState({ email: "", password: "" });
 	const { login, isAuthenticated } = useAuth();
 	const navigate = useNavigate();
 
-	const [isValid, setIsValid] = useState(true);
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate("/app", { replace: true });
+		}
+	}, [isAuthenticated, navigate]);
 
-	useEffect(
-		function () {
-			if (isAuthenticated === true) navigate("/app", { replace: true });
-		},
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData({ ...formData, [name]: value });
+	};
 
-		[isAuthenticated, navigate]
-	);
+	const handleBlur = (e) => {
+		const { name, value } = e.target;
+		let error = "";
 
-	function handleSubmit(e) {
+		if (!value.trim()) {
+			error = "Campo obbligatorio";
+		} else if (
+			name === "email" &&
+			!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
+		) {
+			error = "Email non valida";
+		}
+
+		setErrors({ ...errors, [name]: error });
+	};
+
+	const isFormValid = () => {
+		return (
+			formData.email &&
+			formData.password &&
+			!errors.email &&
+			!errors.password
+		);
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (email && password) login(email, password);
-	}
-
-	function validateEmail(email) {
-		setEmail(email);
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		setIsValid(emailRegex.test(email));
-	}
+		if (isFormValid()) {
+			const success = await login(formData.email, formData.password);
+			if (success) {
+				navigate("/app", { replace: true });
+			} else {
+				alert("Email o password errate. Riprova.");
+			}
+		}
+	};
 
 	return (
-		<main className="max-w-3xl mx-auto py-8 px-4 lg:py-16 lg:px-6 flex flex-col gap-4 justify-center min-h-[calc(100dvh-64px)]">
-			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-				<div className="flex flex-col gap-2">
-					<label
-						htmlFor="email"
-						className="body-small font-bold text-(--primary)"
-					>
-						Email
-					</label>
-					<input
-						type="email"
-						id="email"
-						className={`bg-white body-small rounded-lg focus:outline-none block w-full p-2 border-2 ${
-							!isValid && "border-red-500"
-						}`}
-						placeholder="mariorossi@gmail.com"
-						required
-						onChange={(e) => validateEmail(e.target.value)}
-						value={email}
-					/>
-					<p
-						className={`text-red-500 body-small ${
-							isValid ? "hidden" : "block"
-						}`}
-					>
-						Email non valida
-					</p>
+		<>
+			<header className="relative h-[46px] border-b-[2px] border-b-(--black-normal)">
+				<div className="absolute left-1/2 -translate-x-1/2 bottom-[-10px]">
+					<Logo />
 				</div>
-				<div className="flex flex-col gap-2">
-					<label
-						htmlFor="password"
-						className="body-small font-bold text-(--primary)"
-					>
-						Password
-					</label>
-					<input
-						type="password"
-						id="password"
-						className="bg-white body-small rounded-lg focus:outline-none block w-full p-2 border-2"
-						placeholder="password"
-						required
-						onChange={(e) => setPassword(e.target.value)}
-						value={password}
-					/>
-				</div>
-				<NormalButton>Login</NormalButton>
-			</form>
-			<p className="flex gap-1 self-center text-(--white) mt-auto">
-				Non hai un account?
-			</p>
-		</main>
+			</header>
+			<main className="md:max-w-sm flex flex-col justify-center gap-[16px] mx-auto py-[40px] px-[16px] min-h-dvh">
+				<h2 className="title-h2 font-semibold">Login utente</h2>
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-[16px]"
+				>
+					<div className="flex flex-col gap-[10px]">
+						<GenericInput
+							type="email"
+							required={true}
+							name="email"
+							id="emailUtente"
+							placeholder="Email"
+							messageError={errors.email}
+							value={formData.email}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+						<GenericInput
+							type="password"
+							required={true}
+							name="password"
+							id="passwordUtente"
+							placeholder="Password"
+							messageError={errors.password}
+							value={formData.password}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+					</div>
+					<div className="flex flex-col gap-[8px]">
+						<NormalButton
+							text="Accedi subito"
+							action={handleSubmit}
+							disabled={!isFormValid()}
+						/>
+						<GhostButton
+							text="Non sei registrato? Registrati"
+							action={() => navigate("/registrazione")}
+						/>
+					</div>
+				</form>
+			</main>
+		</>
 	);
 }

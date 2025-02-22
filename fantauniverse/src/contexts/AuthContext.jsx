@@ -19,10 +19,10 @@ function reducer(state, action) {
 			return { ...state, user: action.payload, isAuthenticated: true };
 
 		case "logout":
-			return { ...state, user: {}, isAuthenticated: false };
+			return { ...state, user: null, isAuthenticated: false };
 
 		default:
-			break;
+			return state; // This case is important to avoid undefined state
 	}
 }
 
@@ -35,7 +35,9 @@ function AuthProvider({ children }) {
 	function login(email, password) {
 		if (email === FAKE_USER.email && password === FAKE_USER.password) {
 			dispatch({ type: "login", payload: FAKE_USER });
+			return true; // Return true for successful login
 		}
+		return false; // Return false for failed login
 	}
 
 	function logout() {
@@ -51,10 +53,9 @@ function AuthProvider({ children }) {
 
 function useAuth() {
 	const context = useContext(AuthContext);
-	if (context === undefined)
-		throw new Error(
-			"AuthContext é stato usato al di fuori di AuthProvider"
-		);
+	if (context === undefined) {
+		throw new Error("useAuth must be used within an AuthProvider");
+	}
 	return context;
 }
 

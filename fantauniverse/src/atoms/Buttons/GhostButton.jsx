@@ -4,7 +4,7 @@ export default function GhostButton({
 	text,
 	action,
 	disabled = false,
-	icon = true, // Imposta il valore di default su `true`
+	icon = true,
 }) {
 	return (
 		<button
