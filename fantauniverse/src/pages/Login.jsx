@@ -25,7 +25,7 @@ export default function Login() {
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
-		setServerError(""); // Reset errore quando si modifica il form
+		setServerError("");
 	};
 
 	const handleBlur = (e) => {

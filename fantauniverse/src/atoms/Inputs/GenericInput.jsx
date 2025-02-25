@@ -2,6 +2,7 @@ import {
 	HandRaisedIcon,
 	EyeIcon,
 	EyeSlashIcon,
+	MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
@@ -18,6 +19,7 @@ export default function GenericInput({
 }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPasswordType = type === "password";
+	const isSearchType = type === "search";
 
 	const togglePasswordVisibility = () => {
 		setShowPassword((prev) => !prev);
@@ -40,8 +42,14 @@ export default function GenericInput({
 							? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"
 							: "bg-(--black-light-hover) border-transparent focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
 					}
-                    ${isPasswordType ? "pr-[40px]" : "pr-[24px]"}`}
+                    ${
+						isPasswordType || isSearchType
+							? "pr-[40px]"
+							: "pr-[24px]"
+					}`}
 				/>
+
+				{/* Icona per il campo password */}
 				{isPasswordType && (
 					<button
 						type="button"
@@ -55,7 +63,14 @@ export default function GenericInput({
 						)}
 					</button>
 				)}
+
+				{isSearchType && (
+					<button className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal)">
+						<MagnifyingGlassIcon className="h-[20px] w-[20px]" />
+					</button>
+				)}
 			</div>
+
 			{messageError && (
 				<p className="body-small text-(--error-normal) flex items-center gap-2">
 					<HandRaisedIcon className="h-[16px] w-[16px] text-(--error-normal) flex-shrink-0" />

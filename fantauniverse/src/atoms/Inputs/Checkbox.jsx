@@ -27,7 +27,7 @@ function Checkbox({
 					checked={checked}
 					onChange={handleChange}
 					onBlur={handleBlur}
-					className={`min-w-[18px] min-h-[18px] bg-(--black-light-hover) accent-(--black-light-hover) radius-[4px] focus:outline-none cursor-pointer ${
+					className={`min-w-[18px] min-h-[18px] bg-(--black-light-hover) accent-(--black-light-hover) radius-[4px] focus:border-solid focus:border-[2px] focus:border-(--black-normal) cursor-pointer ${
 						touched && required && !checked
 							? "bg-(--error-light)"
 							: ""
