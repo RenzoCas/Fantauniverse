@@ -5,10 +5,14 @@ import NormalButton from "../atoms/Buttons/NormalButton";
 import Logo from "../atoms/Logo";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import GhostButton from "../atoms/Buttons/GhostButton";
+import Loader from "../components/Loader";
 
 export default function Login() {
-	const [formData, setFormData] = useState({ email: "", password: "" });
-	const [errors, setErrors] = useState({ email: "", password: "" });
+	const [formData, setFormData] = useState({ username: "", password: "" });
+	const [errors, setErrors] = useState({});
+	const [serverError, setServerError] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
 	const { login, isAuthenticated } = useAuth();
 	const navigate = useNavigate();
 
@@ -21,73 +25,68 @@ export default function Login() {
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
+		setServerError(""); // Reset errore quando si modifica il form
 	};
 
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
-		let error = "";
-
-		if (!value.trim()) {
-			error = "Campo obbligatorio";
-		} else if (
-			name === "email" &&
-			!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
-		) {
-			error = "Email non valida";
-		}
-
+		let error = value.trim() ? "" : "Campo obbligatorio";
 		setErrors({ ...errors, [name]: error });
-	};
-
-	const isFormValid = () => {
-		return (
-			formData.email &&
-			formData.password &&
-			!errors.email &&
-			!errors.password
-		);
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (isFormValid()) {
-			const success = await login(formData.email, formData.password);
-			if (success) {
-				navigate("/app", { replace: true });
-			} else {
-				alert("Email o password errate. Riprova.");
-			}
+
+		setIsLoading(true);
+		setServerError("");
+
+		try {
+			const user = await login(formData.username, formData.password);
+			localStorage.setItem("token", user.token);
+			navigate("/app", { replace: true });
+		} catch (error) {
+			setServerError("Username o password errati");
+			console.log(error.message);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	return (
 		<>
-			<header className="relative h-[46px] border-b-[2px] border-b-(--black-normal)">
+			{isLoading && <Loader />}
+			<header className="relative h-[46px] border-b-[2px] border-b-black">
 				<div className="absolute left-1/2 -translate-x-1/2 bottom-[-10px]">
 					<Logo />
 				</div>
 			</header>
-			<main className="md:max-w-sm flex flex-col justify-center gap-[16px] mx-auto py-[40px] px-[16px] min-h-dvh">
+
+			<main className="md:max-w-sm flex flex-col justify-center gap-[16px] mx-auto py-[40px] px-[16px] min-h-[calc(100dvh-46px)]">
 				<h2 className="title-h2 font-semibold">Login utente</h2>
 				<form
 					onSubmit={handleSubmit}
 					className="flex flex-col gap-[16px]"
 				>
 					<div className="flex flex-col gap-[10px]">
+						{serverError && (
+							<p className="text-(--error-normal)">
+								{serverError}
+							</p>
+						)}
 						<GenericInput
-							type="email"
-							required={true}
-							name="email"
-							id="emailUtente"
-							placeholder="Email"
-							messageError={errors.email}
-							value={formData.email}
+							type="text"
+							required
+							name="username"
+							id="username"
+							placeholder="Username"
+							messageError={errors.username}
+							value={formData.username}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
 						<GenericInput
 							type="password"
-							required={true}
+							required
 							name="password"
 							id="passwordUtente"
 							placeholder="Password"
@@ -97,11 +96,15 @@ export default function Login() {
 							handleBlur={handleBlur}
 						/>
 					</div>
+
 					<div className="flex flex-col gap-[8px]">
 						<NormalButton
-							text="Accedi subito"
+							text={
+								isLoading
+									? "Accesso in corso..."
+									: "Accedi subito"
+							}
 							action={handleSubmit}
-							disabled={!isFormValid()}
 						/>
 						<GhostButton
 							text="Non sei registrato? Registrati"

@@ -41,7 +41,7 @@ function Checkbox({
 				</label>
 			</div>
 
-			{touched && required && !checked && (
+			{touched == true && required == true && checked == false && (
 				<p className="body-small text-(--error-normal) flex items-center gap-2">
 					<HandRaisedIcon className="h-4 w-4 text-(--error-normal)" />
 					{messageError}

@@ -1,15 +1,17 @@
 import { createContext, useContext, useReducer } from "react";
 
-const AuthContext = createContext();
+const LegeContext = createContext();
 
 const initialState = {
-	user: null,
-	isAuthenticated: false,
+	id: "",
+	name: "",
+	visibility: "",
+	partecipants: [],
 };
 
 function reducer(state, action) {
 	switch (action.type) {
-		case "register":
+		case "recupera":
 		case "login":
 		case "tokenInfo":
 			return { ...state, user: action.payload, isAuthenticated: true };
@@ -22,7 +24,7 @@ function reducer(state, action) {
 	}
 }
 
-function AuthProvider({ children }) {
+function LegheProvider({ children }) {
 	const [{ user, isAuthenticated }, dispatch] = useReducer(
 		reducer,
 		initialState
@@ -113,7 +115,7 @@ function AuthProvider({ children }) {
 	};
 
 	return (
-		<AuthContext.Provider
+		<LegeContext.Provider
 			value={{
 				user,
 				isAuthenticated,
@@ -124,16 +126,16 @@ function AuthProvider({ children }) {
 			}}
 		>
 			{children}
-		</AuthContext.Provider>
+		</LegeContext.Provider>
 	);
 }
 
-function useAuth() {
-	const context = useContext(AuthContext);
+function useLeghe() {
+	const context = useContext(LegeContext);
 	if (!context) {
-		throw new Error("useAuth must be used within an AuthProvider");
+		throw new Error("useLeghe must be used within an LegheProvider");
 	}
 	return context;
 }
 
-export { AuthProvider, useAuth };
+export { LegheProvider, useLeghe };

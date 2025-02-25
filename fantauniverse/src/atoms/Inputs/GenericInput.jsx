@@ -46,7 +46,7 @@ export default function GenericInput({
 					<button
 						type="button"
 						onClick={togglePasswordVisibility}
-						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-none"
+						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal)"
 					>
 						{showPassword ? (
 							<EyeSlashIcon className="h-[24px] w-[24px]" />
