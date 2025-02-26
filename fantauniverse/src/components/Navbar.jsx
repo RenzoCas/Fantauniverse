@@ -6,9 +6,11 @@ import {
 	UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const { logout } = useAuth();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -20,7 +22,9 @@ export default function Navbar() {
 		>
 			<Logo></Logo>
 			<div className="flex gap-[12px] items-center">
-				<EqualsIcon className="h-[24px] w-[24px]"></EqualsIcon>
+				<button onClick={logout}>
+					<EqualsIcon className="h-[24px] w-[24px]"></EqualsIcon>
+				</button>
 				<button
 					onClick={toggleMenu}
 					className="p-[4px] bg-(--black-light) flex gap-[4px] items-center rounded-[2px]"

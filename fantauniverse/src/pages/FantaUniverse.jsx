@@ -1,6 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Navbar from "../components/Navbar";
 import GenericInput from "../atoms/Inputs/GenericInput";
+import TabButton from "../atoms/Buttons/TabButton";
 import Lega from "../atoms/Lega";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
@@ -9,17 +10,23 @@ import ModalCreateLeague from "../components/ModalCreateLeague";
 export default function FantaUniverse() {
 	const { user, urlServer } = useAuth();
 	const [leagues, setLeague] = useState([]);
-	const [isModalOpen, setIsModalOpen] = useState(false); // Stato per la modale
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [adminLeague, setAdminLeague] = useState(false);
 
 	useEffect(() => {
 		const getLeague = async () => {
 			try {
-				const response = await fetch(`${urlServer}/league/myLeague`, {
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-					},
-				});
+				const response = await fetch(
+					`${urlServer}/league/myLeague?role=${
+						adminLeague == true ? "ADMIN" : "PARTICIPANT"
+					}`,
+					{
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${user.token}`,
+						},
+					}
+				);
 
 				if (!response.ok) {
 					throw new Error("Errore nel caricamento delle leghe.");
@@ -32,7 +39,7 @@ export default function FantaUniverse() {
 		};
 
 		getLeague();
-	}, [urlServer, user.token]);
+	}, [urlServer, user.token, adminLeague]);
 
 	return (
 		<>
@@ -48,7 +55,7 @@ export default function FantaUniverse() {
 						<p className="body-regular font-semibold">
 							Le tue leghe
 						</p>
-						{leagues.length !== 0 && (
+						{adminLeague && leagues.length !== 0 && (
 							<button
 								onClick={() => setIsModalOpen(true)}
 								className="p-[4px] bg-(--black-light) rounded-full"
@@ -57,12 +64,31 @@ export default function FantaUniverse() {
 							</button>
 						)}
 					</div>
-					<GenericInput
-						type="search"
-						name="cercaLega"
-						id="cercaLega"
-						placeholder="Cerca una lega a cui iscriverti"
-					/>
+
+					<div className="flex align-center">
+						<TabButton
+							handleClick={() => setAdminLeague(false)}
+							active={!adminLeague}
+						>
+							Partecipante
+						</TabButton>
+						<TabButton
+							handleClick={() => setAdminLeague(true)}
+							active={adminLeague}
+						>
+							Admin
+						</TabButton>
+					</div>
+
+					{!adminLeague && (
+						<GenericInput
+							type="search"
+							name="cercaLega"
+							id="cercaLega"
+							placeholder="Cerca una lega a cui iscriverti"
+						/>
+					)}
+
 					{leagues.length !== 0 && (
 						<ul className="flex flex-col gap-[10px]">
 							{leagues.map((el) => (
@@ -76,11 +102,11 @@ export default function FantaUniverse() {
 						</ul>
 					)}
 				</section>
-				{leagues.length === 0 && (
+				{adminLeague && leagues.length === 0 && (
 					<>
 						<p className="body-normal font-semibold text-(--black-darker) text-center">
-							Sembra che non hai ancora una lega, cerca una nuova
-							lega o creane una da 0.
+							Sembra che non hai creato nessuna lega. Creane una
+							da 0.
 						</p>
 						<button
 							onClick={() => setIsModalOpen(true)}

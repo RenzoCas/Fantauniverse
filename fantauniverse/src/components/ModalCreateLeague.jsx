@@ -3,7 +3,8 @@ import GenericInput from "../atoms/Inputs/GenericInput";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
-import Select from "../atoms/Inputs/Select";
+// import Select from "../atoms/Inputs/Select";
+import Radio from "../atoms/Inputs/Radio";
 
 function ModalCreateLeague({ isOpen, onClose }) {
 	const [formData, setFormData] = useState({
@@ -15,16 +16,14 @@ function ModalCreateLeague({ isOpen, onClose }) {
 	const [errors, setErrors] = useState({});
 	const [isSuccess, setIsSuccess] = useState(null);
 	const { user, urlServer } = useAuth();
-	const optSelectVisibility = [
+	const visibilityObj = [
 		{
 			value: "PUBLIC",
-			text: "Pubblica",
-			selected: true,
+			label: "Pubblica",
 		},
 		{
 			value: "PRIVATE",
-			text: "Privata",
-			selected: false,
+			label: "Privata",
 		},
 	];
 
@@ -66,6 +65,15 @@ function ModalCreateLeague({ isOpen, onClose }) {
 		}
 	};
 
+	const isFormValid = () => {
+		return (
+			formData.name.trim() !== "" &&
+			formData.coinName.trim() !== "" &&
+			formData.maxCoins !== "" &&
+			formData.maxCoins > 0
+		);
+	};
+
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
 		setErrors((prevErrors) => ({
@@ -90,9 +98,6 @@ function ModalCreateLeague({ isOpen, onClose }) {
 			if (!response.ok) {
 				throw new Error("Errore nella creazione di una nuova lega.");
 			}
-
-			const data = await response.json();
-			console.log(data);
 			setIsSuccess(true);
 		} catch (error) {
 			setIsSuccess(false);
@@ -154,13 +159,6 @@ function ModalCreateLeague({ isOpen, onClose }) {
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
-							<Select
-								id="visibility"
-								name="visibility"
-								value={formData.visibility}
-								options={optSelectVisibility}
-								handleChange={handleChange}
-							/>
 							<GenericInput
 								type="text"
 								required
@@ -183,9 +181,25 @@ function ModalCreateLeague({ isOpen, onClose }) {
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
+							<div className="grid grid-cols-2">
+								{visibilityObj.map((opt, idx) => (
+									<Radio
+										key={idx}
+										id={`radio-${idx}`}
+										name="visibility"
+										value={opt.value}
+										checked={
+											opt.value == formData.visibility
+										}
+										handleChange={handleChange}
+										label={opt.label}
+									/>
+								))}
+							</div>
 							<NormalButton
 								text="Crea lega"
 								action={handleSubmit}
+								disabled={!isFormValid()}
 							/>
 						</form>
 					</>

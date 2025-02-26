@@ -16,6 +16,7 @@ export default function GenericInput({
 	value,
 	handleChange,
 	handleBlur,
+	autocomplete,
 }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPasswordType = type === "password";
@@ -37,6 +38,7 @@ export default function GenericInput({
 					placeholder={`${placeholder}${required ? "*" : ""}`}
 					onChange={handleChange}
 					onBlur={handleBlur}
+					autoComplete={autocomplete}
 					className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) ${
 						messageError
 							? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"

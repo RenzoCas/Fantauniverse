@@ -28,6 +28,12 @@ export default function Login() {
 		setServerError("");
 	};
 
+	const isFormValid = () => {
+		return (
+			formData.username.trim() !== "" && formData.password.trim() !== ""
+		);
+	};
+
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
 		setErrors((prevErrors) => ({
@@ -38,6 +44,7 @@ export default function Login() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (!isFormValid()) return;
 
 		setIsLoading(true);
 		setServerError("");
@@ -85,6 +92,7 @@ export default function Login() {
 							value={formData.username}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
+							autocomplete="username"
 						/>
 						<GenericInput
 							type="password"
@@ -96,6 +104,7 @@ export default function Login() {
 							value={formData.password}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
+							autocomplete="current-password"
 						/>
 					</div>
 
@@ -107,6 +116,7 @@ export default function Login() {
 									: "Accedi subito"
 							}
 							action={handleSubmit}
+							disabled={!isFormValid()}
 						/>
 						<GhostButton
 							text="Non sei registrato? Registrati"

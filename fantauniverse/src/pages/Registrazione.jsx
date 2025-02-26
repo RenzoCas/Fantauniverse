@@ -60,11 +60,13 @@ export default function Registrazione() {
 	};
 
 	const isFormValid = () => {
-		formData.username &&
+		return (
+			formData.username &&
 			validateEmail(formData.email) &&
 			validatePassword(formData.password) &&
 			formData.password === formData.confermaPassword &&
-			formData.privacy;
+			formData.privacy
+		);
 	};
 
 	const handleSubmit = async (e) => {
@@ -126,6 +128,7 @@ export default function Registrazione() {
 							value={formData.username}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
+							autocomplete="username"
 						/>
 						<GenericInput
 							type="email"
@@ -137,6 +140,7 @@ export default function Registrazione() {
 							value={formData.email}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
+							autocomplete="email"
 						/>
 						<GenericInput
 							type="password"
@@ -148,6 +152,7 @@ export default function Registrazione() {
 							value={formData.password}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
+							autocomplete="new-password"
 						/>
 						<GenericInput
 							type="password"
@@ -159,6 +164,7 @@ export default function Registrazione() {
 							value={formData.confermaPassword}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
+							autocomplete="new-password"
 						/>
 						<div className="flex align-start gap-[10px]">
 							<Checkbox
@@ -172,21 +178,22 @@ export default function Registrazione() {
 							/>
 						</div>
 					</div>
+					<div className="flex flex-col gap-[8px]">
+						<NormalButton
+							text={
+								isLoading
+									? "Registrazione in corso..."
+									: "Registrati subito"
+							}
+							action={handleSubmit}
+							disabled={!isFormValid() || isLoading}
+						/>
 
-					<NormalButton
-						text={
-							isLoading
-								? "Registrazione in corso..."
-								: "Registrati subito"
-						}
-						action={handleSubmit}
-						disabled={!isFormValid() || isLoading}
-					/>
-
-					<GhostButton
-						text="Gi&agrave; registrato? Accedi"
-						action={() => navigate("/login")}
-					/>
+						<GhostButton
+							text="Gi&agrave; registrato? Accedi"
+							action={() => navigate("/login")}
+						/>
+					</div>
 				</form>
 			</main>
 		</>
