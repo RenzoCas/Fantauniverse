@@ -1,16 +1,16 @@
-// import { lazy, useEffect, useRef } from "react";
-// import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-// import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { lazy } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
+import { lazy, useEffect, useRef } from "react";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+// import { lazy } from "react";
+// import { BrowserRouter, Route, Routes } from "react-router-dom";
+// import { AuthProvider } from "./contexts/AuthContext";
 
 import Homepage from "./pages/Homepage";
 import Regolamento from "./pages/Regolamento";
 import FAQPage from "./pages/Faq";
 import NotFound from "./pages/NotFound";
 import FantaUniverse from "./pages/FantaUniverse";
-// import ProtectedRoute from "./guards/ProtectedRoute";
+import ProtectedRoute from "./guards/ProtectedRoute";
 import Registrazione from "./pages/Registrazione";
 
 const Login = lazy(() => import("./pages/Login"));
@@ -19,7 +19,7 @@ function App() {
 	return (
 		<AuthProvider>
 			<BrowserRouter>
-				{/* <AuthInitializer /> */}
+				<AuthInitializer />
 				<Routes>
 					<Route path="/" element={<Homepage />} />
 					<Route path="registrazione" element={<Registrazione />} />
@@ -30,9 +30,9 @@ function App() {
 					<Route
 						path="app"
 						element={
-							// <ProtectedRoute>
-							<FantaUniverse />
-							// </ProtectedRoute>
+							<ProtectedRoute>
+								<FantaUniverse />
+							</ProtectedRoute>
 						}
 					/>
 				</Routes>
@@ -41,31 +41,31 @@ function App() {
 	);
 }
 
-// function AuthInitializer() {
-// 	const { tokenInfo } = useAuth();
-// 	const navigate = useNavigate();
-// 	const hasCheckedToken = useRef(false);
+function AuthInitializer() {
+	const { tokenInfo } = useAuth();
+	const navigate = useNavigate();
+	const hasCheckedToken = useRef(false);
 
-// 	useEffect(() => {
-// 		const checkToken = async () => {
-// 			if (hasCheckedToken.current) return;
-// 			hasCheckedToken.current = true;
+	useEffect(() => {
+		const checkToken = async () => {
+			if (hasCheckedToken.current) return;
+			hasCheckedToken.current = true;
 
-// 			const token = localStorage.getItem("token");
-// 			if (token) {
-// 				try {
-// 					await tokenInfo(token);
-// 					navigate("/app", { replace: true });
-// 				} catch (error) {
-// 					console.error("Sessione scaduta:", error.message);
-// 				}
-// 			}
-// 		};
+			const token = localStorage.getItem("token");
+			if (token) {
+				try {
+					await tokenInfo(token);
+					navigate("/app", { replace: true });
+				} catch (error) {
+					console.error("Sessione scaduta:", error.message);
+				}
+			}
+		};
 
-// 		checkToken();
-// 	}, [tokenInfo, navigate]);
+		checkToken();
+	}, [tokenInfo, navigate]);
 
-// 	return null;
-// }
+	return null;
+}
 
 export default App;

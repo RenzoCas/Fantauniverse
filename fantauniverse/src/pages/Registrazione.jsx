@@ -59,12 +59,13 @@ export default function Registrazione() {
 		setErrors({ ...errors, [name]: error });
 	};
 
-	const isFormValid = () =>
+	const isFormValid = () => {
 		formData.username &&
-		validateEmail(formData.email) &&
-		validatePassword(formData.password) &&
-		formData.password === formData.confermaPassword &&
-		formData.privacy;
+			validateEmail(formData.email) &&
+			validatePassword(formData.password) &&
+			formData.password === formData.confermaPassword &&
+			formData.privacy;
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();

@@ -30,8 +30,10 @@ export default function Login() {
 
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
-		let error = value.trim() ? "" : "Campo obbligatorio";
-		setErrors({ ...errors, [name]: error });
+		setErrors((prevErrors) => ({
+			...prevErrors,
+			[name]: value.trim() ? "" : "Campo obbligatorio",
+		}));
 	};
 
 	const handleSubmit = async (e) => {

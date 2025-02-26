@@ -117,6 +117,7 @@ function AuthProvider({ children }) {
 			value={{
 				user,
 				isAuthenticated,
+				urlServer,
 				login,
 				register,
 				logout,
