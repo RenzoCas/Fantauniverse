@@ -3,32 +3,28 @@ import GenericInput from "../atoms/Inputs/GenericInput";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
-import Radio from "../atoms/Inputs/Radio";
+import Checkbox from "../atoms/Inputs/Checkbox";
 
-function ModalCreateLeague({ isOpen, onClose }) {
+function ModalAddRules({ isOpen, onClose, leagueId }) {
 	const [formData, setFormData] = useState({
 		name: "",
-		visibility: "PUBLIC",
-		coinName: "",
-		maxCoins: "",
+		rule: "",
+		malus: false,
+		value: "",
 	});
 	const [errors, setErrors] = useState({});
 	const [isSuccess, setIsSuccess] = useState(null);
 	const { user, urlServer } = useAuth();
-	const visibilityObj = [
-		{
-			value: "PUBLIC",
-			label: "Pubblica",
-		},
-		{
-			value: "PRIVATE",
-			label: "Privata",
-		},
-	];
 
 	const handleChange = (e) => {
-		const { name, value } = e.target;
-		if (name === "maxCoins") {
+		const { name, value, type, checked } = e.target;
+
+		if (type === "checkbox") {
+			setFormData((prevData) => ({
+				...prevData,
+				[name]: checked,
+			}));
+		} else if (name === "value") {
 			if (!/^\d*$/.test(value)) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
@@ -38,11 +34,10 @@ function ModalCreateLeague({ isOpen, onClose }) {
 			}
 
 			const numericValue = Number(value);
-
-			if (numericValue > 10000) {
+			if (numericValue > 100) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
-					[name]: "Il valore massimo è 10.000",
+					[name]: "Il valore massimo è 100",
 				}));
 				return;
 			} else {
@@ -67,9 +62,9 @@ function ModalCreateLeague({ isOpen, onClose }) {
 	const isFormValid = () => {
 		return (
 			formData.name.trim() !== "" &&
-			formData.coinName.trim() !== "" &&
-			formData.maxCoins !== "" &&
-			formData.maxCoins > 0
+			formData.rule.trim() !== "" &&
+			formData.value !== "" &&
+			formData.value > 0
 		);
 	};
 
@@ -83,19 +78,24 @@ function ModalCreateLeague({ isOpen, onClose }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
 		try {
-			const response = await fetch(`${urlServer}/league`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
-			});
+			const response = await fetch(
+				`${urlServer}/league/action/addRules`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						leagueId: leagueId,
+						rules: [formData],
+					}),
+				}
+			);
 
 			if (!response.ok) {
-				throw new Error("Errore nella creazione di una nuova lega.");
+				throw new Error("Errore nell'aggiunta delle regole.");
 			}
 			setIsSuccess(true);
 		} catch (error) {
@@ -106,7 +106,7 @@ function ModalCreateLeague({ isOpen, onClose }) {
 
 	return (
 		<div
-			id="modalCreateLeague"
+			id="modalAddRules"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
 			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease ${
@@ -124,14 +124,14 @@ function ModalCreateLeague({ isOpen, onClose }) {
 				{isSuccess === true ? (
 					<>
 						<p className="text-(--black-normal) font-semibold">
-							Lega creata con successo!
+							Regole aggiunte con successo.
 						</p>
 						<NormalButton text="Chiudi" action={onClose} />
 					</>
 				) : isSuccess === false ? (
 					<>
 						<p className="text-(--error-normal) font-semibold">
-							Creazione non riuscita, riprova.
+							Errore nell&rsquo;inserimento delle regole, riprova.
 						</p>
 						<NormalButton
 							text="Riprova"
@@ -141,7 +141,7 @@ function ModalCreateLeague({ isOpen, onClose }) {
 				) : (
 					<>
 						<h4 className="font-semibold text-(--black-normal)">
-							Crea la tua lega
+							Aggiungi le tue regole
 						</h4>
 						<form
 							onSubmit={handleSubmit}
@@ -152,51 +152,46 @@ function ModalCreateLeague({ isOpen, onClose }) {
 								required
 								name="name"
 								id="name"
-								placeholder="Nome lega"
+								placeholder="Nome regola"
 								messageError={errors.name}
 								value={formData.name}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
 							<GenericInput
-								type="text"
+								type="textarea"
 								required
-								name="coinName"
-								id="coinName"
-								placeholder="Nome coin"
-								messageError={errors.coinName}
-								value={formData.coinName}
+								name="rule"
+								id="rule"
+								placeholder="Testo regola"
+								messageError={errors.rule}
+								value={formData.rule}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
 							<GenericInput
 								type="text"
 								required
-								name="maxCoins"
-								id="maxCoins"
-								placeholder="Max coin utilizzabili"
-								messageError={errors.maxCoins}
-								value={formData.maxCoins}
+								name="value"
+								id="value"
+								placeholder="Punteggio regola"
+								messageError={errors.value}
+								value={formData.value}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
-							<div className="grid grid-cols-2">
-								{visibilityObj.map((opt, idx) => (
-									<Radio
-										key={idx}
-										id={`radio-${idx}`}
-										name="visibility"
-										value={opt.value}
-										checked={
-											opt.value == formData.visibility
-										}
-										handleChange={handleChange}
-										label={opt.label}
-									/>
-								))}
+							<div className="flex align-start gap-[10px]">
+								<Checkbox
+									name="malus"
+									id="malus"
+									messageError={errors.malus}
+									label="Questa regola é un malus (punteggio negativo)"
+									checked={formData.malus}
+									handleChange={handleChange}
+								/>
 							</div>
 							<NormalButton
-								text="Crea lega"
+								text="Aggiungi Regole"
 								action={handleSubmit}
 								disabled={!isFormValid()}
 							/>
@@ -208,4 +203,4 @@ function ModalCreateLeague({ isOpen, onClose }) {
 	);
 }
 
-export default ModalCreateLeague;
+export default ModalAddRules;

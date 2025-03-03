@@ -20,20 +20,20 @@ export default function Navbar() {
 		<nav
 			className={`bg-white py-[8px] px-[16px] sticky top-0 flex justify-between items-center border-b-[2px] border-b-(--black-normal)`}
 		>
-			<Logo></Logo>
+			<Logo />
 			<div className="flex gap-[12px] items-center">
 				<button onClick={logout}>
-					<EqualsIcon className="h-[24px] w-[24px]"></EqualsIcon>
+					<EqualsIcon className="h-[24px] w-[24px]" />
 				</button>
 				<button
 					onClick={toggleMenu}
 					className="p-[4px] bg-(--black-light) flex gap-[4px] items-center rounded-[2px]"
 				>
-					<UserCircleIcon className="h-[27px] w-[27px]"></UserCircleIcon>
+					<UserCircleIcon className="h-[27px] w-[27px]" />
 					{!isMenuOpen ? (
-						<ChevronDownIcon className="h-[20px] w-[20px]"></ChevronDownIcon>
+						<ChevronDownIcon className="h-[20px] w-[20px]" />
 					) : (
-						<ChevronUpIcon className="h-[20px] w-[20px]"></ChevronUpIcon>
+						<ChevronUpIcon className="h-[20px] w-[20px]" />
 					)}
 				</button>
 			</div>

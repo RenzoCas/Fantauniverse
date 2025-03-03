@@ -6,12 +6,15 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 // import { AuthProvider } from "./contexts/AuthContext";
 
 import Homepage from "./pages/Homepage";
-import Regolamento from "./pages/Regolamento";
 import FAQPage from "./pages/Faq";
 import NotFound from "./pages/NotFound";
 import FantaUniverse from "./pages/FantaUniverse";
 import ProtectedRoute from "./guards/ProtectedRoute";
-import Registrazione from "./pages/Registrazione";
+import Registration from "./pages/Registration";
+import ViewLeague from "./pages/ViewLeague";
+import Dashboard from "./pages/Dashboard";
+import ViewTeam from "./pages/ViewTeam";
+import Rules from "./components/Rules";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -22,11 +25,12 @@ function App() {
 				<AuthInitializer />
 				<Routes>
 					<Route path="/" element={<Homepage />} />
-					<Route path="registrazione" element={<Registrazione />} />
+					<Route path="register" element={<Registration />} />
 					<Route path="login" element={<Login />} />
-					<Route path="regolamento" element={<Regolamento />} />
+					<Route path="rules" element={<Rules />} />
 					<Route path="faq" element={<FAQPage />} />
 					<Route path="*" element={<NotFound />} />
+
 					<Route
 						path="app"
 						element={
@@ -34,7 +38,11 @@ function App() {
 								<FantaUniverse />
 							</ProtectedRoute>
 						}
-					/>
+					>
+						<Route index element={<Dashboard />} />
+						<Route path="league/:id" element={<ViewLeague />} />
+						<Route path="league/team" element={<ViewTeam />} />
+					</Route>
 				</Routes>
 			</BrowserRouter>
 		</AuthProvider>

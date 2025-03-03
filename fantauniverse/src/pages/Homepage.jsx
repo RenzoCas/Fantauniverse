@@ -28,13 +28,13 @@ export default function Homepage() {
 					action={() => {
 						navigate("/login");
 					}}
-				></NormalButton>
+				/>
 				<GhostButton
 					text="Non sei registrato? Registrati"
 					action={() => {
 						navigate("/registrazione");
 					}}
-				></GhostButton>
+				/>
 			</div>
 			<div className="flex flex-col gap-[16px] px-[32px] md:px-0">
 				<p className="body-small text-(--black-normal) text-center">
@@ -43,7 +43,7 @@ export default function Homepage() {
 				<GhostButton
 					text="Scopri come creare il tuo universo"
 					icon={false}
-				></GhostButton>
+				/>
 			</div>
 		</main>
 	);

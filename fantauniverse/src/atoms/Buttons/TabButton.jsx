@@ -2,8 +2,10 @@ export default function TabButton({ handleClick, children, active }) {
 	return (
 		<button
 			onClick={handleClick}
-			className={`w-full border-b-2 p-[8px] text-(--accent-normal) font-semibold ${
-				active ? "border-b-(--accent-normal)" : "border-b-transparent"
+			className={`w-full py-[10px] px-[4px] rounded-[12px] ${
+				active
+					? "bg-white text-(--black-darker)"
+					: "bg-transparent text-(--black-light-active)"
 			}`}
 		>
 			{children}
