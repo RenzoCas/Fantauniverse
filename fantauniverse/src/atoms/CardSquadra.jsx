@@ -7,7 +7,7 @@ function CardSquadra({ squadra, handleClick }) {
 		<div
 			role="button"
 			tabIndex="0"
-			className="flex gap-[10px] bg-(--black-normal) rounded-[16px] p-[8px]"
+			className="flex gap-[10px] bg-(--black-normal) rounded-[16px] p-[8px] fixed bottom-[24px] w-[calc(100vw-32px)] md:max-w-[528px]"
 			onClick={() => handleClick(id)}
 		>
 			<img

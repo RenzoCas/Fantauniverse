@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 
-const LegeContext = createContext();
+const LegheContext = createContext();
 
 const initialState = {
 	id: "",
@@ -115,7 +115,7 @@ function LegheProvider({ children }) {
 	};
 
 	return (
-		<LegeContext.Provider
+		<LegheContext.Provider
 			value={{
 				user,
 				isAuthenticated,
@@ -126,12 +126,12 @@ function LegheProvider({ children }) {
 			}}
 		>
 			{children}
-		</LegeContext.Provider>
+		</LegheContext.Provider>
 	);
 }
 
 function useLeghe() {
-	const context = useContext(LegeContext);
+	const context = useContext(LegheContext);
 	if (!context) {
 		throw new Error("useLeghe must be used within an LegheProvider");
 	}

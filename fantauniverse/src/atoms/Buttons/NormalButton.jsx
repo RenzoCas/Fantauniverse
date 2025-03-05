@@ -5,12 +5,13 @@ export default function NormalButton({
 	action,
 	disabled = false,
 	icon = true,
+	classOpt,
 }) {
 	return (
 		<button
 			onClick={action}
 			disabled={disabled}
-			className={`group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white
+			className={`group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white ${classOpt}
         ${
 			disabled
 				? "bg-(--black-light) text-(--black-normal)/25 cursor-not-allowed"

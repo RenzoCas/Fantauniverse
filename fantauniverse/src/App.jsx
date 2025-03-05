@@ -25,7 +25,7 @@ function App() {
 				<AuthInitializer />
 				<Routes>
 					<Route path="/" element={<Homepage />} />
-					<Route path="register" element={<Registration />} />
+					<Route path="registration" element={<Registration />} />
 					<Route path="login" element={<Login />} />
 					<Route path="rules" element={<Rules />} />
 					<Route path="faq" element={<FAQPage />} />

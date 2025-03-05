@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import Checkbox from "../atoms/Inputs/Checkbox";
 
-function ModalAddRules({ isOpen, onClose, leagueId }) {
+function ModalAddRules({ isOpen, onClose, leagueId, onAddRule }) {
 	const [formData, setFormData] = useState({
 		name: "",
 		rule: "",
@@ -15,6 +15,7 @@ function ModalAddRules({ isOpen, onClose, leagueId }) {
 	const [errors, setErrors] = useState({});
 	const [isSuccess, setIsSuccess] = useState(null);
 	const { user, urlServer } = useAuth();
+	const [resultText, setResultText] = useState();
 
 	const handleChange = (e) => {
 		const { name, value, type, checked } = e.target;
@@ -87,18 +88,26 @@ function ModalAddRules({ isOpen, onClose, leagueId }) {
 						Authorization: `Bearer ${user.token}`,
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({
-						leagueId: leagueId,
-						rules: [formData],
-					}),
+					body: JSON.stringify({ leagueId, rules: [formData] }),
 				}
 			);
 
 			if (!response.ok) {
-				throw new Error("Errore nell'aggiunta delle regole.");
+				if (response.status === 409) {
+					setResultText("Titolo regola giá presente.");
+					throw new Error("Titolo regola giá presente.");
+				}
+
+				setResultText("Errore nell'aggiunta della regola.");
+				throw new Error("Errore nell'aggiunta della regola.");
 			}
+
+			const result = await response.json();
+			setResultText("Regola aggiunta con successo.");
+			onAddRule(result.rules);
 			setIsSuccess(true);
 		} catch (error) {
+			setResultText("Errore nell'aggiunta della regola.");
 			setIsSuccess(false);
 			console.log(error.message);
 		}
@@ -109,29 +118,39 @@ function ModalAddRules({ isOpen, onClose, leagueId }) {
 			id="modalAddRules"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
-			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease ${
+			className={`fixed bottom-0 left-0 w-screen h-screen bg-black/50 flex justify-center items-end transition-opacity duration-500 ease ${
 				isOpen ? "opacity-100 visible" : "opacity-0 invisible"
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-t-lg p-[16px] w-full transition-transform duration-500 ease flex flex-col gap-[24px] ${
+				className={`bg-white shadow-lg rounded-t-lg p-4 w-full transition-transform duration-500 ease flex flex-col gap-6 z-100 ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[20px] w-[20px]" />
+					<XMarkIcon className="h-5 w-5" />
 				</button>
 				{isSuccess === true ? (
 					<>
-						<p className="text-(--black-normal) font-semibold">
-							Regole aggiunte con successo.
-						</p>
-						<NormalButton text="Chiudi" action={onClose} />
+						<p className="text-black font-semibold">{resultText}</p>
+						<NormalButton
+							text="Chiudi"
+							action={() => {
+								onClose();
+								setIsSuccess(null);
+								setFormData({
+									name: "",
+									rule: "",
+									malus: false,
+									value: "",
+								});
+							}}
+						/>
 					</>
 				) : isSuccess === false ? (
 					<>
-						<p className="text-(--error-normal) font-semibold">
-							Errore nell&rsquo;inserimento delle regole, riprova.
+						<p className="text-red-500 font-semibold">
+							{resultText}
 						</p>
 						<NormalButton
 							text="Riprova"
@@ -140,12 +159,12 @@ function ModalAddRules({ isOpen, onClose, leagueId }) {
 					</>
 				) : (
 					<>
-						<h4 className="font-semibold text-(--black-normal)">
+						<h4 className="font-semibold text-black">
 							Aggiungi le tue regole
 						</h4>
 						<form
 							onSubmit={handleSubmit}
-							className="flex flex-col gap-[16px]"
+							className="flex flex-col gap-4"
 						>
 							<GenericInput
 								type="text"
@@ -169,6 +188,7 @@ function ModalAddRules({ isOpen, onClose, leagueId }) {
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
+
 							<GenericInput
 								type="text"
 								required

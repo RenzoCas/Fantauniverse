@@ -32,7 +32,7 @@ export default function Homepage() {
 				<GhostButton
 					text="Non sei registrato? Registrati"
 					action={() => {
-						navigate("/registrazione");
+						navigate("/registration");
 					}}
 				/>
 			</div>

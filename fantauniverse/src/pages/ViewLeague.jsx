@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
-import { BoltIcon } from "@heroicons/react/24/outline";
+import { BoltIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Rules from "../components/Rules";
 import Tab from "../components/Tab";
 import Ranking from "../components/Ranking";
@@ -26,6 +26,7 @@ function ViewLega() {
 		description,
 	} = state.lega;
 	const isAdmin = admin.id == user.id;
+	const [newRules, setNewRules] = useState(rules);
 
 	useEffect(() => {
 		const getSquadra = async () => {
@@ -62,14 +63,24 @@ function ViewLega() {
 	};
 
 	return (
-		<div className="flex flex-col gap-[16px] justify-between h-full">
+		<div className="flex flex-col gap-[16px] justify-between h-full flex-1">
 			<div className="top flex flex-col gap-[16px]">
 				<img
 					src={icon || "https://placehold.co/361x217"}
 					alt="Logo lega"
 					className="w-full rounded-[8px]"
 				/>
-				<h2 className="title-h4">{name}</h2>
+				<div className="flex justify-between">
+					<h2 className="title-h4">{name}</h2>
+					{isAdmin && (
+						<div className="flex gap-[8px] items-center">
+							<p className="body-small">Elimina lega</p>
+							<button onClick={() => {}}>
+								<TrashIcon className="w-[24px] h-[24px]" />
+							</button>
+						</div>
+					)}
+				</div>
 				{description != null && (
 					<p className="body-small text-(--black-normal)">
 						{description}
@@ -80,9 +91,15 @@ function ViewLega() {
 					tabActive={tabActive}
 					handleTabChange={handleTabChange}
 					isAdmin={isAdmin}
+					status={status}
 				/>
 				{tabActive == "Regolamento" && (
-					<Rules rules={rules} leagueId={id} />
+					<Rules
+						rules={newRules}
+						leagueId={id}
+						isAdmin={isAdmin}
+						setNewRules={setNewRules}
+					/>
 				)}
 				{tabActive == "Classifica" && (
 					<Ranking
@@ -105,7 +122,9 @@ function ViewLega() {
 					<CardSquadra squadra={team} handleClick={handleClick} />
 				) : (
 					status == "STARTED" &&
-					registered && <p>registrato e iniziato</p>
+					registered && (
+						<CardSquadra squadra={team} handleClick={handleClick} />
+					)
 				))}
 		</div>
 	);
