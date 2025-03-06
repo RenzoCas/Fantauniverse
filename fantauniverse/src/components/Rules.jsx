@@ -1,8 +1,9 @@
 import { useState } from "react";
-import Rule from "../atoms/Rule";
-import ModalAddRules from "./ModalAddRules";
+import Rule from "./Rule";
+import ModalAddRules from "./modals/ModalAddRules";
 import { CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
+import GenericPopup from "./popups/GenericPopup";
 
 function Rules({ isAdmin }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +44,9 @@ function Rules({ isAdmin }) {
 					))}
 				</ul>
 			) : (
-				<p>Non ci sono regole, aggiungile.</p>
+				<p className="body-normal font-semibold text-(--black-darker) text-center">
+					Sembra che tu non abbia aggiunto nessuna regola.
+				</p>
 			)}
 			{isAdmin && (
 				<>
@@ -51,19 +54,15 @@ function Rules({ isAdmin }) {
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
 					/>
-
-					<div
-						className={`flex items-center gap-[8px] bg-green-50 shadow-lg rounded-[16px] p-[24px] fixed transition-transform duration-500 ease z-100 w-[calc(100vw-32px)] md:max-w-[528px] ${
-							isSuccessDelete
-								? "transform translate-y-0 bottom-[32px]"
-								: "transform translate-y-full bottom-0"
-						}`}
+					<GenericPopup
+						isOpen={isSuccessDelete}
+						background="green-50"
 					>
 						<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
 						<p className="font-bold text-(--black-normal)">
 							Regola eliminata correttamente
 						</p>
-					</div>
+					</GenericPopup>
 				</>
 			)}
 		</>

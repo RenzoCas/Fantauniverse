@@ -43,6 +43,9 @@ export default function Homepage() {
 				<GhostButton
 					text="Scopri come creare il tuo universo"
 					icon={false}
+					action={() => {
+						navigate("/rules");
+					}}
 				/>
 			</div>
 		</main>

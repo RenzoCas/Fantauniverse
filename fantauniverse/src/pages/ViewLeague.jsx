@@ -3,15 +3,18 @@ import { useUser } from "../contexts/UserContext";
 import { useEffect, useState } from "react";
 import {
 	ArrowLeftCircleIcon,
-	BoltIcon,
+	CheckIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import Rules from "../components/Rules";
 import Tab from "../components/Tab";
 import Ranking from "../components/Ranking";
-import CardSquadra from "../atoms/CardSquadra";
+import CardSquadra from "../components/CardSquadra";
 import Loader from "../components/Loader";
 import { useLeague } from "../contexts/LeagueContext";
+import ModalConfermDelete from "../components/modals/ModalConfirmDelete";
+import NormalButton from "../atoms/Buttons/NormalButton";
+import FixedPopup from "../components/popups/FixedPopup";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -24,9 +27,10 @@ function ViewLega() {
 	const [team, setTeam] = useState();
 	const [hasData, setHasData] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isModalConfirmDeleteOpen, setisModalConfirmDeleteOpen] =
+		useState(false);
 
-	const { id, admin } = state;
-	const isAdmin = admin.id == user.id;
+	const { id, isAdmin, leagueInfoCompleted } = state.league;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -55,7 +59,7 @@ function ViewLega() {
 		fetchData();
 	}, [getLeague, user.token, urlServer, id]);
 
-	const { icon, description, name, participants, status, registered } =
+	const { icon, description, name, participants, status, isRegistered } =
 		league;
 
 	const handleTabChange = (tab) => {
@@ -66,6 +70,8 @@ function ViewLega() {
 		navigate(`/app/league/team`, { state: { participantId } });
 	};
 
+	const handleStartLeague = () => {};
+
 	const handleAddParticipant = () => {
 		addParticipant(id);
 	};
@@ -75,92 +81,116 @@ function ViewLega() {
 			{isLoading ? (
 				<Loader />
 			) : (
-				<div className="flex flex-col gap-[16px] justify-between h-full flex-1">
-					<button
-						onClick={() => {
-							navigate("/app");
-						}}
-						className="flex items-center gap-[4px] body-normal text-(--accent-normal)"
-					>
-						<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
-						Indietro
-					</button>
-					<div className="top flex flex-col gap-[16px]">
-						<img
-							src={icon || "https://placehold.co/361x217"}
-							alt="Logo lega"
-							className="w-full rounded-[8px]"
-						/>
-						<div className="flex justify-between">
-							<h2 className="title-h4">{name}</h2>
-							{isAdmin && (
-								<div className="flex gap-[8px] items-center">
-									<p className="body-small whitespace-nowrap">
-										Elimina lega
-									</p>
-									<button
-										onClick={() => {
-											deleteLeague(id);
-											navigate("/app");
-										}}
-									>
-										<TrashIcon className="w-[24px] h-[24px]" />
-									</button>
-								</div>
+				<>
+					<div className="flex flex-col gap-[16px] justify-between h-full flex-1">
+						<button
+							onClick={() => {
+								navigate("/app");
+							}}
+							className="flex items-center gap-[4px] body-normal text-(--accent-normal)"
+						>
+							<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
+							Indietro
+						</button>
+						<div className="top flex flex-col gap-[16px]">
+							<img
+								src={icon || "https://placehold.co/361x217"}
+								alt="Logo lega"
+								className="w-full rounded-[8px]"
+							/>
+							<div className="flex justify-between">
+								<h2 className="title-h4">{name}</h2>
+								{isAdmin && (
+									<div className="flex gap-[8px] items-center">
+										<p className="body-small whitespace-nowrap">
+											Elimina lega
+										</p>
+										<button
+											onClick={() => {
+												deleteLeague(id);
+												navigate("/app");
+											}}
+										>
+											<TrashIcon className="w-[24px] h-[24px]" />
+										</button>
+									</div>
+								)}
+							</div>
+							{description != null && (
+								<p className="body-small text-(--black-normal)">
+									{description}
+								</p>
+							)}
+
+							<Tab
+								tabActive={tabActive}
+								handleTabChange={handleTabChange}
+								isAdmin={isAdmin}
+								status={status}
+							/>
+							{tabActive == "Regolamento" && (
+								<Rules isAdmin={isAdmin} />
+							)}
+							{tabActive == "Classifica" && (
+								<Ranking
+									participants={participants}
+									handleClick={handleClick}
+								/>
+							)}
+							{tabActive == "Admin" && (
+								<>
+									<p>admin</p>
+								</>
 							)}
 						</div>
-						{description != null && (
-							<p className="body-small text-(--black-normal)">
-								{description}
-							</p>
-						)}
-
-						<Tab
-							tabActive={tabActive}
-							handleTabChange={handleTabChange}
-							isAdmin={isAdmin}
-							status={status}
-						/>
-						{tabActive == "Regolamento" && (
-							<Rules isAdmin={isAdmin} />
-						)}
-						{tabActive == "Classifica" && (
-							<Ranking
-								participants={participants}
-								handleClick={handleClick}
-							/>
-						)}
-						{tabActive == "Admin" && <p>admin</p>}
+						{hasData &&
+							(status === "PENDING" && leagueInfoCompleted ? (
+								<NormalButton
+									text="Pubblica lega"
+									action={handleStartLeague}
+								></NormalButton>
+							) : status === "PENDING" && !leagueInfoCompleted ? (
+								<FixedPopup background="(--error-light)">
+									<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
+									<p className="font-bold text-(--black-normal)">
+										Inserisci almeno una regola ed un player
+										per poter pubblicare la lega
+									</p>
+								</FixedPopup>
+							) : status === "NOT_STARTED" && isRegistered ? (
+								<CardSquadra
+									squadra={team}
+									handleClick={handleClick}
+									disabled={false}
+								/>
+							) : status === "NOT_STARTED" && !isRegistered ? (
+								<NormalButton
+									text="Unisciti alla lega"
+									action={handleAddParticipant}
+								></NormalButton>
+							) : status === "STARTED" && isRegistered ? (
+								<CardSquadra
+									squadra={team}
+									handleClick={handleClick}
+									disabled={true}
+								/>
+							) : status === "STARTED" && !isRegistered ? (
+								<FixedPopup background="(--error-light)">
+									<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
+									<p className="font-bold text-(--black-normal)">
+										Non puoi iscriverti, la lega è già
+										avviata
+									</p>
+								</FixedPopup>
+							) : null)}
 					</div>
-					{hasData &&
-						(status == "NOT_STARTED" && !registered ? (
-							<button
-								onClick={handleAddParticipant}
-								className="group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white bg-(--accent-normal)"
-							>
-								<span>Unisciti alla lega</span>
-								<BoltIcon className="h-[24px] w-[24px] text-(--black-normal) bg-white p-[4px] rounded-full" />
-							</button>
-						) : status == "NOT_STARTED" && registered ? (
-							<CardSquadra
-								squadra={team}
-								handleClick={handleClick}
-							/>
-						) : status == "STARTED" && registered ? (
-							<CardSquadra
-								squadra={team}
-								handleClick={handleClick}
-								disabled={true}
-							/>
-						) : (
-							status == "STARTED" &&
-							!registered && (
-								<p>
-									Non puoi iscriverti, la lega é giá avviata
-								</p>
-							)
-						))}
-				</div>
+					<ModalConfermDelete
+						isOpen={isModalConfirmDeleteOpen}
+						onClose={() => setisModalConfirmDeleteOpen(false)}
+					>
+						<p>prova</p>
+					</ModalConfermDelete>
+				</>
 			)}
 		</>
 	);

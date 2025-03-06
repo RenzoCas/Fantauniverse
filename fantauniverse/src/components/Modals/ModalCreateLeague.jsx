@@ -1,9 +1,9 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import GenericInput from "../atoms/Inputs/GenericInput";
+import GenericInput from "../../atoms/Inputs/GenericInput";
 import { useState } from "react";
-import NormalButton from "../atoms/Buttons/NormalButton";
-import Radio from "../atoms/Inputs/Radio";
-import { useLeague } from "../contexts/LeagueContext";
+import NormalButton from "../../atoms/Buttons/NormalButton";
+import Radio from "../../atoms/Inputs/Radio";
+import { useLeague } from "../../contexts/LeagueContext";
 
 function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 	const [formData, setFormData] = useState({
@@ -102,7 +102,7 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 			id="modalCreateLeague"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
-			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease ${
+			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
 				isOpen ? "opacity-100 visible" : "opacity-0 invisible"
 			}`}
 		>

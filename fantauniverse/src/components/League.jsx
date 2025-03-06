@@ -1,14 +1,12 @@
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
-import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Lega({ league }) {
 	const navigate = useNavigate();
-	const { user } = useUser();
-	const { id, name, icon, admin, participants } = league;
+	const { id, name, icon, isAdmin, numberParticipants } = league;
 
 	const handleClick = () => {
-		navigate(`league/${id}`, { state: { id, admin } });
+		navigate(`league/${id}`, { state: { league } });
 	};
 
 	return (
@@ -24,12 +22,10 @@ export default function Lega({ league }) {
 			<div className="flex flex-col gap-1.5 w-full">
 				<div className="flex justify-between items-center">
 					<h4 className="font-medium text-gray-800">{name}</h4>
-					{admin?.id === user?.id && (
-						<WrenchScrewdriverIcon className="w-5 h-5" />
-					)}
+					{isAdmin && <WrenchScrewdriverIcon className="w-5 h-5" />}
 				</div>
 				<p className="text-sm text-gray-600">
-					{participants?.length} partecipanti
+					{numberParticipants} partecipanti
 				</p>
 			</div>
 		</li>

@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import GenericInput from "../atoms/Inputs/GenericInput";
-import Lega from "../atoms/Lega";
-import ModalCreateLeague from "../components/ModalCreateLeague";
+import Lega from "../components/League";
+import ModalCreateLeague from "../components/modals/ModalCreateLeague";
 import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
@@ -10,17 +10,13 @@ function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { user } = useUser();
 	const { myLeagues, getMyLeagues, createLeague, findLeague } = useLeague();
-	const [request, setRequest] = useState(false);
 	const [formData, setFormData] = useState({
 		name: "",
 	});
 
 	useEffect(() => {
-		if (myLeagues.length === 0 && !request) {
-			getMyLeagues();
-			setRequest(true);
-		}
-	}, [getMyLeagues, request, myLeagues]);
+		getMyLeagues();
+	}, [getMyLeagues]);
 
 	const handleCreateLeague = async (formData) => {
 		const newLeague = await createLeague(formData);
@@ -50,14 +46,21 @@ function Dashboard() {
 			<section className="flex flex-col gap-[12px]">
 				<div className="flex justify-between items-center gap-[8px]">
 					<p className="body-regular font-semibold">Le tue leghe</p>
-					<button
-						onClick={() => setIsModalOpen(true)}
-						className="p-[4px] bg-(--black-light) rounded-full"
-					>
-						<PlusIcon className="h-[16px] w-[16px]" />
-					</button>
+					{myLeagues.length > 0 && (
+						<div className="flex gap-[8px] items-center">
+							<p className="body-small whitespace-nowrap">
+								Crea lega
+							</p>
+							<button
+								onClick={() => setIsModalOpen(true)}
+								className="p-[4px] bg-(--black-light) rounded-full"
+							>
+								<PlusIcon className="h-[16px] w-[16px]" />
+							</button>
+						</div>
+					)}
 				</div>
-				<form action="" onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmit}>
 					<GenericInput
 						type="search"
 						name="cercaLega"
@@ -76,8 +79,8 @@ function Dashboard() {
 					</ul>
 				) : (
 					<p className="body-normal font-semibold text-(--black-darker) text-center">
-						Sembra che non hai ancora una lega, cerca una nuova lega
-						o creane una da 0.
+						Sembra che tu non abbia ancora una lega. Cerca una nuova
+						lega oppure creane una da zero.
 					</p>
 				)}
 			</section>

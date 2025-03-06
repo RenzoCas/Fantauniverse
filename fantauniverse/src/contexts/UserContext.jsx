@@ -29,6 +29,7 @@ function UserProvider({ children }) {
 	);
 
 	const urlServer = "https://soviet-glory-vinzo-s-org-50c662e0.koyeb.app";
+	// const urlServer = "http://192.168.1.94:8547";
 
 	const login = async (username, password) => {
 		try {
@@ -82,8 +83,28 @@ function UserProvider({ children }) {
 		}
 	};
 
-	const logout = () => {
-		dispatch({ type: "logout" });
+	const logout = async () => {
+		try {
+			const response = await fetch(`${urlServer}/token/logout`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message:
+						"Errore nell'eliminazione del token di autenticazione",
+				};
+			}
+			localStorage.removeItem("authToken");
+			dispatch({ type: "logout" });
+		} catch (error) {
+			console.error("Registration error:", error.message);
+			throw error;
+		}
 	};
 
 	const tokenInfo = async (token) => {

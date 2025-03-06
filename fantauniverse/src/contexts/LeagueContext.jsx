@@ -19,9 +19,9 @@ const initialStateLeague = {
 	coinName: "",
 	maxCoins: 0,
 	icon: [],
-	admin: {},
+	isAdmin: false,
 	status: "",
-	registered: true,
+	isRegistered: true,
 	rules: [],
 	participants: [],
 	players: [],
@@ -160,7 +160,7 @@ function LeagueProvider({ children }) {
 
 	const getMyLeagues = useCallback(async () => {
 		try {
-			if (!user || !user.token || myLeagues.myLeagues.length > 0) return;
+			if (!user || !user.token) return;
 
 			const response = await fetch(`${urlServer}/league/myLeague`, {
 				method: "GET",
@@ -180,7 +180,7 @@ function LeagueProvider({ children }) {
 		} catch (error) {
 			console.error(error.message);
 		}
-	}, [user, urlServer, myLeagues]);
+	}, [user, urlServer]);
 
 	const getLeague = useCallback(
 		async (leagueId) => {
@@ -239,15 +239,12 @@ function LeagueProvider({ children }) {
 
 	const deleteLeague = async (leagueId) => {
 		try {
-			const response = await fetch(
-				`${urlServer}/league/action/${leagueId}`,
-				{
-					method: "DELETE",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-					},
-				}
-			);
+			const response = await fetch(`${urlServer}/league/${leagueId}`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			});
 
 			if (!response.ok) {
 				throw new Error("Errore nella cancellazione della lega.");
@@ -262,7 +259,7 @@ function LeagueProvider({ children }) {
 	const addParticipant = async (leagueId) => {
 		try {
 			const response = await fetch(
-				`${urlServer}/league/action/addParticipant/${leagueId}`,
+				`${urlServer}/league/addParticipant/${leagueId}`,
 				{
 					method: "POST",
 					headers: {
@@ -288,20 +285,17 @@ function LeagueProvider({ children }) {
 
 	const addRule = async (ruleData) => {
 		try {
-			const response = await fetch(
-				`${urlServer}/league/action/addRules`,
-				{
-					method: "POST",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						leagueId: league.id,
-						rules: [ruleData],
-					}),
-				}
-			);
+			const response = await fetch(`${urlServer}/league/addRules`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					leagueId: league.id,
+					rules: [ruleData],
+				}),
+			});
 
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta della regola");
@@ -325,7 +319,7 @@ function LeagueProvider({ children }) {
 			if (!league.id) throw new Error("Nessuna lega selezionata.");
 
 			const response = await fetch(
-				`${urlServer}/league/action/deleteRule/${ruleId}`,
+				`${urlServer}/league/deleteRule/${ruleId}`,
 				{
 					method: "DELETE",
 					headers: {

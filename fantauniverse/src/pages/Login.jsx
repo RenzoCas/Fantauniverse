@@ -51,7 +51,7 @@ export default function Login() {
 
 		try {
 			const user = await login(formData.username, formData.password);
-			localStorage.setItem("token", user.token);
+			localStorage.setItem("authToken", user.token);
 			navigate("/app", { replace: true });
 		} catch (error) {
 			setServerError("Username o password errati");

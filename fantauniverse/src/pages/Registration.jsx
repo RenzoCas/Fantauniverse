@@ -4,7 +4,7 @@ import GhostButton from "../atoms/Buttons/GhostButton";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import Logo from "../atoms/Logo";
-import Checkbox from "../atoms/Inputs/Checkbox";
+// import Checkbox from "../atoms/Inputs/Checkbox";
 import { useUser } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 
@@ -64,8 +64,8 @@ export default function Registrazione() {
 			formData.username &&
 			validateEmail(formData.email) &&
 			validatePassword(formData.password) &&
-			formData.password === formData.confermaPassword &&
-			formData.privacy
+			formData.password === formData.confermaPassword
+			// formData.privacy
 		);
 	};
 
@@ -81,7 +81,7 @@ export default function Registrazione() {
 				username: formData.username,
 				email: formData.email,
 				password: formData.password,
-				privacy: formData.privacy,
+				// privacy: formData.privacy,
 			});
 
 			localStorage.setItem("token", user.token);
@@ -166,7 +166,7 @@ export default function Registrazione() {
 							handleBlur={handleBlur}
 							autocomplete="new-password"
 						/>
-						<div className="flex align-start gap-[10px]">
+						{/* <div className="flex align-start gap-[10px]">
 							<Checkbox
 								name="privacy"
 								id="privacyPolicy"
@@ -176,7 +176,7 @@ export default function Registrazione() {
 								checked={formData.privacy}
 								handleChange={handleChange}
 							/>
-						</div>
+						</div> */}
 					</div>
 					<div className="flex flex-col gap-[8px]">
 						<NormalButton

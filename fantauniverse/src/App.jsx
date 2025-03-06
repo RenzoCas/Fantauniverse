@@ -11,8 +11,8 @@ import Registration from "./pages/Registration";
 import ViewLeague from "./pages/ViewLeague";
 import Dashboard from "./pages/Dashboard";
 import ViewTeam from "./pages/ViewTeam";
-import Rules from "./components/Rules";
 import { LeagueProvider } from "./contexts/LeagueContext";
+import Rules from "./pages/Rules";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -29,7 +29,6 @@ function App() {
 						<Route path="rules" element={<Rules />} />
 						<Route path="faq" element={<FAQPage />} />
 						<Route path="*" element={<NotFound />} />
-
 						<Route
 							path="app"
 							element={
@@ -59,13 +58,14 @@ function AuthInitializer() {
 			if (hasCheckedToken.current) return;
 			hasCheckedToken.current = true;
 
-			const token = localStorage.getItem("token");
+			const token = localStorage.getItem("authToken");
 			if (token) {
 				try {
 					await tokenInfo(token);
 					navigate("/app", { replace: true });
 				} catch (error) {
 					console.error("Sessione scaduta:", error.message);
+					localStorage.removeItem("authToken");
 				}
 			}
 		};
