@@ -5,13 +5,13 @@ import NormalButton from "../atoms/Buttons/NormalButton";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import Logo from "../atoms/Logo";
 import Checkbox from "../atoms/Inputs/Checkbox";
-import { useAuth } from "../contexts/AuthContext";
+import { useUser } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 
 export default function Registrazione() {
 	const messageError = "Campo obbligatorio";
 	const navigate = useNavigate();
-	const { register } = useAuth();
+	const { register } = useUser();
 
 	const [formData, setFormData] = useState({
 		username: "",

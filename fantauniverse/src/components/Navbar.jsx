@@ -6,11 +6,11 @@ import {
 	UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useUser } from "../contexts/UserContext";
 
 export default function Navbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const { logout } = useAuth();
+	const { logout } = useUser();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);

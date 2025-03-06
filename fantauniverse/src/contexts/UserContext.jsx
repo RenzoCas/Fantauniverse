@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 
-const AuthContext = createContext();
+const UserContext = createContext();
 
 const initialState = {
 	user: null,
@@ -22,13 +22,13 @@ function reducer(state, action) {
 	}
 }
 
-function AuthProvider({ children }) {
+function UserProvider({ children }) {
 	const [{ user, isAuthenticated }, dispatch] = useReducer(
 		reducer,
 		initialState
 	);
 
-	const urlServer = "http://192.168.1.94:8547";
+	const urlServer = "https://soviet-glory-vinzo-s-org-50c662e0.koyeb.app";
 
 	const login = async (username, password) => {
 		try {
@@ -113,7 +113,7 @@ function AuthProvider({ children }) {
 	};
 
 	return (
-		<AuthContext.Provider
+		<UserContext.Provider
 			value={{
 				user,
 				isAuthenticated,
@@ -125,16 +125,16 @@ function AuthProvider({ children }) {
 			}}
 		>
 			{children}
-		</AuthContext.Provider>
+		</UserContext.Provider>
 	);
 }
 
-function useAuth() {
-	const context = useContext(AuthContext);
+function useUser() {
+	const context = useContext(UserContext);
 	if (!context) {
-		throw new Error("useAuth must be used within an AuthProvider");
+		throw new Error("useUser must be used within an UserProvider");
 	}
 	return context;
 }
 
-export { AuthProvider, useAuth };
+export { UserProvider, useUser };

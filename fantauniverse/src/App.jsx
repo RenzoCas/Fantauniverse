@@ -1,9 +1,6 @@
 import { lazy, useEffect, useRef } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-// import { lazy } from "react";
-// import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import { AuthProvider } from "./contexts/AuthContext";
+import { UserProvider, useUser } from "./contexts/UserContext";
 
 import Homepage from "./pages/Homepage";
 import FAQPage from "./pages/Faq";
@@ -15,42 +12,45 @@ import ViewLeague from "./pages/ViewLeague";
 import Dashboard from "./pages/Dashboard";
 import ViewTeam from "./pages/ViewTeam";
 import Rules from "./components/Rules";
+import { LeagueProvider } from "./contexts/LeagueContext";
 
 const Login = lazy(() => import("./pages/Login"));
 
 function App() {
 	return (
-		<AuthProvider>
-			<BrowserRouter>
-				<AuthInitializer />
-				<Routes>
-					<Route path="/" element={<Homepage />} />
-					<Route path="registration" element={<Registration />} />
-					<Route path="login" element={<Login />} />
-					<Route path="rules" element={<Rules />} />
-					<Route path="faq" element={<FAQPage />} />
-					<Route path="*" element={<NotFound />} />
+		<UserProvider>
+			<LeagueProvider>
+				<BrowserRouter>
+					<AuthInitializer />
+					<Routes>
+						<Route path="/" element={<Homepage />} />
+						<Route path="registration" element={<Registration />} />
+						<Route path="login" element={<Login />} />
+						<Route path="rules" element={<Rules />} />
+						<Route path="faq" element={<FAQPage />} />
+						<Route path="*" element={<NotFound />} />
 
-					<Route
-						path="app"
-						element={
-							<ProtectedRoute>
-								<FantaUniverse />
-							</ProtectedRoute>
-						}
-					>
-						<Route index element={<Dashboard />} />
-						<Route path="league/:id" element={<ViewLeague />} />
-						<Route path="league/team" element={<ViewTeam />} />
-					</Route>
-				</Routes>
-			</BrowserRouter>
-		</AuthProvider>
+						<Route
+							path="app"
+							element={
+								<ProtectedRoute>
+									<FantaUniverse />
+								</ProtectedRoute>
+							}
+						>
+							<Route index element={<Dashboard />} />
+							<Route path="league/:id" element={<ViewLeague />} />
+							<Route path="league/team" element={<ViewTeam />} />
+						</Route>
+					</Routes>
+				</BrowserRouter>
+			</LeagueProvider>
+		</UserProvider>
 	);
 }
 
 function AuthInitializer() {
-	const { tokenInfo } = useAuth();
+	const { tokenInfo } = useUser();
 	const navigate = useNavigate();
 	const hasCheckedToken = useRef(false);
 

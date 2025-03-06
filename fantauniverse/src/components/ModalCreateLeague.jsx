@@ -1,20 +1,22 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import Radio from "../atoms/Inputs/Radio";
+import { useLeague } from "../contexts/LeagueContext";
 
-function ModalCreateLeague({ isOpen, onClose }) {
+function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 	const [formData, setFormData] = useState({
 		name: "",
+		description: "",
 		visibility: "PUBLIC",
 		coinName: "",
 		maxCoins: "",
 	});
 	const [errors, setErrors] = useState({});
 	const [isSuccess, setIsSuccess] = useState(null);
-	const { user, urlServer } = useAuth();
+	const { createLeague } = useLeague();
+
 	const visibilityObj = [
 		{
 			value: "PUBLIC",
@@ -69,7 +71,8 @@ function ModalCreateLeague({ isOpen, onClose }) {
 			formData.name.trim() !== "" &&
 			formData.coinName.trim() !== "" &&
 			formData.maxCoins !== "" &&
-			formData.maxCoins > 0
+			formData.maxCoins > 0 &&
+			!Object.values(errors).some((error) => error !== "")
 		);
 	};
 
@@ -84,23 +87,13 @@ function ModalCreateLeague({ isOpen, onClose }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		try {
-			const response = await fetch(`${urlServer}/league`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
-			});
+		const newLeague = await createLeague(formData);
 
-			if (!response.ok) {
-				throw new Error("Errore nella creazione di una nuova lega.");
-			}
+		if (newLeague) {
 			setIsSuccess(true);
-		} catch (error) {
+			onCreate();
+		} else {
 			setIsSuccess(false);
-			console.log(error.message);
 		}
 	};
 
@@ -159,6 +152,15 @@ function ModalCreateLeague({ isOpen, onClose }) {
 								handleBlur={handleBlur}
 							/>
 							<GenericInput
+								type="textarea"
+								name="description"
+								id="description"
+								placeholder="Descrizione breve lega."
+								messageError={errors.description}
+								value={formData.description}
+								handleChange={handleChange}
+							/>
+							<GenericInput
 								type="text"
 								required
 								name="coinName"
@@ -188,7 +190,7 @@ function ModalCreateLeague({ isOpen, onClose }) {
 										name="visibility"
 										value={opt.value}
 										checked={
-											opt.value == formData.visibility
+											opt.value === formData.visibility
 										}
 										handleChange={handleChange}
 										label={opt.label}

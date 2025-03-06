@@ -1,14 +1,14 @@
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
-import { useAuth } from "../contexts/AuthContext";
+import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
-export default function Lega({ lega }) {
-	const { id, icon, name, admin, participants } = lega;
-	const { user } = useAuth();
+export default function Lega({ league }) {
 	const navigate = useNavigate();
+	const { user } = useUser();
+	const { id, name, icon, admin, participants } = league;
 
 	const handleClick = () => {
-		navigate(`/app/league/${id}`, { state: { lega } });
+		navigate(`league/${id}`, { state: { id, admin } });
 	};
 
 	return (
@@ -29,7 +29,7 @@ export default function Lega({ lega }) {
 					)}
 				</div>
 				<p className="text-sm text-gray-600">
-					{participants.length} partecipanti
+					{participants?.length} partecipanti
 				</p>
 			</div>
 		</li>

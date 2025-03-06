@@ -1,47 +1,21 @@
 import { useState } from "react";
-// import NormalButton from "../atoms/Buttons/NormalButton";
 import Rule from "../atoms/Rule";
 import ModalAddRules from "./ModalAddRules";
-import { useAuth } from "../contexts/AuthContext";
 import { CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useLeague } from "../contexts/LeagueContext";
 
-function Rules({ rules, leagueId, isAdmin, setNewRules }) {
+function Rules({ isAdmin }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isSuccessDelete, setIsSuccessDelete] = useState(false);
-	const { user, urlServer } = useAuth();
-
-	const handleAddRule = (rule) => {
-		setNewRules(rule);
-	};
+	const { league, deleteRule } = useLeague();
+	const { rules } = league;
 
 	const handleDeleteRule = async (ruleId) => {
-		try {
-			const response = await fetch(
-				`${urlServer}/league/action/deleteRule/${ruleId}`,
-				{
-					method: "DELETE",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Errore nella cancellazione della regola.");
-			}
-
-			setIsSuccessDelete(true);
-			setNewRules((prevRules) =>
-				prevRules.filter((rule) => rule.id !== ruleId)
-			);
-		} catch (error) {
-			console.error(error.message);
-		} finally {
-			setTimeout(() => {
-				setIsSuccessDelete(false);
-			}, 2000);
-		}
+		await deleteRule(ruleId);
+		setIsSuccessDelete(true);
+		setTimeout(() => {
+			setIsSuccessDelete(false);
+		}, 1000);
 	};
 
 	return (
@@ -59,9 +33,9 @@ function Rules({ rules, leagueId, isAdmin, setNewRules }) {
 			)}
 			{rules.length > 0 ? (
 				<ul className="flex flex-col gap-[16px]">
-					{rules.map((el) => (
+					{rules.map((el, idx) => (
 						<Rule
-							key={el.id}
+							key={idx}
 							ruleObj={el}
 							onDelete={handleDeleteRule}
 							isAdmin={isAdmin}
@@ -76,8 +50,6 @@ function Rules({ rules, leagueId, isAdmin, setNewRules }) {
 					<ModalAddRules
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
-						leagueId={leagueId}
-						onAddRule={handleAddRule}
 					/>
 
 					<div

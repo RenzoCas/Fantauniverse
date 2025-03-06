@@ -1,11 +1,11 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import Checkbox from "../atoms/Inputs/Checkbox";
+import { useLeague } from "../contexts/LeagueContext";
 
-function ModalAddRules({ isOpen, onClose, leagueId, onAddRule }) {
+function ModalAddRules({ isOpen, onClose }) {
 	const [formData, setFormData] = useState({
 		name: "",
 		rule: "",
@@ -14,8 +14,8 @@ function ModalAddRules({ isOpen, onClose, leagueId, onAddRule }) {
 	});
 	const [errors, setErrors] = useState({});
 	const [isSuccess, setIsSuccess] = useState(null);
-	const { user, urlServer } = useAuth();
 	const [resultText, setResultText] = useState();
+	const { addRule } = useLeague();
 
 	const handleChange = (e) => {
 		const { name, value, type, checked } = e.target;
@@ -79,37 +79,15 @@ function ModalAddRules({ isOpen, onClose, leagueId, onAddRule }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		try {
-			const response = await fetch(
-				`${urlServer}/league/action/addRules`,
-				{
-					method: "POST",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ leagueId, rules: [formData] }),
-				}
-			);
 
-			if (!response.ok) {
-				if (response.status === 409) {
-					setResultText("Titolo regola giá presente.");
-					throw new Error("Titolo regola giá presente.");
-				}
+		const newRules = await addRule(formData);
 
-				setResultText("Errore nell'aggiunta della regola.");
-				throw new Error("Errore nell'aggiunta della regola.");
-			}
-
-			const result = await response.json();
+		if (newRules) {
 			setResultText("Regola aggiunta con successo.");
-			onAddRule(result.rules);
 			setIsSuccess(true);
-		} catch (error) {
+		} else {
 			setResultText("Errore nell'aggiunta della regola.");
 			setIsSuccess(false);
-			console.log(error.message);
 		}
 	};
 
@@ -188,7 +166,6 @@ function ModalAddRules({ isOpen, onClose, leagueId, onAddRule }) {
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
-
 							<GenericInput
 								type="text"
 								required

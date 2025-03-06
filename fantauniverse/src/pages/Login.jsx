@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import Logo from "../atoms/Logo";
@@ -13,7 +13,7 @@ export default function Login() {
 	const [serverError, setServerError] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { login, isAuthenticated } = useAuth();
+	const { login, isAuthenticated } = useUser();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -120,7 +120,7 @@ export default function Login() {
 						/>
 						<GhostButton
 							text="Non sei registrato? Registrati"
-							action={() => navigate("/registrazione")}
+							action={() => navigate("/registration")}
 						/>
 					</div>
 				</form>

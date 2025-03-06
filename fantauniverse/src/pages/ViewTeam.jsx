@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import { useAuth } from "../contexts/AuthContext";
+import { useUser } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 
 function ViewTeam() {
 	const { state } = useLocation();
-	const { urlServer, user } = useAuth();
+	const { urlServer, user } = useUser();
 	const participantId = state.participantId;
 	const [team, setTeam] = useState();
 	const [isLoading, setIsLoading] = useState(true);
