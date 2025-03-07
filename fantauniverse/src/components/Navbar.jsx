@@ -16,6 +16,10 @@ export default function Navbar() {
 		setIsMenuOpen(!isMenuOpen);
 	};
 
+	const handleLogout = () => {
+		logout();
+	};
+
 	return (
 		<nav className="bg-white py-2 px-4 sticky top-0 flex justify-between items-center border-b-2 border-black relative z-100">
 			<Logo />
@@ -41,7 +45,7 @@ export default function Navbar() {
 					<ChevronRightIcon className="h-[16px] w-[16px] stroke-3" />
 				</NavLink>
 				<button
-					onClick={logout}
+					onClick={handleLogout}
 					className="body-small font-bold text-left flex justify-between items-center gap-[4px]"
 				>
 					Logout

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Rule from "./Rule";
 import ModalAddRules from "./modals/ModalAddRules";
-import { CheckIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericPopup from "./popups/GenericPopup";
 
@@ -54,11 +54,8 @@ function Rules({ isAdmin }) {
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
 					/>
-					<GenericPopup
-						isOpen={isSuccessDelete}
-						background="green-50"
-					>
-						<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
+
+					<GenericPopup isOpen={isSuccessDelete} type="success">
 						<p className="font-bold text-(--black-normal)">
 							Regola eliminata correttamente
 						</p>

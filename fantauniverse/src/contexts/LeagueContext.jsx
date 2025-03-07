@@ -51,6 +51,14 @@ function myLeaguesReducer(state, action) {
 				myLeagues: [...state.myLeagues, action.payload],
 			};
 
+		case "updateLeague":
+			return {
+				...state,
+				myLeagues: state.myLeagues.map((league) =>
+					league.id === action.payload.id ? action.payload : league
+				),
+			};
+
 		case "deleteLeague":
 			return {
 				...state,
@@ -59,10 +67,16 @@ function myLeaguesReducer(state, action) {
 				),
 			};
 
-		case "addParicipant":
+		case "addParticipant":
 			return {
 				...state,
 				myLeagues: [...state.myLeagues, action.payload],
+			};
+
+		case "resetMyLeague":
+			return {
+				...state,
+				myLeagues: [],
 			};
 
 		default:
@@ -224,6 +238,9 @@ function LeagueProvider({ children }) {
 			});
 
 			if (!response.ok) {
+				if (response.status === 409) {
+					return { error: "Esiste già una lega con questo nome." };
+				}
 				throw new Error("Errore nella creazione di una nuova lega.");
 			}
 
@@ -231,6 +248,40 @@ function LeagueProvider({ children }) {
 			dispatchMyLeagues({ type: "createLeague", payload: newLeague });
 
 			return newLeague;
+		} catch (error) {
+			console.error(error.message);
+			return { error: "Errore nella creazione della lega. Riprova." };
+		}
+	};
+
+	const updatedLeague = async (league) => {
+		try {
+			const response = await fetch(`${urlServer}/league`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(league),
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nell'aggiornamento della lega.");
+			}
+
+			const updatedLeagueData = await response.json();
+
+			dispatchMyLeagues({
+				type: "updateLeague",
+				payload: updatedLeagueData,
+			});
+
+			dispatchLeague({
+				type: "getLeague",
+				payload: updatedLeagueData,
+			});
+
+			return updatedLeagueData;
 		} catch (error) {
 			console.error(error.message);
 			return null;
@@ -254,6 +305,10 @@ function LeagueProvider({ children }) {
 		} catch (error) {
 			console.error(error.message);
 		}
+	};
+
+	const resetMyLeague = () => {
+		dispatchLeague({ type: "resetMyLeague" });
 	};
 
 	const addParticipant = async (leagueId) => {
@@ -355,7 +410,9 @@ function LeagueProvider({ children }) {
 				getMyLeagues,
 				getLeague,
 				createLeague,
+				updatedLeague,
 				deleteLeague,
+				resetMyLeague,
 				addParticipant,
 				addRule,
 				deleteRule,

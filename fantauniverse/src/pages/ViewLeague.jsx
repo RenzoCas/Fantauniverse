@@ -21,7 +21,8 @@ function ViewLega() {
 	const { state } = useLocation();
 
 	const { user, urlServer } = useUser();
-	const { league, getLeague, deleteLeague, addParticipant } = useLeague();
+	const { league, getLeague, deleteLeague, addParticipant, updatedLeague } =
+		useLeague();
 
 	const [tabActive, setTabActive] = useState("Regolamento");
 	const [team, setTeam] = useState();
@@ -59,8 +60,8 @@ function ViewLega() {
 		fetchData();
 	}, [getLeague, user.token, urlServer, id]);
 
-	const { icon, description, name, participants, status, isRegistered } =
-		league;
+	const { description, name, participants, status, isRegistered } = league;
+	const [icon, setIcon] = useState(league.icon || null);
 
 	const handleTabChange = (tab) => {
 		setTabActive(tab);
@@ -74,6 +75,36 @@ function ViewLega() {
 
 	const handleAddParticipant = () => {
 		addParticipant(id);
+	};
+
+	const handleDeleteLeague = async () => {
+		setIsLoading(true);
+		await deleteLeague(id);
+		setIsLoading(false);
+		navigate("/app");
+	};
+
+	const handleFileChange = async (event) => {
+		const file = event.target.files[0];
+		if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+			const reader = new FileReader();
+			reader.onloadend = async () => {
+				// Rimuovi il prefisso 'data:image/jpeg;base64,' dalla stringa
+				const base64Image = reader.result.split(",")[1];
+
+				// Imposta l'icon solo con la parte del base64
+				setIcon(base64Image);
+
+				// Crea i dati aggiornati della lega
+				const updatedLeagueData = { ...league, icon: base64Image };
+
+				// Invia i dati aggiornati al contesto o al server
+				await updatedLeague(updatedLeagueData);
+			};
+			reader.readAsDataURL(file);
+		} else {
+			alert("Per favore seleziona un file JPEG o PNG.");
+		}
 	};
 
 	return (
@@ -93,10 +124,26 @@ function ViewLega() {
 							Indietro
 						</button>
 						<div className="top flex flex-col gap-[16px]">
+							<input
+								type="file"
+								name="logo"
+								id="logoLega"
+								accept="image/jpeg, image/png"
+								onChange={handleFileChange}
+								style={{ display: "none" }}
+							/>
 							<img
-								src={icon || "https://placehold.co/361x217"}
+								src={
+									icon != null
+										? icon
+										: "https://placehold.co/361x217"
+								}
 								alt="Logo lega"
 								className="w-full rounded-[8px]"
+								onClick={() =>
+									document.getElementById("logoLega").click()
+								}
+								style={{ cursor: "pointer" }}
 							/>
 							<div className="flex justify-between">
 								<h2 className="title-h4">{name}</h2>
@@ -105,12 +152,7 @@ function ViewLega() {
 										<p className="body-small whitespace-nowrap">
 											Elimina lega
 										</p>
-										<button
-											onClick={() => {
-												deleteLeague(id);
-												navigate("/app");
-											}}
-										>
+										<button onClick={handleDeleteLeague}>
 											<TrashIcon className="w-[24px] h-[24px]" />
 										</button>
 									</div>

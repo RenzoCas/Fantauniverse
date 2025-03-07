@@ -14,7 +14,6 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 		maxCoins: "",
 	});
 	const [errors, setErrors] = useState({});
-	const [isSuccess, setIsSuccess] = useState(null);
 	const { createLeague } = useLeague();
 
 	const visibilityObj = [
@@ -87,13 +86,23 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const newLeague = await createLeague(formData);
+		const result = await createLeague(formData);
+		onClose();
 
-		if (newLeague) {
-			setIsSuccess(true);
-			onCreate();
+		if (result && !result.error) {
+			onCreate("success", "Lega creata con successo!");
+			setFormData({
+				name: "",
+				description: "",
+				visibility: "PUBLIC",
+				coinName: "",
+				maxCoins: "",
+			});
 		} else {
-			setIsSuccess(false);
+			onCreate(
+				"error",
+				result.error || "Errore nella creazione della lega. Riprova."
+			);
 		}
 	};
 
@@ -114,97 +123,75 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 				<button onClick={onClose} className="flex self-end">
 					<XMarkIcon className="h-[20px] w-[20px]" />
 				</button>
-				{isSuccess === true ? (
-					<>
-						<p className="text-(--black-normal) font-semibold">
-							Lega creata con successo!
-						</p>
-						<NormalButton text="Chiudi" action={onClose} />
-					</>
-				) : isSuccess === false ? (
-					<>
-						<p className="text-(--error-normal) font-semibold">
-							Creazione non riuscita, riprova.
-						</p>
-						<NormalButton
-							text="Riprova"
-							action={() => setIsSuccess(null)}
-						/>
-					</>
-				) : (
-					<>
-						<h4 className="font-semibold text-(--black-normal)">
-							Crea la tua lega
-						</h4>
-						<form
-							onSubmit={handleSubmit}
-							className="flex flex-col gap-[16px]"
-						>
-							<GenericInput
-								type="text"
-								required
-								name="name"
-								id="name"
-								placeholder="Nome lega"
-								messageError={errors.name}
-								value={formData.name}
+
+				<h4 className="font-semibold text-(--black-normal)">
+					Crea la tua lega
+				</h4>
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-[16px]"
+				>
+					<GenericInput
+						type="text"
+						required
+						name="name"
+						id="name"
+						placeholder="Nome lega"
+						messageError={errors.name}
+						value={formData.name}
+						handleChange={handleChange}
+						handleBlur={handleBlur}
+					/>
+					<GenericInput
+						type="textarea"
+						name="description"
+						id="description"
+						placeholder="Descrizione breve lega."
+						messageError={errors.description}
+						value={formData.description}
+						handleChange={handleChange}
+					/>
+					<GenericInput
+						type="text"
+						required
+						name="coinName"
+						id="coinName"
+						placeholder="Nome coin"
+						messageError={errors.coinName}
+						value={formData.coinName}
+						handleChange={handleChange}
+						handleBlur={handleBlur}
+					/>
+					<GenericInput
+						type="text"
+						required
+						name="maxCoins"
+						id="maxCoins"
+						placeholder="Max coin utilizzabili"
+						messageError={errors.maxCoins}
+						value={formData.maxCoins}
+						handleChange={handleChange}
+						handleBlur={handleBlur}
+					/>
+					<div className="grid grid-cols-2">
+						{visibilityObj.map((opt, idx) => (
+							<Radio
+								key={idx}
+								id={`radio-${idx}`}
+								name="visibility"
+								value={opt.value}
+								checked={opt.value === formData.visibility}
 								handleChange={handleChange}
-								handleBlur={handleBlur}
+								label={opt.label}
 							/>
-							<GenericInput
-								type="textarea"
-								name="description"
-								id="description"
-								placeholder="Descrizione breve lega."
-								messageError={errors.description}
-								value={formData.description}
-								handleChange={handleChange}
-							/>
-							<GenericInput
-								type="text"
-								required
-								name="coinName"
-								id="coinName"
-								placeholder="Nome coin"
-								messageError={errors.coinName}
-								value={formData.coinName}
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-							/>
-							<GenericInput
-								type="text"
-								required
-								name="maxCoins"
-								id="maxCoins"
-								placeholder="Max coin utilizzabili"
-								messageError={errors.maxCoins}
-								value={formData.maxCoins}
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-							/>
-							<div className="grid grid-cols-2">
-								{visibilityObj.map((opt, idx) => (
-									<Radio
-										key={idx}
-										id={`radio-${idx}`}
-										name="visibility"
-										value={opt.value}
-										checked={
-											opt.value === formData.visibility
-										}
-										handleChange={handleChange}
-										label={opt.label}
-									/>
-								))}
-							</div>
-							<NormalButton
-								text="Crea lega"
-								action={handleSubmit}
-								disabled={!isFormValid()}
-							/>
-						</form>
-					</>
-				)}
+						))}
+					</div>
+					<NormalButton
+						text="Crea lega"
+						action={handleSubmit}
+						disabled={!isFormValid()}
+					/>
+				</form>
 			</div>
 		</div>
 	);
