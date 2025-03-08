@@ -7,16 +7,25 @@ import GenericPopup from "../components/popups/GenericPopup";
 
 function Rules() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isSuccessDelete, setIsSuccessDelete] = useState(false);
 	const { league, deleteRule } = useLeague();
 	const { rules, isAdmin } = league;
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		message: "",
+	});
+
+	const showPopup = (message) => {
+		setPopupData({ isOpen: true, type: "success", message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type: "success", message }),
+			2000
+		);
+	};
 
 	const handleDeleteRule = async (ruleId) => {
 		await deleteRule(ruleId);
-		setIsSuccessDelete(true);
-		setTimeout(() => {
-			setIsSuccessDelete(false);
-		}, 1000);
+		showPopup("Regola eliminata correttamente");
 	};
 
 	return (
@@ -53,11 +62,14 @@ function Rules() {
 					<ModalAddRule
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
+						showPopup={showPopup}
 					/>
-
-					<GenericPopup isOpen={isSuccessDelete} type="success">
+					<GenericPopup
+						isOpen={popupData.isOpen}
+						type={popupData.type}
+					>
 						<p className="font-bold text-(--black-normal)">
-							Regola eliminata correttamente
+							{popupData.message}
 						</p>
 					</GenericPopup>
 				</>

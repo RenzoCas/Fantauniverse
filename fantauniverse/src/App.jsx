@@ -1,6 +1,7 @@
-import { lazy, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { UserProvider, useUser } from "./contexts/UserContext";
+import { LeagueProvider } from "./contexts/LeagueContext";
 
 import Homepage from "./pages/Homepage";
 import FAQPage from "./pages/Faq";
@@ -11,10 +12,8 @@ import Registration from "./pages/Registration";
 import ViewLeague from "./pages/ViewLeague";
 import Dashboard from "./pages/Dashboard";
 import ViewTeam from "./pages/ViewTeam";
-import { LeagueProvider } from "./contexts/LeagueContext";
 import GenericRules from "./pages/GenericRules";
-
-const Login = lazy(() => import("./pages/Login"));
+import Login from "./pages/Login";
 
 function App() {
 	return (

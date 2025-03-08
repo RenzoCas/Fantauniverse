@@ -2,23 +2,20 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useLeague } from "../../contexts/LeagueContext";
 import NormalButton from "../../atoms/Buttons/NormalButton";
-import Checkbox from "../../atoms/Inputs/Checkbox";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 
-function ModalAddRule({ isOpen, onClose, showPopup }) {
+function ModalAddPlayer({ isOpen, onClose, showPopup }) {
 	const [formData, setFormData] = useState({
 		name: "",
-		rule: "",
-		value: "",
-		malus: false,
+		price: "",
 	});
 	const [errors, setErrors] = useState({});
-	const { addRule } = useLeague();
+	const { addPlayer } = useLeague();
 
 	const handleChange = (e) => {
-		const { name, value, type, checked } = e.target;
+		const { name, value } = e.target;
 
-		if (name === "value") {
+		if (name === "price") {
 			if (!/^\d*$/.test(value)) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
@@ -28,10 +25,16 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 			}
 
 			const numericValue = Number(value);
-			if (numericValue > 100) {
+			if (numericValue < 1) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
-					[name]: "Il valore massimo è 100",
+					[name]: "Il valore minimo é 1.",
+				}));
+				return;
+			} else if (numericValue > 100) {
+				setErrors((prevErrors) => ({
+					...prevErrors,
+					[name]: "Il valore massimo è 100.",
 				}));
 				return;
 			} else {
@@ -48,7 +51,7 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 		} else {
 			setFormData({
 				...formData,
-				[name]: type === "checkbox" ? checked : value,
+				[name]: value,
 			});
 		}
 	};
@@ -56,9 +59,8 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 	const isFormValid = () => {
 		return (
 			formData.name.trim() !== "" &&
-			formData.rule.trim() !== "" &&
-			formData.value !== "" &&
-			formData.value > 0
+			formData.price !== "" &&
+			formData.price > 0
 		);
 	};
 
@@ -73,20 +75,23 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const newRules = await addRule(formData);
+		const newPlayer = await addPlayer(formData);
 
-		if (newRules) {
-			showPopup("Regola aggiunta correttamente");
+		if (newPlayer) {
+			showPopup("Player aggiunto correttamente.");
 			onClose();
-			setFormData({ name: "", rule: "", value: "", malus: false });
+			setFormData({
+				name: "",
+				price: "",
+			});
 		} else {
-			showPopup("Errore nell'aggiunta della regola");
+			showPopup("Errore nell'aggiunta del player");
 		}
 	};
 
 	return (
 		<div
-			id="ModalAddRule"
+			id="ModalAddPlayer"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
 			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
@@ -102,7 +107,7 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 					<XMarkIcon className="h-[16px] w-[16px]" />
 				</button>
 				<h4 className="font-semibold text-(--black-normal)">
-					Aggiungi Regola
+					Aggiungi Player
 				</h4>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 					<GenericInput
@@ -110,45 +115,25 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 						required
 						name="name"
 						id="name"
-						placeholder="Nome regola"
+						placeholder="Nome player"
 						messageError={errors.name}
 						value={formData.name}
 						handleChange={handleChange}
 						handleBlur={handleBlur}
 					/>
 					<GenericInput
-						type="textarea"
-						required
-						name="rule"
-						id="rule"
-						placeholder="Testo regola"
-						messageError={errors.rule}
-						value={formData.rule}
-						handleChange={handleChange}
-						handleBlur={handleBlur}
-					/>
-					<GenericInput
 						type="text"
 						required
-						name="value"
-						id="value"
-						placeholder="Punteggio regola"
-						messageError={errors.value}
-						value={formData.value}
+						name="price"
+						id="price"
+						placeholder="Valore player"
+						messageError={errors.price}
+						value={formData.price}
 						handleChange={handleChange}
 						handleBlur={handleBlur}
 					/>
-					<div className="flex align-start gap-[10px]">
-						<Checkbox
-							name="malus"
-							id="malus"
-							label="Questa regola è un malus (punteggio negativo)"
-							checked={formData.malus}
-							handleChange={handleChange}
-						/>
-					</div>
 					<NormalButton
-						text="Aggiungi Regola"
+						text="Aggiungi Player"
 						action={handleSubmit}
 						disabled={!isFormValid()}
 					/>
@@ -158,4 +143,4 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 	);
 }
 
-export default ModalAddRule;
+export default ModalAddPlayer;

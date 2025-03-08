@@ -9,17 +9,12 @@ function Player({ playerObj, onDelete, isAdmin }) {
 	return (
 		<li className={`flex flex-col rounded-[8px] border shadow-lg`}>
 			<div className="flex justify-end py-[8px] px-[16px] border-b border-b-(--black-light-hover)">
-				<p className="body-small text-(--black-normal)">
+				<p className="body-small font-semibold text-(--black-normal)">
 					<span className="font-bold">{price} </span>
 					{coinName}
 				</p>
 			</div>
 			<div className="flex gap-[16px] py-[8px] px-[16px] items-center">
-				<img
-					src="https://placehold.co/60x60"
-					alt={`Immagine di ${name}`}
-					className="rounded-full"
-				/>
 				<div className="flex gap-[8px]">
 					<p className="font-bold body-normal">{name}</p>
 					<p

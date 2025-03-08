@@ -99,8 +99,8 @@ function UserProvider({ children }) {
 						"Errore nell'eliminazione del token di autenticazione",
 				};
 			}
-			localStorage.removeItem("authToken");
 			dispatch({ type: "logout" });
+			localStorage.removeItem("authToken");
 		} catch (error) {
 			console.error("Registration error:", error.message);
 			throw error;

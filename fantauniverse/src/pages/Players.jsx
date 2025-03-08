@@ -1,27 +1,37 @@
+import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
-import { useState } from "react";
-import GenericPopup from "../components/popups/GenericPopup";
 import Player from "../components/Player";
-import ModalAddPlayer from "../components/modals/ModalsAddPlayer";
+import ModalAddPlayer from "../components/modals/ModalAddPlayer";
+import GenericPopup from "../components/popups/GenericPopup";
 
 function Players() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isSuccessDelete, setIsSuccessDelete] = useState(false);
 	const { league, deletePlayer } = useLeague();
 	const { players, isAdmin } = league;
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		message: "",
+	});
+
+	const showPopup = (message) => {
+		setPopupData({ isOpen: true, type: "success", message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type: "success", message }),
+			2000
+		);
+	};
 
 	const handleDeletePlayer = async (playerId) => {
 		await deletePlayer(playerId);
-		setIsSuccessDelete(true);
-		setTimeout(() => {
-			setIsSuccessDelete(false);
-		}, 1000);
+		showPopup("Player eliminato correttamente");
 	};
+
 	return (
 		<>
-			<div className="flex items-center gap-[16px] justify-end">
-				<div className="flex items-center gap-[8px]">
+			{isAdmin && (
+				<div className="flex items-center gap-[8px] justify-end">
 					<p className="body-small">Aggiungi player</p>
 					<button
 						onClick={() => setIsModalOpen(true)}
@@ -30,7 +40,7 @@ function Players() {
 						<PlusIcon className="h-[16px] w-[16px]" />
 					</button>
 				</div>
-			</div>
+			)}
 			{players.length > 0 ? (
 				<ul className="flex flex-col gap-[16px]">
 					{players.map((el, idx) => (
@@ -52,11 +62,14 @@ function Players() {
 					<ModalAddPlayer
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
+						showPopup={showPopup}
 					/>
-
-					<GenericPopup isOpen={isSuccessDelete} type="success">
+					<GenericPopup
+						isOpen={popupData.isOpen}
+						type={popupData.type}
+					>
 						<p className="font-bold text-(--black-normal)">
-							Player eliminato correttamente
+							{popupData.message}
 						</p>
 					</GenericPopup>
 				</>

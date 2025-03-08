@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
 	ArrowLeftCircleIcon,
 	CheckIcon,
@@ -18,6 +18,8 @@ import ModalConfermDelete from "../components/modals/ModalConfirmDelete";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import FixedPopup from "../components/popups/FixedPopup";
 import Players from "./Players";
+import ModalLeague from "../components/modals/ModalLeague";
+import GenericPopup from "../components/popups/GenericPopup";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -26,14 +28,29 @@ function ViewLega() {
 	const { user, urlServer } = useUser();
 	const { league, getLeague, deleteLeague, addParticipant, updatedLeague } =
 		useLeague();
+
 	const [tabActive, setTabActive] = useState("Regolamento");
 	const [team, setTeam] = useState();
 	const [hasData, setHasData] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isModalConfirmDeleteOpen, setisModalConfirmDeleteOpen] =
 		useState(false);
-
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		message: "",
+	});
+	const initialState = {
+		id: league.id,
+		name: league.name,
+		description: league.description,
+		visibility: league.visibility,
+		coinName: league.coinName,
+		maxCoins: league.maxCoins,
+	};
 	const { id, isAdmin } = state.league;
+	const fileInputRef = useRef(null);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -93,6 +110,17 @@ function ViewLega() {
 		navigate("/app");
 	};
 
+	const handleUpdateImage = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
+	const showPopup = (type, message) => {
+		setPopupData({ isOpen: true, type, message });
+		setTimeout(() => setPopupData({ isOpen: false, type, message }), 1000);
+	};
+
 	const handleFileChange = async (event) => {
 		const file = event.target.files[0];
 		if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
@@ -107,6 +135,10 @@ function ViewLega() {
 		} else {
 			alert("Per favore seleziona un file JPEG o PNG.");
 		}
+	};
+
+	const handleUpdateLeague = async () => {
+		setIsModalOpen(true);
 	};
 
 	return (
@@ -129,11 +161,11 @@ function ViewLega() {
 							{isAdmin && (
 								<div className="flex items-center gap-[8px]">
 									<button
-										onClick={() => {}}
+										onClick={handleUpdateLeague}
 										className="flex items-center gap-[4px] text-(--accent-normal)"
 									>
 										<p className="body-small">
-											Impostazioni lega
+											Modifica lega
 										</p>
 										<Cog6ToothIcon className="h-[24px] w-[24px]" />
 									</button>
@@ -147,7 +179,8 @@ function ViewLega() {
 								id="logoLega"
 								accept="image/jpeg, image/png"
 								onChange={handleFileChange}
-								style={{ display: "none" }}
+								ref={fileInputRef}
+								className="hidden"
 							/>
 							<picture className="relative w-full rounded-[8px]">
 								<img
@@ -158,16 +191,10 @@ function ViewLega() {
 									}
 									alt="Logo lega"
 									className="w-full rounded-[8px]"
-									onClick={() =>
-										document
-											.getElementById("logoLega")
-											.click()
-									}
+									onClick={handleUpdateImage}
 									style={{ cursor: "pointer" }}
 								/>
-								{icon == null && (
-									<CloudArrowUpIcon className="absolute bottom-[16px] right-[16px] h-[32px] w-[32px]" />
-								)}
+								<CloudArrowUpIcon className="absolute bottom-[16px] right-[16px] h-[32px] w-[32px]" />
 							</picture>
 							<div className="flex justify-between">
 								<h2 className="title-h4">{name}</h2>
@@ -194,9 +221,7 @@ function ViewLega() {
 								isAdmin={isAdmin}
 								status={status}
 							/>
-							{tabActive == "Regolamento" && (
-								<Rules isAdmin={isAdmin} />
-							)}
+							{tabActive == "Regolamento" && <Rules />}
 							{tabActive == "Classifica" && (
 								<Ranking
 									participants={participants}
@@ -210,6 +235,7 @@ function ViewLega() {
 								<NormalButton
 									text="Pubblica lega"
 									action={handleStartLeague}
+									classOpt={"sticky bottom-[32px] mt-auto"}
 								></NormalButton>
 							) : status === "PENDING" && !leagueInfoCompleted ? (
 								<FixedPopup background="(--error-light)">
@@ -246,12 +272,29 @@ function ViewLega() {
 								</FixedPopup>
 							) : null)}
 					</div>
+					<ModalLeague
+						isOpen={isModalOpen}
+						onClose={async () => {
+							setIsModalOpen(false);
+							await getLeague(id);
+						}}
+						onCreate={showPopup}
+						initialState={initialState}
+					/>
 					<ModalConfermDelete
 						isOpen={isModalConfirmDeleteOpen}
 						onClose={() => setisModalConfirmDeleteOpen(false)}
 					>
 						<p>prova</p>
 					</ModalConfermDelete>
+					<GenericPopup
+						isOpen={popupData.isOpen}
+						type={popupData.type}
+					>
+						<p className="font-bold text-(--black-normal)">
+							{popupData.message}
+						</p>
+					</GenericPopup>
 				</>
 			)}
 		</>

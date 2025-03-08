@@ -5,10 +5,11 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import Logo from "../atoms/Logo";
 
 export default function Navbar() {
+	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { logout } = useUser();
 
@@ -16,12 +17,13 @@ export default function Navbar() {
 		setIsMenuOpen(!isMenuOpen);
 	};
 
-	const handleLogout = () => {
-		logout();
+	const handleLogout = async () => {
+		await logout();
+		navigate("/");
 	};
 
 	return (
-		<nav className="bg-white py-2 px-4 sticky top-0 flex justify-between items-center border-b-2 border-black relative z-100">
+		<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex justify-between items-center border-b-[2px] border-black relative z-100">
 			<Logo />
 			<div className="flex gap-3 items-center">
 				<button onClick={toggleMenu}>
@@ -30,18 +32,31 @@ export default function Navbar() {
 			</div>
 
 			<div
+				className={`fixed top-0 right-0 h-full w-full bg-(--black-normal)/50 ${
+					isMenuOpen ? "flex" : "hidden"
+				}`}
+			></div>
+
+			<div
 				className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-500 p-[16px] flex flex-col gap-[16px] ${
 					isMenuOpen ? "translate-x-0" : "translate-x-full"
 				}`}
 			>
 				<button className="self-end" onClick={toggleMenu}>
-					<XMarkIcon className="h-6 w-6" />
+					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 				<NavLink
 					to="/profile"
-					className="body-small font-bold text-left flex justify-between items-center gap-[4px]"
+					className="body-small font-bold text-left flex justify-between items-center gap-[4px] mt-[16px]"
 				>
 					Modifica Profilo
+					<ChevronRightIcon className="h-[16px] w-[16px] stroke-3" />
+				</NavLink>
+				<NavLink
+					to="rules"
+					className="body-small font-bold text-left flex justify-between items-center gap-[4px]"
+				>
+					Regolamento
 					<ChevronRightIcon className="h-[16px] w-[16px] stroke-3" />
 				</NavLink>
 				<button

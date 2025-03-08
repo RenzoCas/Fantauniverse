@@ -5,7 +5,7 @@ import { useLeague } from "../contexts/LeagueContext";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import Lega from "../components/League";
 import Loader from "../components/Loader";
-import ModalCreateLeague from "../components/modals/ModalCreateLeague";
+import ModalLeague from "../components/modals/ModalLeague";
 import GenericPopup from "../components/popups/GenericPopup";
 
 function Dashboard() {
@@ -27,7 +27,7 @@ function Dashboard() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (myLeagues.length === 0 && !requestDone) {
+			if (!requestDone) {
 				setIsLoading(true);
 				await getMyLeagues();
 				setRequestDone(true);
@@ -119,7 +119,7 @@ function Dashboard() {
 						</button>
 					)}
 
-					<ModalCreateLeague
+					<ModalLeague
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}
 						onCreate={showPopup}

@@ -6,9 +6,13 @@ function Rule({ ruleObj, onDelete, isAdmin }) {
 	return (
 		<li className={`flex flex-col rounded-[8px] border shadow-lg`}>
 			<div className="flex justify-end py-[8px] px-[16px] border-b border-b-(--black-light-hover)">
-				<p className="body-small text-(--black-normal)">
-					<span className="font-bold">{value} </span>
-					{malus ? "Malus" : "Bonus"}
+				<p
+					className={`body-small font-semibold text-(--black-normal)  ${
+						malus && "text-(--error-normal)"
+					}`}
+				>
+					{value}
+					{malus ? " Malus" : " Bonus"}
 				</p>
 			</div>
 			<div className="flex gap-[16px] py-[8px] px-[16px] items-center">

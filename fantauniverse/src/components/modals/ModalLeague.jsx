@@ -5,14 +5,16 @@ import GenericInput from "../../atoms/Inputs/GenericInput";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import Radio from "../../atoms/Inputs/Radio";
 
-function ModalCreateLeague({ isOpen, onClose, onCreate }) {
-	const [formData, setFormData] = useState({
-		name: "",
-		description: "",
-		visibility: "PUBLIC",
-		coinName: "",
-		maxCoins: "",
-	});
+function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
+	const [formData, setFormData] = useState(
+		initialState || {
+			name: "",
+			description: "",
+			visibility: "PUBLIC",
+			coinName: "",
+			maxCoins: "",
+		}
+	);
 	const [errors, setErrors] = useState({});
 	const { createLeague } = useLeague();
 
@@ -90,7 +92,14 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 		onClose();
 
 		if (result && !result.error) {
-			onCreate("success", "Lega creata con successo!");
+			onCreate(
+				"success",
+				`${
+					initialState
+						? "Lega aggiornata con successo"
+						: "Lega creata con successo!"
+				}`
+			);
 			setFormData({
 				name: "",
 				description: "",
@@ -101,14 +110,19 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 		} else {
 			onCreate(
 				"error",
-				result.error || "Errore nella creazione della lega. Riprova."
+				result.error ||
+					`${
+						initialState
+							? "Errore nell'aggiornamento della lega. Riprova."
+							: "Errore nella creazione della lega. Riprova."
+					}`
 			);
 		}
 	};
 
 	return (
 		<div
-			id="modalCreateLeague"
+			id="modalLeague"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
 			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
@@ -125,7 +139,7 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 				</button>
 
 				<h4 className="font-semibold text-(--black-normal)">
-					Crea la tua lega
+					{initialState ? "Aggiorna lega" : "Crea lega"}
 				</h4>
 				<form
 					onSubmit={handleSubmit}
@@ -187,7 +201,7 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 						))}
 					</div>
 					<NormalButton
-						text="Crea lega"
+						text={initialState ? "Aggiorna lega" : "Crea lega"}
 						action={handleSubmit}
 						disabled={!isFormValid()}
 					/>
@@ -197,4 +211,4 @@ function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 	);
 }
 
-export default ModalCreateLeague;
+export default ModalLeague;
