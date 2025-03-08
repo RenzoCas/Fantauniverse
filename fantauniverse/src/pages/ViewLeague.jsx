@@ -1,20 +1,23 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUser } from "../contexts/UserContext";
 import { useEffect, useState } from "react";
 import {
 	ArrowLeftCircleIcon,
 	CheckIcon,
+	CloudArrowUpIcon,
+	Cog6ToothIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
-import Rules from "../components/Rules";
+import { useUser } from "../contexts/UserContext";
+import { useLeague } from "../contexts/LeagueContext";
+import Rules from "../pages/Rules";
 import Tab from "../components/Tab";
-import Ranking from "../components/Ranking";
+import Ranking from "../pages/Ranking";
 import CardSquadra from "../components/CardSquadra";
 import Loader from "../components/Loader";
-import { useLeague } from "../contexts/LeagueContext";
 import ModalConfermDelete from "../components/modals/ModalConfirmDelete";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import FixedPopup from "../components/popups/FixedPopup";
+import Players from "./Players";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -23,7 +26,6 @@ function ViewLega() {
 	const { user, urlServer } = useUser();
 	const { league, getLeague, deleteLeague, addParticipant, updatedLeague } =
 		useLeague();
-
 	const [tabActive, setTabActive] = useState("Regolamento");
 	const [team, setTeam] = useState();
 	const [hasData, setHasData] = useState(false);
@@ -31,7 +33,7 @@ function ViewLega() {
 	const [isModalConfirmDeleteOpen, setisModalConfirmDeleteOpen] =
 		useState(false);
 
-	const { id, isAdmin, leagueInfoCompleted } = state.league;
+	const { id, isAdmin } = state.league;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -60,8 +62,15 @@ function ViewLega() {
 		fetchData();
 	}, [getLeague, user.token, urlServer, id]);
 
-	const { description, name, participants, status, isRegistered } = league;
-	const [icon, setIcon] = useState(league.icon || null);
+	const {
+		description,
+		name,
+		participants,
+		status,
+		isRegistered,
+		leagueInfoCompleted,
+	} = league;
+	const [icon, setIcon] = useState(league.icon);
 
 	const handleTabChange = (tab) => {
 		setTabActive(tab);
@@ -89,16 +98,9 @@ function ViewLega() {
 		if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
 			const reader = new FileReader();
 			reader.onloadend = async () => {
-				// Rimuovi il prefisso 'data:image/jpeg;base64,' dalla stringa
 				const base64Image = reader.result.split(",")[1];
-
-				// Imposta l'icon solo con la parte del base64
 				setIcon(base64Image);
-
-				// Crea i dati aggiornati della lega
 				const updatedLeagueData = { ...league, icon: base64Image };
-
-				// Invia i dati aggiornati al contesto o al server
 				await updatedLeague(updatedLeagueData);
 			};
 			reader.readAsDataURL(file);
@@ -113,16 +115,31 @@ function ViewLega() {
 				<Loader />
 			) : (
 				<>
-					<div className="flex flex-col gap-[16px] justify-between h-full flex-1">
-						<button
-							onClick={() => {
-								navigate("/app");
-							}}
-							className="flex items-center gap-[4px] body-normal text-(--accent-normal)"
-						>
-							<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
-							Indietro
-						</button>
+					<div className="flex flex-col gap-[16px] flex-1">
+						<div className="flex items-center justify-between gap-[16px]">
+							<button
+								onClick={() => {
+									navigate("/app");
+								}}
+								className="flex items-center gap-[4px] text-(--accent-normal)"
+							>
+								<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
+								<p className="body-normal">Indietro</p>
+							</button>
+							{isAdmin && (
+								<div className="flex items-center gap-[8px]">
+									<button
+										onClick={() => {}}
+										className="flex items-center gap-[4px] text-(--accent-normal)"
+									>
+										<p className="body-small">
+											Impostazioni lega
+										</p>
+										<Cog6ToothIcon className="h-[24px] w-[24px]" />
+									</button>
+								</div>
+							)}
+						</div>
 						<div className="top flex flex-col gap-[16px]">
 							<input
 								type="file"
@@ -132,19 +149,26 @@ function ViewLega() {
 								onChange={handleFileChange}
 								style={{ display: "none" }}
 							/>
-							<img
-								src={
-									icon != null
-										? icon
-										: "https://placehold.co/361x217"
-								}
-								alt="Logo lega"
-								className="w-full rounded-[8px]"
-								onClick={() =>
-									document.getElementById("logoLega").click()
-								}
-								style={{ cursor: "pointer" }}
-							/>
+							<picture className="relative w-full rounded-[8px]">
+								<img
+									src={
+										icon != null
+											? `data:image/png;base64,${icon}`
+											: "https://placehold.co/361x217"
+									}
+									alt="Logo lega"
+									className="w-full rounded-[8px]"
+									onClick={() =>
+										document
+											.getElementById("logoLega")
+											.click()
+									}
+									style={{ cursor: "pointer" }}
+								/>
+								{icon == null && (
+									<CloudArrowUpIcon className="absolute bottom-[16px] right-[16px] h-[32px] w-[32px]" />
+								)}
+							</picture>
 							<div className="flex justify-between">
 								<h2 className="title-h4">{name}</h2>
 								{isAdmin && (
@@ -179,11 +203,7 @@ function ViewLega() {
 									handleClick={handleClick}
 								/>
 							)}
-							{tabActive == "Admin" && (
-								<>
-									<p>admin</p>
-								</>
-							)}
+							{tabActive == "Players" && <Players />}
 						</div>
 						{hasData &&
 							(status === "PENDING" && leagueInfoCompleted ? (

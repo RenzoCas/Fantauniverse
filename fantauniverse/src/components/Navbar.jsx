@@ -1,4 +1,3 @@
-import Logo from "../atoms/Logo";
 import {
 	Bars3Icon,
 	ChevronRightIcon,
@@ -7,6 +6,7 @@ import {
 import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { NavLink } from "react-router";
+import Logo from "../atoms/Logo";
 
 export default function Navbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);

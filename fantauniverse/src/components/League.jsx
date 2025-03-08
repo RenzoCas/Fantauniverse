@@ -15,9 +15,13 @@ export default function Lega({ league }) {
 			onClick={handleClick}
 		>
 			<img
-				src={icon || "https://placehold.co/60x60"}
+				src={
+					icon != null
+						? `data:image/png;base64,${icon}`
+						: "https://placehold.co/60x60"
+				}
 				alt={`Logo lega ${name}`}
-				className="rounded-lg"
+				className="rounded-lg w-[60px] h-[60px]"
 			/>
 			<div className="flex flex-col gap-1.5 w-full">
 				<div className="flex justify-between items-center">

@@ -19,10 +19,10 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 			)}
 			{isAdmin && (
 				<TabButton
-					handleClick={() => handleTabChange("Admin")}
-					active={tabActive === "Admin"}
+					handleClick={() => handleTabChange("Players")}
+					active={tabActive === "Players"}
 				>
-					<p className="body-normal">Admin</p>
+					<p className="body-normal">Players</p>
 				</TabButton>
 			)}
 		</div>

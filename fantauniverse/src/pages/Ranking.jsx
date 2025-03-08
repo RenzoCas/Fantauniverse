@@ -1,4 +1,4 @@
-import Participant from "./Participant";
+import Participant from "../components/Participant";
 
 function Ranking({ participants, handleClick }) {
 	return (

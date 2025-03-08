@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router";
-// import GhostButton from "../atoms/Buttons/GhostButton";
 import NormalButton from "../atoms/Buttons/NormalButton";
 
 export default function NotFound() {

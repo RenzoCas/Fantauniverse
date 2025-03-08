@@ -1,11 +1,11 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import { useUser } from "../contexts/UserContext";
+import { useLeague } from "../contexts/LeagueContext";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import Lega from "../components/League";
 import Loader from "../components/Loader";
 import ModalCreateLeague from "../components/modals/ModalCreateLeague";
-import { useEffect, useState } from "react";
-import { useUser } from "../contexts/UserContext";
-import { useLeague } from "../contexts/LeagueContext";
 import GenericPopup from "../components/popups/GenericPopup";
 
 function Dashboard() {

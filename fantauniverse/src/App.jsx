@@ -12,7 +12,7 @@ import ViewLeague from "./pages/ViewLeague";
 import Dashboard from "./pages/Dashboard";
 import ViewTeam from "./pages/ViewTeam";
 import { LeagueProvider } from "./contexts/LeagueContext";
-import Rules from "./pages/Rules";
+import GenericRules from "./pages/GenericRules";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -26,7 +26,7 @@ function App() {
 						<Route path="/" element={<Homepage />} />
 						<Route path="registration" element={<Registration />} />
 						<Route path="login" element={<Login />} />
-						<Route path="rules" element={<Rules />} />
+						<Route path="rules" element={<GenericRules />} />
 						<Route path="faq" element={<FAQPage />} />
 						<Route path="*" element={<NotFound />} />
 						<Route

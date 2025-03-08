@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useUser } from "../contexts/UserContext";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import Logo from "../atoms/Logo";
 // import Checkbox from "../atoms/Inputs/Checkbox";
-import { useUser } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 
 export default function Registrazione() {
@@ -84,7 +84,7 @@ export default function Registrazione() {
 				// privacy: formData.privacy,
 			});
 
-			localStorage.setItem("token", user.token);
+			localStorage.setItem("authToken", user.token);
 			navigate("/app");
 		} catch (error) {
 			if (error.status == 409) {

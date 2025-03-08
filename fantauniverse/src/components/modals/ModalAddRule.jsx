@@ -1,11 +1,11 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { useLeague } from "../../contexts/LeagueContext";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import Checkbox from "../../atoms/Inputs/Checkbox";
-import { useLeague } from "../../contexts/LeagueContext";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 
-function ModalAddRules({ isOpen, onClose }) {
+function ModalAddRule({ isOpen, onClose }) {
 	const [formData, setFormData] = useState({
 		name: "",
 		rule: "",
@@ -93,7 +93,7 @@ function ModalAddRules({ isOpen, onClose }) {
 
 	return (
 		<div
-			id="modalAddRules"
+			id="ModalAddRule"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
 			className={`fixed bottom-0 left-0 w-screen h-screen bg-black/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
@@ -138,7 +138,7 @@ function ModalAddRules({ isOpen, onClose }) {
 				) : (
 					<>
 						<h4 className="font-semibold text-black">
-							Aggiungi le tue regole
+							Aggiungi regola
 						</h4>
 						<form
 							onSubmit={handleSubmit}
@@ -200,4 +200,4 @@ function ModalAddRules({ isOpen, onClose }) {
 	);
 }
 
-export default ModalAddRules;
+export default ModalAddRule;

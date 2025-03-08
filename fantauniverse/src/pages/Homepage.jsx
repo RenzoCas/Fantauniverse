@@ -1,7 +1,7 @@
+import { useNavigate } from "react-router";
 import Logo from "../atoms/Logo";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GhostButton from "../atoms/Buttons/GhostButton";
-import { useNavigate } from "react-router";
 
 export default function Homepage() {
 	const navigate = useNavigate();

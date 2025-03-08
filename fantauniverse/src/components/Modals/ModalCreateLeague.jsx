@@ -1,9 +1,9 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import GenericInput from "../../atoms/Inputs/GenericInput";
 import { useState } from "react";
+import { useLeague } from "../../contexts/LeagueContext";
+import GenericInput from "../../atoms/Inputs/GenericInput";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import Radio from "../../atoms/Inputs/Radio";
-import { useLeague } from "../../contexts/LeagueContext";
 
 function ModalCreateLeague({ isOpen, onClose, onCreate }) {
 	const [formData, setFormData] = useState({

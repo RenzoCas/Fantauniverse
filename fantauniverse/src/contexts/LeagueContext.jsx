@@ -18,7 +18,7 @@ const initialStateLeague = {
 	visibility: "",
 	coinName: "",
 	maxCoins: 0,
-	icon: [],
+	icon: null,
 	isAdmin: false,
 	status: "",
 	isRegistered: true,
@@ -86,14 +86,8 @@ function myLeaguesReducer(state, action) {
 
 function leagueReducer(state, action) {
 	switch (action.type) {
-		case "getLeague":
+		case "updateLeague":
 			return action.payload;
-
-		case "addRule":
-			return {
-				...state,
-				rules: action.payload,
-			};
 
 		default:
 			return state;
@@ -162,7 +156,7 @@ function LeagueProvider({ children }) {
 				}
 
 				const data = await response.json();
-				dispatchLeague({ type: "getLeague", payload: data });
+				dispatchLeague({ type: "updateLeague", payload: data });
 
 				return data;
 			} catch (error) {
@@ -216,7 +210,7 @@ function LeagueProvider({ children }) {
 				}
 
 				const data = await response.json();
-				dispatchLeague({ type: "getLeague", payload: data });
+				dispatchLeague({ type: "updateLeague", payload: data });
 
 				return data;
 			} catch (error) {
@@ -273,11 +267,6 @@ function LeagueProvider({ children }) {
 
 			dispatchMyLeagues({
 				type: "updateLeague",
-				payload: updatedLeagueData,
-			});
-
-			dispatchLeague({
-				type: "getLeague",
 				payload: updatedLeagueData,
 			});
 
@@ -356,13 +345,14 @@ function LeagueProvider({ children }) {
 				throw new Error("Errore nell'aggiunta della regola");
 
 			const updatedLeague = await response.json();
+			console.log(updatedLeague);
 
 			dispatchLeague({
-				type: "addRule",
-				payload: updatedLeague.rules,
+				type: "updateLeague",
+				payload: updatedLeague,
 			});
 
-			return updatedLeague.rules;
+			return updatedLeague;
 		} catch (error) {
 			console.error(error.message);
 			return null;
@@ -387,13 +377,62 @@ function LeagueProvider({ children }) {
 				throw new Error("Errore nella cancellazione della regola.");
 			}
 
-			dispatchLeague({
-				type: "getLeague",
-				payload: {
-					...league,
-					rules: league.rules.filter((rule) => rule.id !== ruleId),
+			await getLeague(league.id);
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+
+	const addPlayer = async (playerData) => {
+		try {
+			const response = await fetch(`${urlServer}/league/addPlayers`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
 				},
+				body: JSON.stringify({
+					leagueId: league.id,
+					players: [playerData],
+				}),
 			});
+
+			if (!response.ok)
+				throw new Error("Errore nell'aggiunta del player");
+
+			const updatedLeague = await response.json();
+
+			dispatchLeague({
+				type: "updateLeague",
+				payload: updatedLeague,
+			});
+
+			return updatedLeague;
+		} catch (error) {
+			console.error(error.message);
+			return null;
+		}
+	};
+
+	const deletePlayer = async (playerId) => {
+		try {
+			if (!league.id) throw new Error("Nessuna lega selezionata.");
+
+			const response = await fetch(
+				`${urlServer}/league/deletePlayer/${playerId}`,
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Errore nella cancellazione del player.");
+			}
+
+			await getLeague(league.id);
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -416,6 +455,8 @@ function LeagueProvider({ children }) {
 				addParticipant,
 				addRule,
 				deleteRule,
+				addPlayer,
+				deletePlayer,
 			}}
 		>
 			{children}

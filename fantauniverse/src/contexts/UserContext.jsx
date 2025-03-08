@@ -88,7 +88,7 @@ function UserProvider({ children }) {
 			const response = await fetch(`${urlServer}/token/logout`, {
 				method: "GET",
 				headers: {
-					"Content-Type": "application/json",
+					Authorization: `Bearer ${user.token}`,
 				},
 			});
 
