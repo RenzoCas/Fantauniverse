@@ -345,7 +345,6 @@ function LeagueProvider({ children }) {
 				throw new Error("Errore nell'aggiunta della regola");
 
 			const updatedLeague = await response.json();
-			console.log(updatedLeague);
 
 			dispatchLeague({
 				type: "updateLeague",

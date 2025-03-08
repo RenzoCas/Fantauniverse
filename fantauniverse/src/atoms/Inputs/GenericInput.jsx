@@ -28,7 +28,7 @@ export default function GenericInput({
 	};
 
 	return (
-		<div className="group flex flex-col gap-[8px]">
+		<div className="group flex flex-col gap-[8px] w-full">
 			<div className="relative">
 				{/* Controlla se è una textarea o un input */}
 				{isTextarea ? (

@@ -14,15 +14,18 @@ export default function Lega({ league }) {
 			className="flex gap-2.5 p-4 border border-gray-300 rounded-lg bg-white cursor-pointer"
 			onClick={handleClick}
 		>
-			<img
-				src={
-					icon != null
-						? `data:image/png;base64,${icon}`
-						: "https://placehold.co/60x60"
-				}
-				alt={`Logo lega ${name}`}
-				className="rounded-lg w-[60px] h-[60px]"
-			/>
+			<picture className="rounded-lg w-[60px] h-[60px] overflow-hidden">
+				<img
+					src={
+						icon != null
+							? `data:image/png;base64,${icon}`
+							: "https://placehold.co/60x60"
+					}
+					alt={`Logo lega ${name}`}
+					className="h-full object-cover"
+				/>
+			</picture>
+
 			<div className="flex flex-col gap-1.5 w-full">
 				<div className="flex justify-between items-center">
 					<h4 className="font-medium text-gray-800">{name}</h4>

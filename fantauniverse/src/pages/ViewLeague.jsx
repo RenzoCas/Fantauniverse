@@ -86,8 +86,8 @@ function ViewLega() {
 		status,
 		isRegistered,
 		leagueInfoCompleted,
+		icon,
 	} = league;
-	const [icon, setIcon] = useState(league.icon);
 
 	const handleTabChange = (tab) => {
 		setTabActive(tab);
@@ -122,18 +122,27 @@ function ViewLega() {
 	};
 
 	const handleFileChange = async (event) => {
-		const file = event.target.files[0];
-		if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-			const reader = new FileReader();
-			reader.onloadend = async () => {
-				const base64Image = reader.result.split(",")[1];
-				setIcon(base64Image);
-				const updatedLeagueData = { ...league, icon: base64Image };
-				await updatedLeague(updatedLeagueData);
-			};
-			reader.readAsDataURL(file);
-		} else {
-			alert("Per favore seleziona un file JPEG o PNG.");
+		try {
+			const file = event.target.files[0];
+			if (
+				file &&
+				(file.type === "image/jpeg" || file.type === "image/png")
+			) {
+				const reader = new FileReader();
+				reader.onloadend = async () => {
+					const base64Image = reader.result.split(",")[1];
+					const updatedLeagueData = { ...league, icon: base64Image };
+					setIsLoading(true);
+					await updatedLeague(updatedLeagueData);
+					await getLeague(id);
+					setIsLoading(false);
+				};
+				reader.readAsDataURL(file);
+			} else {
+				throw new Error("Per favore seleziona un file JPEG o PNG.");
+			}
+		} catch (error) {
+			alert(error.message);
 		}
 	};
 
@@ -158,7 +167,7 @@ function ViewLega() {
 								<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
 								<p className="body-normal">Indietro</p>
 							</button>
-							{isAdmin && (
+							{isAdmin && status === "PENDING" && (
 								<div className="flex items-center gap-[8px]">
 									<button
 										onClick={handleUpdateLeague}
@@ -182,23 +191,27 @@ function ViewLega() {
 								ref={fileInputRef}
 								className="hidden"
 							/>
-							<picture className="relative w-full rounded-[8px]">
+							<picture
+								className="relative w-full rounded-[8px]"
+								onClick={handleUpdateImage}
+							>
 								<img
 									src={
 										icon != null
 											? `data:image/png;base64,${icon}`
-											: "https://placehold.co/361x217"
+											: "https://placehold.co/360x202"
 									}
 									alt="Logo lega"
-									className="w-full rounded-[8px]"
-									onClick={handleUpdateImage}
+									className="w-full rounded-[8px] w-full h-auto object-cover"
 									style={{ cursor: "pointer" }}
 								/>
-								<CloudArrowUpIcon className="absolute bottom-[16px] right-[16px] h-[32px] w-[32px]" />
+								<div className="absolute bottom-[16px] right-[16px] p-[4px] rounded-full bg-(--black-light)">
+									<CloudArrowUpIcon className="h-[24px] w-[24px]" />
+								</div>
 							</picture>
 							<div className="flex justify-between">
 								<h2 className="title-h4">{name}</h2>
-								{isAdmin && (
+								{isAdmin && status === "PENDING" && (
 									<div className="flex gap-[8px] items-center">
 										<p className="body-small whitespace-nowrap">
 											Elimina lega

@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import ViewTeam from "./pages/ViewTeam";
 import GenericRules from "./pages/GenericRules";
 import Login from "./pages/Login";
+import Account from "./pages/Account";
 
 function App() {
 	return (
@@ -27,6 +28,7 @@ function App() {
 						<Route path="login" element={<Login />} />
 						<Route path="rules" element={<GenericRules />} />
 						<Route path="faq" element={<FAQPage />} />
+						<Route path="account" element={<Account />} />
 						<Route path="*" element={<NotFound />} />
 						<Route
 							path="app"

@@ -1,15 +1,38 @@
 import { useNavigate } from "react-router";
-import GhostButton from "../atoms/Buttons/GhostButton";
+// import GhostButton from "../atoms/Buttons/GhostButton";
 import Navbar from "../components/Navbar";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import { useUser } from "../contexts/UserContext";
+import Logo from "../atoms/Logo";
 
 export default function GenericRules() {
 	const navigate = useNavigate();
+	const { user } = useUser();
 	return (
 		<>
-			<header>
+			{user ? (
 				<Navbar />
-			</header>
+			) : (
+				<header className="relative h-[46px] border-b-[2px] border-b-black">
+					<div className="absolute left-1/2 -translate-x-1/2 bottom-[-10px]">
+						<Logo />
+					</div>
+				</header>
+			)}
+
 			<main className="max-w-3xl mx-auto py-8 px-4 lg:py-16 lg:px-6 flex flex-col gap-4 min-h-[calc(100dvh-64px)]">
+				{!user && (
+					<button
+						onClick={() => {
+							navigate(-1);
+						}}
+						className="flex items-center gap-[4px] text-(--accent-normal)"
+					>
+						<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
+						<p className="body-normal">Indietro</p>
+					</button>
+				)}
+
 				<h1 className="title-h4 text-(--primary) font-semibold">
 					Regolamento
 				</h1>
@@ -114,12 +137,12 @@ export default function GenericRules() {
 						</li>
 					</ul>
 				</section>
-				<GhostButton
+				{/* <GhostButton
 					text="Registrati e inizia a giocare!"
 					action={() => {
 						navigate("/registration");
 					}}
-				/>
+				/> */}
 			</main>
 		</>
 	);

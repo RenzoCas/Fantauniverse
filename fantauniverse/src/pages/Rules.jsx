@@ -8,7 +8,7 @@ import GenericPopup from "../components/popups/GenericPopup";
 function Rules() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { league, deleteRule } = useLeague();
-	const { rules, isAdmin } = league;
+	const { rules, isAdmin, status } = league;
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
@@ -30,7 +30,7 @@ function Rules() {
 
 	return (
 		<>
-			{isAdmin && (
+			{isAdmin && status === "PENDING" && (
 				<div className="flex items-center gap-[8px] justify-end">
 					<p className="body-small">Aggiungi regola</p>
 					<button
@@ -57,7 +57,7 @@ function Rules() {
 					Sembra che tu non abbia aggiunto nessuna regola.
 				</p>
 			)}
-			{isAdmin && (
+			{isAdmin && status === "PENDING" && (
 				<>
 					<ModalAddRule
 						isOpen={isModalOpen}

@@ -5,18 +5,19 @@ export default function GhostButton({
 	action,
 	disabled = false,
 	icon = true,
+	classOpt,
 }) {
 	return (
 		<button
 			onClick={action}
 			disabled={disabled}
-			className={`group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-(--black-normal)
-        ${
-			disabled
-				? "text-(--black-normal)/25 cursor-not-allowed"
-				: "text-(--black-normal) hover:bg-(--black-light)"
-		}
-      `}
+			className={`group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-(--black-normal) ${classOpt}
+                ${
+					disabled
+						? "text-(--black-normal)/25 cursor-not-allowed"
+						: "text-(--black-normal) hover:bg-(--black-light)"
+				}
+            `}
 		>
 			<span>{text}</span>
 

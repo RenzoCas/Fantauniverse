@@ -96,17 +96,20 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 				"success",
 				`${
 					initialState
-						? "Lega aggiornata con successo"
+						? "Lega aggiornata con successo!"
 						: "Lega creata con successo!"
 				}`
 			);
-			setFormData({
-				name: "",
-				description: "",
-				visibility: "PUBLIC",
-				coinName: "",
-				maxCoins: "",
-			});
+			{
+				!initialState &&
+					setFormData({
+						name: "",
+						description: "",
+						visibility: "PUBLIC",
+						coinName: "",
+						maxCoins: "",
+					});
+			}
 		} else {
 			onCreate(
 				"error",
@@ -125,17 +128,17 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 			id="modalLeague"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
-			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
+			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 ${
 				isOpen ? "opacity-100 visible" : "opacity-0 invisible"
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-t-lg p-[16px] w-full transition-transform duration-500 ease flex flex-col gap-[24px] ${
+				className={`bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] ${
 					isOpen ? "translate-y-0" : "translate-y-full"
-				}`}
+				} md:max-w-[600px] md:rounded-lg md:items-center md:justify-center`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[20px] w-[20px]" />
+					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 
 				<h4 className="font-semibold text-(--black-normal)">
@@ -143,7 +146,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 				</h4>
 				<form
 					onSubmit={handleSubmit}
-					className="flex flex-col gap-[16px]"
+					className="flex flex-col gap-[16px] w-full"
 				>
 					<GenericInput
 						type="text"
@@ -160,33 +163,36 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						type="textarea"
 						name="description"
 						id="description"
-						placeholder="Descrizione breve lega."
+						placeholder="Descrizione breve della lega"
 						messageError={errors.description}
 						value={formData.description}
 						handleChange={handleChange}
 					/>
-					<GenericInput
-						type="text"
-						required
-						name="coinName"
-						id="coinName"
-						placeholder="Nome coin"
-						messageError={errors.coinName}
-						value={formData.coinName}
-						handleChange={handleChange}
-						handleBlur={handleBlur}
-					/>
-					<GenericInput
-						type="text"
-						required
-						name="maxCoins"
-						id="maxCoins"
-						placeholder="Max coin utilizzabili"
-						messageError={errors.maxCoins}
-						value={formData.maxCoins}
-						handleChange={handleChange}
-						handleBlur={handleBlur}
-					/>
+					<div className="flex flex-col gap-[16px] md:flex-row">
+						<GenericInput
+							type="text"
+							required
+							name="coinName"
+							id="coinName"
+							placeholder="Nome moneta"
+							messageError={errors.coinName}
+							value={formData.coinName}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+						<GenericInput
+							type="text"
+							required
+							name="maxCoins"
+							id="maxCoins"
+							placeholder="Numero massimo di monete utilizzabili"
+							messageError={errors.maxCoins}
+							value={formData.maxCoins}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+					</div>
+
 					<div className="grid grid-cols-2">
 						{visibilityObj.map((opt, idx) => (
 							<Radio

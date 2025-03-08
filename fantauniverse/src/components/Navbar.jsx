@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { NavLink, useNavigate } from "react-router";
 import Logo from "../atoms/Logo";
+import NormalButton from "../atoms/Buttons/NormalButton";
 
 export default function Navbar() {
 	const navigate = useNavigate();
@@ -46,25 +47,31 @@ export default function Navbar() {
 					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 				<NavLink
-					to="/profile"
-					className="body-small font-bold text-left flex justify-between items-center gap-[4px] mt-[16px]"
+					to="/app"
+					className="body-normal font-semibold text-left flex justify-between items-center gap-[4px] mt-[16px]"
 				>
-					Modifica Profilo
-					<ChevronRightIcon className="h-[16px] w-[16px] stroke-3" />
+					Le mie leghe
+					<ChevronRightIcon className="h-[16px] w-[16px] stroke-2" />
 				</NavLink>
 				<NavLink
-					to="rules"
-					className="body-small font-bold text-left flex justify-between items-center gap-[4px]"
+					to="/rules"
+					className="body-normal font-semibold text-left flex justify-between items-center gap-[4px]"
 				>
 					Regolamento
-					<ChevronRightIcon className="h-[16px] w-[16px] stroke-3" />
+					<ChevronRightIcon className="h-[16px] w-[16px] stroke-2" />
 				</NavLink>
-				<button
-					onClick={handleLogout}
-					className="body-small font-bold text-left flex justify-between items-center gap-[4px]"
+				<NavLink
+					to="/account"
+					className="body-normal font-semibold text-left flex justify-between items-center gap-[4px]"
 				>
-					Logout
-				</button>
+					Modifica Profilo
+					<ChevronRightIcon className="h-[16px] w-[16px] stroke-2" />
+				</NavLink>
+				<NormalButton
+					text="Logout"
+					action={handleLogout}
+					classOpt={`mt-auto`}
+				/>
 			</div>
 		</nav>
 	);

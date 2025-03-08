@@ -8,7 +8,7 @@ import GenericPopup from "../components/popups/GenericPopup";
 function Players() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { league, deletePlayer } = useLeague();
-	const { players, isAdmin } = league;
+	const { players, isAdmin, status } = league;
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
@@ -30,7 +30,7 @@ function Players() {
 
 	return (
 		<>
-			{isAdmin && (
+			{isAdmin && status === "PENDING" && (
 				<div className="flex items-center gap-[8px] justify-end">
 					<p className="body-small">Aggiungi player</p>
 					<button
@@ -57,7 +57,7 @@ function Players() {
 					Sembra che tu non abbia aggiunto nessun player.
 				</p>
 			)}
-			{isAdmin && (
+			{isAdmin && status === "PENDING" && (
 				<>
 					<ModalAddPlayer
 						isOpen={isModalOpen}
