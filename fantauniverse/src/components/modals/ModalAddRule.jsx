@@ -73,15 +73,14 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const newRules = await addRule(formData);
-
-		if (newRules) {
-			showPopup("Regola aggiunta correttamente");
-			onClose();
-			setFormData({ name: "", rule: "", value: "", malus: false });
-		} else {
-			showPopup("Errore nell'aggiunta della regola");
+		const result = await addRule(formData);
+		onClose();
+		setFormData({ name: "", rule: "", value: "", malus: false });
+		if (!result) {
+			showPopup("Errore nell'aggiunta della regola", "error");
+			return;
 		}
+		showPopup("Regola aggiunta correttamente", "success");
 	};
 
 	return (
@@ -99,7 +98,7 @@ function ModalAddRule({ isOpen, onClose, showPopup }) {
 				}`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[16px] w-[16px]" />
+					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 				<h4 className="font-semibold text-(--black-normal)">
 					Aggiungi Regola

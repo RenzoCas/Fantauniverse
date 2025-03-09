@@ -15,17 +15,17 @@ function Players() {
 		message: "",
 	});
 
-	const showPopup = (message) => {
-		setPopupData({ isOpen: true, type: "success", message });
+	const showPopup = (message, type) => {
+		setPopupData({ isOpen: true, type: type, message });
 		setTimeout(
-			() => setPopupData({ isOpen: false, type: "success", message }),
+			() => setPopupData({ isOpen: false, type: type, message }),
 			2000
 		);
 	};
 
 	const handleDeletePlayer = async (playerId) => {
 		await deletePlayer(playerId);
-		showPopup("Player eliminato correttamente");
+		showPopup("Player eliminato correttamente", "success");
 	};
 
 	return (

@@ -2,10 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import {
 	ArrowLeftCircleIcon,
-	CheckIcon,
 	CloudArrowUpIcon,
 	Cog6ToothIcon,
 	TrashIcon,
+	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
@@ -14,7 +14,7 @@ import Tab from "../components/Tab";
 import Ranking from "../pages/Ranking";
 import CardSquadra from "../components/CardSquadra";
 import Loader from "../components/Loader";
-import ModalConfermDelete from "../components/modals/ModalConfirmDelete";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import FixedPopup from "../components/popups/FixedPopup";
 import Players from "./Players";
@@ -26,15 +26,14 @@ function ViewLega() {
 	const { state } = useLocation();
 
 	const { user, urlServer } = useUser();
-	const { league, getLeague, deleteLeague, addParticipant, updatedLeague } =
+	const { league, getLeague, deleteLeague, addParticipant, updateLeague } =
 		useLeague();
 
 	const [tabActive, setTabActive] = useState("Regolamento");
 	const [team, setTeam] = useState();
 	const [hasData, setHasData] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const [isModalConfirmDeleteOpen, setisModalConfirmDeleteOpen] =
-		useState(false);
+	const [isModalConfirmAction, setIsModalConfirmAction] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -51,6 +50,8 @@ function ViewLega() {
 	};
 	const { id, isAdmin } = state.league;
 	const fileInputRef = useRef(null);
+	const [textConfirmAction, setTextConfirmAction] = useState("");
+	const [confirmAction, setConfirmAction] = useState(null);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -97,10 +98,22 @@ function ViewLega() {
 		navigate(`/app/league/team`, { state: { participantId } });
 	};
 
-	const handleStartLeague = () => {};
+	const handlePublishLeague = () => {
+		setTextConfirmAction("Sei sicuro di voler eliminare la lega?");
+		setConfirmAction(() => handleUpdateStatusLeague);
+		setIsModalConfirmAction(true);
+	};
+
+	const handleUpdateStatusLeague = () => {};
 
 	const handleAddParticipant = () => {
 		addParticipant(id);
+	};
+
+	const handleDeleteLeagueClick = () => {
+		setConfirmAction(() => handleDeleteLeague);
+		setTextConfirmAction("Sei sicuro di voler eliminare la lega?");
+		setIsModalConfirmAction(true);
 	};
 
 	const handleDeleteLeague = async () => {
@@ -133,7 +146,7 @@ function ViewLega() {
 					const base64Image = reader.result.split(",")[1];
 					const updatedLeagueData = { ...league, icon: base64Image };
 					setIsLoading(true);
-					await updatedLeague(updatedLeagueData);
+					await updateLeague(updatedLeagueData);
 					await getLeague(id);
 					setIsLoading(false);
 				};
@@ -216,7 +229,9 @@ function ViewLega() {
 										<p className="body-small whitespace-nowrap">
 											Elimina lega
 										</p>
-										<button onClick={handleDeleteLeague}>
+										<button
+											onClick={handleDeleteLeagueClick}
+										>
 											<TrashIcon className="w-[24px] h-[24px]" />
 										</button>
 									</div>
@@ -234,25 +249,25 @@ function ViewLega() {
 								isAdmin={isAdmin}
 								status={status}
 							/>
-							{tabActive == "Regolamento" && <Rules />}
-							{tabActive == "Classifica" && (
+							{tabActive === "Regolamento" && <Rules />}
+							{tabActive === "Classifica" && (
 								<Ranking
 									participants={participants}
 									handleClick={handleClick}
 								/>
 							)}
-							{tabActive == "Players" && <Players />}
+							{tabActive === "Players" && <Players />}
 						</div>
 						{hasData &&
 							(status === "PENDING" && leagueInfoCompleted ? (
 								<NormalButton
 									text="Pubblica lega"
-									action={handleStartLeague}
+									action={handlePublishLeague}
 									classOpt={"sticky bottom-[32px] mt-auto"}
 								></NormalButton>
 							) : status === "PENDING" && !leagueInfoCompleted ? (
 								<FixedPopup background="(--error-light)">
-									<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
+									<XMarkIcon className="w-[24px] h-[24px] flex-shrink-0" />
 									<p className="font-bold text-(--black-normal)">
 										Inserisci almeno una regola ed un player
 										per poter pubblicare la lega
@@ -277,7 +292,7 @@ function ViewLega() {
 								/>
 							) : status === "STARTED" && !isRegistered ? (
 								<FixedPopup background="(--error-light)">
-									<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
+									<XMarkIcon className="w-[24px] h-[24px] flex-shrink-0" />
 									<p className="font-bold text-(--black-normal)">
 										Non puoi iscriverti, la lega è già
 										avviata
@@ -294,12 +309,12 @@ function ViewLega() {
 						onCreate={showPopup}
 						initialState={initialState}
 					/>
-					<ModalConfermDelete
-						isOpen={isModalConfirmDeleteOpen}
-						onClose={() => setisModalConfirmDeleteOpen(false)}
-					>
-						<p>prova</p>
-					</ModalConfermDelete>
+					<ModalConfirmAction
+						isOpen={isModalConfirmAction}
+						onClose={() => setIsModalConfirmAction(false)}
+						onConfirmAction={confirmAction}
+						textConfirmAction={textConfirmAction}
+					></ModalConfirmAction>
 					<GenericPopup
 						isOpen={popupData.isOpen}
 						type={popupData.type}

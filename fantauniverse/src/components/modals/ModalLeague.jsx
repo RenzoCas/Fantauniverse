@@ -16,7 +16,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 		}
 	);
 	const [errors, setErrors] = useState({});
-	const { createLeague } = useLeague();
+	const { createLeague, updateLeague } = useLeague();
 
 	const visibilityObj = [
 		{
@@ -87,8 +87,12 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		const result = await createLeague(formData);
+		let result = null;
+		if (initialState) {
+			result = await updateLeague(formData);
+		} else {
+			result = await createLeague(formData);
+		}
 		onClose();
 
 		if (result && !result.error) {

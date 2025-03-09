@@ -76,17 +76,16 @@ function ModalAddPlayer({ isOpen, onClose, showPopup }) {
 		e.preventDefault();
 
 		const newPlayer = await addPlayer(formData);
-
-		if (newPlayer) {
-			showPopup("Player aggiunto correttamente.");
-			onClose();
-			setFormData({
-				name: "",
-				price: "",
-			});
-		} else {
-			showPopup("Errore nell'aggiunta del player");
+		onClose();
+		setFormData({
+			name: "",
+			price: "",
+		});
+		if (!newPlayer) {
+			showPopup("Errore nell'aggiunta del player", "error");
+			return;
 		}
+		showPopup("Player aggiunto correttamente", "success");
 	};
 
 	return (
@@ -104,7 +103,7 @@ function ModalAddPlayer({ isOpen, onClose, showPopup }) {
 				}`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[16px] w-[16px]" />
+					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 				<h4 className="font-semibold text-(--black-normal)">
 					Aggiungi Player

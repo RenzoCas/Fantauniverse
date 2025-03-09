@@ -248,10 +248,10 @@ function LeagueProvider({ children }) {
 		}
 	};
 
-	const updatedLeague = async (league) => {
+	const updateLeague = async (league) => {
 		try {
 			const response = await fetch(`${urlServer}/league`, {
-				method: "POST",
+				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${user.token}`,
 					"Content-Type": "application/json",
@@ -448,7 +448,7 @@ function LeagueProvider({ children }) {
 				getMyLeagues,
 				getLeague,
 				createLeague,
-				updatedLeague,
+				updateLeague,
 				deleteLeague,
 				resetMyLeague,
 				addParticipant,

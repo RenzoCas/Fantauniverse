@@ -15,17 +15,17 @@ function Rules() {
 		message: "",
 	});
 
-	const showPopup = (message) => {
-		setPopupData({ isOpen: true, type: "success", message });
+	const showPopup = (message, type) => {
+		setPopupData({ isOpen: true, type: type, message });
 		setTimeout(
-			() => setPopupData({ isOpen: false, type: "success", message }),
+			() => setPopupData({ isOpen: false, type: type, message }),
 			2000
 		);
 	};
 
 	const handleDeleteRule = async (ruleId) => {
 		await deleteRule(ruleId);
-		showPopup("Regola eliminata correttamente");
+		showPopup("Regola eliminata correttamente", "success");
 	};
 
 	return (
