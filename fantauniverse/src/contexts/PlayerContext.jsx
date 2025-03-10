@@ -18,7 +18,7 @@ function PlayerProvider({ children }) {
 				},
 				body: JSON.stringify({
 					leagueId: league.id,
-					player: [playerData],
+					players: [playerData],
 				}),
 			});
 

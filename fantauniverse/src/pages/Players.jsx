@@ -54,13 +54,11 @@ function Players() {
 		setIsLoading(true);
 		setIsModalOpen(false);
 		const result = await addPlayer(formData);
+		setIsLoading(false);
 		if (!result) {
 			showPopup("Errore nell'aggiunta del player", "error");
-			setIsLoading(false);
 			return;
 		}
-
-		setIsLoading(false);
 		showPopup("Player aggiunto correttamente", "success");
 	};
 
@@ -82,14 +80,19 @@ function Players() {
 			{players.length > 0 ? (
 				<>
 					{isAdmin && status === "PENDING" && (
-						<div className="flex items-center gap-[8px] justify-end">
-							<p className="body-small">Aggiungi regola</p>
-							<button
-								onClick={handleAddPlayer}
-								className="p-[4px] bg-(--black-light) rounded-full"
-							>
-								<PlusIcon className="h-[16px] w-[16px]" />
-							</button>
+						<div className="flex items-center gap-[8px] justify-between">
+							<h6 className="body-regular font-semibold">
+								Players
+							</h6>
+							<div className="flex items-center gap-[8px] justify-end">
+								<p className="body-small">Aggiungi player</p>
+								<button
+									onClick={handleAddPlayer}
+									className="p-[4px] bg-(--black-light) rounded-full"
+								>
+									<PlusIcon className="h-[16px] w-[16px]" />
+								</button>
+							</div>
 						</div>
 					)}
 
@@ -97,7 +100,7 @@ function Players() {
 						{players.map((el, idx) => (
 							<Player
 								key={idx}
-								ruleObj={el}
+								playerObj={el}
 								onEdit={handleEditPlayer}
 								canEdit={isAdmin && status === "PENDING"}
 							/>

@@ -56,13 +56,11 @@ function Rules() {
 		setIsLoading(true);
 		setIsModalOpen(false);
 		const result = await addRule(formData);
+		setIsLoading(false);
 		if (!result) {
 			showPopup("Errore nell'aggiunta della regola", "error");
-			setIsLoading(false);
 			return;
 		}
-
-		setIsLoading(false);
 		showPopup("Regola aggiunta correttamente", "success");
 	};
 
@@ -159,6 +157,7 @@ function Rules() {
 						onClose={() => setIsModalOpen(false)}
 						onSubmit={isEdit ? handleSubmitEdit : handleSubmitAdd}
 						onDelete={handleDeleteRule}
+						startTabActive={tabActive}
 					/>
 					<GenericPopup
 						isOpen={popupData.isOpen}

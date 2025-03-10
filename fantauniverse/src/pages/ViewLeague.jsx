@@ -184,7 +184,7 @@ function ViewLega() {
 								<p className="body-normal">Indietro</p>
 							</button>
 						</div>
-						<div className="top flex flex-col gap-[16px]">
+						<div className="top flex flex-col gap-[16px] flex-1">
 							<input
 								type="file"
 								name="logo"
@@ -215,11 +215,15 @@ function ViewLega() {
 							{/* <div className="flex justify-between">
 								
 							</div> */}
-							<h2 className="title-h4">{name}</h2>
-							{description != null && (
-								<p className="body-small text-(--black-normal)">
-									{description}
-								</p>
+							{status != "PENDING" && (
+								<>
+									<h2 className="title-h4">{name}</h2>
+									{description != null && (
+										<p className="body-small text-(--black-normal)">
+											{description}
+										</p>
+									)}
+								</>
 							)}
 
 							<Tab

@@ -1,5 +1,5 @@
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 import GhostButton from "../../atoms/Buttons/GhostButton";
@@ -10,6 +10,17 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 		price: "",
 	});
 	const [errors, setErrors] = useState({});
+
+	useEffect(() => {
+		if (playerObj) {
+			setFormData(playerObj);
+		} else {
+			setFormData({
+				name: "",
+				price: "",
+			});
+		}
+	}, [playerObj]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;

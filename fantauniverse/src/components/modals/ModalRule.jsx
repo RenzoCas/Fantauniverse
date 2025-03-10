@@ -5,7 +5,15 @@ import GenericInput from "../../atoms/Inputs/GenericInput";
 import TabButton from "../../atoms/Buttons/TabButton";
 import GhostButton from "../../atoms/Buttons/GhostButton";
 
-function ModalRule({ isOpen, isEdit, ruleObj, onClose, onSubmit, onDelete }) {
+function ModalRule({
+	isOpen,
+	isEdit,
+	ruleObj,
+	onClose,
+	onSubmit,
+	onDelete,
+	startTabActive,
+}) {
 	const [formData, setFormData] = useState({
 		name: "",
 		rule: "",
@@ -13,12 +21,11 @@ function ModalRule({ isOpen, isEdit, ruleObj, onClose, onSubmit, onDelete }) {
 		malus: false,
 	});
 	const [errors, setErrors] = useState({});
-	const [tabActive, setTabActive] = useState("Bonus");
+	const [tabActive, setTabActive] = useState(startTabActive);
 
 	useEffect(() => {
 		if (ruleObj) {
 			setFormData(ruleObj);
-			setTabActive(ruleObj.malus ? "Malus" : "Bonus");
 		} else {
 			setFormData({
 				name: "",
@@ -26,9 +33,14 @@ function ModalRule({ isOpen, isEdit, ruleObj, onClose, onSubmit, onDelete }) {
 				value: "",
 				malus: false,
 			});
-			setTabActive("Bonus");
 		}
 	}, [ruleObj]);
+
+	useEffect(() => {
+		if (isOpen) {
+			setTabActive(startTabActive);
+		}
+	}, [isOpen, startTabActive]);
 
 	const handleTabChange = (tab) => {
 		setTabActive(tab);

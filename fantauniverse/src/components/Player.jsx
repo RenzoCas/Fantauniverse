@@ -1,34 +1,35 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 
-function Player({ playerObj, onDelete, isAdmin }) {
-	const { id, name, price, points } = playerObj;
+function Player({ playerObj, canEdit, onEdit }) {
+	const { name, price, points } = playerObj;
 	const { league } = useLeague();
-	const { coinName } = league;
+	const { coinName, status } = league;
 
 	return (
-		<li className={`flex flex-col rounded-[8px] border shadow-lg`}>
-			<div className="flex justify-end py-[8px] px-[16px] border-b border-b-(--black-light-hover)">
-				<p className="body-small font-semibold text-(--black-normal)">
-					<span className="font-bold">{price} </span>
-					{coinName}
+		<li className="flex border-b border-(--black-light) pb-[8px] gap-[20px]">
+			{canEdit && status == "PENDING" && (
+				<button className="flex" onClick={() => onEdit(playerObj)}>
+					<PencilSquareIcon className="h-[20px] w-[20px]" />
+				</button>
+			)}
+			<div className={`flex gap-[8px] w-full`}>
+				<img
+					src="https://placehold.co/40x40"
+					alt=""
+					className="rounded-full"
+				/>
+				<p className="body-normal font-semibold flex self-center">
+					{name}
 				</p>
-			</div>
-			<div className="flex gap-[16px] py-[8px] px-[16px] items-center">
-				<div className="flex gap-[8px]">
-					<p className="font-bold body-normal">{name}</p>
-					<p
-						className={`body-normal ${
-							points < 0 && "text-(--error-normal)"
-						}`}
-					>
-						{points >= 0 ? points : `-${points}`}
+				{canEdit && status == "PENDING" ? (
+					<p className="body-small font-semibold whitespace-nowrap ml-auto">
+						{price} {coinName}
 					</p>
-				</div>
-				{isAdmin && (
-					<button onClick={() => onDelete(id)} className="ml-auto">
-						<TrashIcon className="w-[24px] h-[24px]" />
-					</button>
+				) : (
+					<p className="body-small font-semibold whitespace-nowrap ml-auto">
+						{points} ptn.
+					</p>
 				)}
 			</div>
 		</li>
