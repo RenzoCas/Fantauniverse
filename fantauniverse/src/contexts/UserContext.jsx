@@ -15,6 +15,7 @@ function reducer(state, action) {
 			return { ...state, user: action.payload, isAuthenticated: true };
 
 		case "logout":
+		case "deleteUser":
 			return { ...state, user: null, isAuthenticated: false };
 
 		default:
@@ -30,31 +31,6 @@ function UserProvider({ children }) {
 
 	const urlServer = "https://soviet-glory-vinzo-s-org-50c662e0.koyeb.app";
 	// const urlServer = "http://192.168.1.94:8547";
-
-	const login = async (username, password) => {
-		try {
-			const response = await fetch(`${urlServer}/login`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ username, password }),
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Errore nella login");
-			}
-
-			const user = await response.json();
-			dispatch({ type: "login", payload: user });
-
-			return user;
-		} catch (error) {
-			console.error("Login error:", error.message);
-			throw error;
-		}
-	};
 
 	const register = async (formData) => {
 		try {
@@ -83,6 +59,31 @@ function UserProvider({ children }) {
 		}
 	};
 
+	const login = async (username, password) => {
+		try {
+			const response = await fetch(`${urlServer}/login`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ username, password }),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.message || "Errore nella login");
+			}
+
+			const user = await response.json();
+			dispatch({ type: "login", payload: user });
+
+			return user;
+		} catch (error) {
+			console.error("Login error:", error.message);
+			throw error;
+		}
+	};
+
 	const logout = async () => {
 		try {
 			const response = await fetch(`${urlServer}/token/logout`, {
@@ -103,6 +104,32 @@ function UserProvider({ children }) {
 			localStorage.removeItem("authToken");
 		} catch (error) {
 			console.error("Registration error:", error.message);
+			throw error;
+		}
+	};
+
+	const deleteUser = async () => {
+		try {
+			const response = await fetch(
+				`${urlServer}?username=${user.username}`,
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Sessione scaduta",
+				};
+			}
+
+			dispatch({ type: "deleteUser" });
+		} catch (error) {
+			console.error("Sessione scaduta:", error.message);
 			throw error;
 		}
 	};
@@ -139,9 +166,10 @@ function UserProvider({ children }) {
 				user,
 				isAuthenticated,
 				urlServer,
-				login,
 				register,
+				login,
 				logout,
+				deleteUser,
 				tokenInfo,
 			}}
 		>

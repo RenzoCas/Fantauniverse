@@ -137,85 +137,86 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] ${
+				className={`bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				} md:max-w-[600px] md:rounded-lg md:items-center md:justify-center`}
 			>
 				<button onClick={onClose} className="flex self-end">
 					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
-
-				<h4 className="font-semibold text-(--black-normal)">
-					{initialState ? "Aggiorna lega" : "Crea lega"}
-				</h4>
-				<form
-					onSubmit={handleSubmit}
-					className="flex flex-col gap-[16px] w-full"
-				>
-					<GenericInput
-						type="text"
-						required
-						name="name"
-						id="name"
-						placeholder="Nome lega"
-						messageError={errors.name}
-						value={formData.name}
-						handleChange={handleChange}
-						handleBlur={handleBlur}
-					/>
-					<GenericInput
-						type="textarea"
-						name="description"
-						id="description"
-						placeholder="Descrizione breve della lega"
-						messageError={errors.description}
-						value={formData.description}
-						handleChange={handleChange}
-					/>
-					<div className="flex flex-col gap-[16px] md:flex-row">
+				<div className="flex flex-col gap-[16px]">
+					<h4 className="font-semibold text-(--black-normal)">
+						{initialState ? "Aggiorna lega" : "Crea lega"}
+					</h4>
+					<form
+						onSubmit={handleSubmit}
+						className="flex flex-col gap-[16px] w-full"
+					>
 						<GenericInput
 							type="text"
 							required
-							name="coinName"
-							id="coinName"
-							placeholder="Nome moneta"
-							messageError={errors.coinName}
-							value={formData.coinName}
+							name="name"
+							id="name"
+							placeholder="Nome lega"
+							messageError={errors.name}
+							value={formData.name}
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
 						<GenericInput
-							type="text"
-							required
-							name="maxCoins"
-							id="maxCoins"
-							placeholder="Numero massimo di monete utilizzabili"
-							messageError={errors.maxCoins}
-							value={formData.maxCoins}
+							type="textarea"
+							name="description"
+							id="description"
+							placeholder="Descrizione breve della lega"
+							messageError={errors.description}
+							value={formData.description}
 							handleChange={handleChange}
-							handleBlur={handleBlur}
 						/>
-					</div>
-
-					<div className="grid grid-cols-2">
-						{visibilityObj.map((opt, idx) => (
-							<Radio
-								key={idx}
-								id={`radio-${idx}`}
-								name="visibility"
-								value={opt.value}
-								checked={opt.value === formData.visibility}
+						<div className="flex flex-col gap-[16px] md:flex-row">
+							<GenericInput
+								type="text"
+								required
+								name="coinName"
+								id="coinName"
+								placeholder="Nome moneta"
+								messageError={errors.coinName}
+								value={formData.coinName}
 								handleChange={handleChange}
-								label={opt.label}
+								handleBlur={handleBlur}
 							/>
-						))}
-					</div>
-					<NormalButton
-						text={initialState ? "Aggiorna lega" : "Crea lega"}
-						action={handleSubmit}
-						disabled={!isFormValid()}
-					/>
-				</form>
+							<GenericInput
+								type="text"
+								required
+								name="maxCoins"
+								id="maxCoins"
+								placeholder="Numero massimo di monete utilizzabili"
+								messageError={errors.maxCoins}
+								value={formData.maxCoins}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+							/>
+						</div>
+
+						<div className="grid grid-cols-2">
+							{visibilityObj.map((opt, idx) => (
+								<Radio
+									key={idx}
+									id={`radio-${idx}`}
+									name="visibility"
+									value={opt.value}
+									checked={opt.value === formData.visibility}
+									handleChange={handleChange}
+									label={opt.label}
+								/>
+							))}
+						</div>
+						<NormalButton
+							text={initialState ? "Aggiorna lega" : "Crea lega"}
+							action={handleSubmit}
+							disabled={!isFormValid()}
+						/>
+					</form>
+				</div>
 			</div>
 		</div>
 	);

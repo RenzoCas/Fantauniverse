@@ -6,12 +6,14 @@ export default function GhostButton({
 	disabled = false,
 	icon = true,
 	classOpt,
+	customIcon = false,
+	children,
 }) {
 	return (
 		<button
 			onClick={action}
 			disabled={disabled}
-			className={`group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-(--black-normal) border border-(--black-light) ${classOpt}
+			className={`group w-full flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-(--black-normal) ${classOpt}
                 ${
 					disabled
 						? "text-(--black-normal)/25 cursor-not-allowed"
@@ -21,7 +23,7 @@ export default function GhostButton({
 		>
 			<span>{text}</span>
 
-			{icon && (
+			{icon && !customIcon && (
 				<BoltIcon
 					className={`h-[24px] w-[24px] p-[4px] rounded-full ${
 						disabled
@@ -30,6 +32,8 @@ export default function GhostButton({
 					}`}
 				/>
 			)}
+
+			{icon && customIcon && children}
 		</button>
 	);
 }

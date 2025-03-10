@@ -22,9 +22,11 @@ const initialStateLeague = {
 	isAdmin: false,
 	status: "",
 	isRegistered: true,
+	leagueInfoCompleted: false,
 	rules: [],
 	participants: [],
 	players: [],
+	days: [],
 };
 
 function allLeaguesReducer(state, action) {
@@ -87,7 +89,7 @@ function myLeaguesReducer(state, action) {
 function leagueReducer(state, action) {
 	switch (action.type) {
 		case "updateLeague":
-			return action.payload;
+			return { ...state, ...action.payload };
 
 		default:
 			return state;
@@ -248,7 +250,7 @@ function LeagueProvider({ children }) {
 		}
 	};
 
-	const updateLeague = async (league) => {
+	const updateLeague = async (updatedLeague) => {
 		try {
 			const response = await fetch(`${urlServer}/league`, {
 				method: "PUT",
@@ -256,7 +258,7 @@ function LeagueProvider({ children }) {
 					Authorization: `Bearer ${user.token}`,
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(league),
+				body: JSON.stringify(updatedLeague),
 			});
 
 			if (!response.ok) {
@@ -300,143 +302,6 @@ function LeagueProvider({ children }) {
 		dispatchLeague({ type: "resetMyLeague" });
 	};
 
-	const addParticipant = async (leagueId) => {
-		try {
-			const response = await fetch(
-				`${urlServer}/league/addParticipant/${leagueId}`,
-				{
-					method: "POST",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
-
-			if (!response.ok)
-				throw new Error("Errore nell'aggiunta della regola");
-
-			dispatchLeague({
-				type: "addParicipant",
-			});
-
-			return true;
-		} catch (error) {
-			console.error(error.message);
-			return null;
-		}
-	};
-
-	const addRule = async (ruleData) => {
-		try {
-			const response = await fetch(`${urlServer}/league/addRules`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					leagueId: league.id,
-					rules: [ruleData],
-				}),
-			});
-
-			if (!response.ok)
-				throw new Error("Errore nell'aggiunta della regola");
-
-			const updatedLeague = await response.json();
-
-			dispatchLeague({
-				type: "updateLeague",
-				payload: updatedLeague,
-			});
-
-			return updatedLeague;
-		} catch (error) {
-			console.error(error.message);
-			return null;
-		}
-	};
-
-	const deleteRule = async (ruleId) => {
-		try {
-			if (!league.id) throw new Error("Nessuna lega selezionata.");
-
-			const response = await fetch(
-				`${urlServer}/league/deleteRule/${ruleId}`,
-				{
-					method: "DELETE",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-					},
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Errore nella cancellazione della regola.");
-			}
-
-			await getLeague(league.id);
-		} catch (error) {
-			console.error(error.message);
-		}
-	};
-
-	const addPlayer = async (playerData) => {
-		try {
-			const response = await fetch(`${urlServer}/league/addPlayers`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					leagueId: league.id,
-					players: [playerData],
-				}),
-			});
-
-			if (!response.ok)
-				throw new Error("Errore nell'aggiunta del player");
-
-			const updatedLeague = await response.json();
-
-			dispatchLeague({
-				type: "updateLeague",
-				payload: updatedLeague,
-			});
-
-			return updatedLeague;
-		} catch (error) {
-			console.error(error.message);
-			return null;
-		}
-	};
-
-	const deletePlayer = async (playerId) => {
-		try {
-			if (!league.id) throw new Error("Nessuna lega selezionata.");
-
-			const response = await fetch(
-				`${urlServer}/league/deletePlayer/${playerId}`,
-				{
-					method: "DELETE",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-					},
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error("Errore nella cancellazione del player.");
-			}
-
-			await getLeague(league.id);
-		} catch (error) {
-			console.error(error.message);
-		}
-	};
-
 	return (
 		<LeagueContext.Provider
 			value={{
@@ -451,11 +316,6 @@ function LeagueProvider({ children }) {
 				updateLeague,
 				deleteLeague,
 				resetMyLeague,
-				addParticipant,
-				addRule,
-				deleteRule,
-				addPlayer,
-				deletePlayer,
 			}}
 		>
 			{children}

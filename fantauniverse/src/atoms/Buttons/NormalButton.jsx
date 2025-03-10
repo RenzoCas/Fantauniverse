@@ -11,7 +11,7 @@ export default function NormalButton({
 		<button
 			onClick={action}
 			disabled={disabled}
-			className={`group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white ${classOpt}
+			className={`group w-full flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white ${classOpt}
         ${
 			disabled
 				? "bg-(--black-light) text-(--black-normal)/25 cursor-not-allowed"

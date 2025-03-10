@@ -1,18 +1,59 @@
-function Select({ name, id, options, value, handleChange }) {
+import { useState } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+
+function Select({ options, selectedValue, handleChange, label }) {
+	const [isOpen, setIsOpen] = useState(false);
+
+	const toggleMenu = () => {
+		setIsOpen(!isOpen);
+	};
+
+	const handleOptionClick = (value) => {
+		handleChange(value);
+		setIsOpen(false);
+	};
+
 	return (
-		<select
-			name={name}
-			id={id}
-			value={value}
-			onChange={handleChange}
-			className="w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 border-transparent placeholder-(--black-normal) bg-(--black-light-hover) focus:outline-none focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
-		>
-			{options.map((opt) => (
-				<option key={opt.value} value={opt.value}>
-					{opt.text}
-				</option>
-			))}
-		</select>
+		<div className="relative">
+			{label && (
+				<label className="block text-sm font-semibold mb-2">
+					{label}
+				</label>
+			)}
+
+			<div
+				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px]"
+				onClick={toggleMenu}
+			>
+				<span className="body-small font-semibold text-(--error-normal)">
+					{options.find((opt) => opt.value === selectedValue)?.text ||
+						"Seleziona un'opzione"}
+				</span>
+				{isOpen ? (
+					<ChevronUpIcon className="h-[20px] w-[20px]" />
+				) : (
+					<ChevronDownIcon className="h-[20px] w-[20px]" />
+				)}
+			</div>
+
+			{isOpen && (
+				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full">
+					{options.map((option) => (
+						<div
+							key={option.value}
+							onClick={() => handleOptionClick(option.value)}
+							className={`p-[8px] cursor-pointer ${
+								option.value === selectedValue
+									? "bg-(--black-light)"
+									: ""
+							}`}
+						>
+							{option.text}
+						</div>
+					))}
+				</div>
+			)}
+		</div>
 	);
 }
 

@@ -1,31 +1,48 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+	ChevronDownIcon,
+	ChevronUpIcon,
+	PencilSquareIcon,
+} from "@heroicons/react/24/outline";
+import { useState } from "react";
 
-function Rule({ ruleObj, onDelete, isAdmin }) {
-	const { name, rule, malus, value, id } = ruleObj;
+function Rule({ ruleObj, canEdit, onEdit }) {
+	const { name, rule, value } = ruleObj;
+	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<li className={`flex flex-col rounded-[8px] border shadow-lg`}>
-			<div className="flex justify-end py-[8px] px-[16px] border-b border-b-(--black-light-hover)">
-				<p
-					className={`body-small font-semibold text-(--black-normal)  ${
-						malus && "text-(--error-normal)"
-					}`}
-				>
-					{value}
-					{malus ? " Malus" : " Bonus"}
-				</p>
-			</div>
-			<div className="flex gap-[16px] py-[8px] px-[16px] items-center">
-				<div className="flex flex-col gap-[8px]">
-					<p className="font-bold body-normal">{name}</p>
-					<p className={`body-normal`}>{rule}</p>
+		<li className="flex border-b border-(--black-light) pb-[8px] gap-[20px]">
+			{canEdit && (
+				<button className="flex" onClick={() => onEdit(ruleObj)}>
+					<PencilSquareIcon className="h-[20px] w-[20px]" />
+				</button>
+			)}
+			<div className={`flex flex-col gap-[4px]`}>
+				<p className="body-small font-semibold">{name}</p>
+				<div className="flex gap-[4px] items-end">
+					<p
+						className={`body-small text-(--black-normal)/70 transition-all ${
+							expanded ? "line-clamp-none" : "line-clamp-2"
+						}`}
+					>
+						{rule}
+					</p>
+					{rule.length > 80 && (
+						<button
+							className="flex"
+							onClick={() => setExpanded(!expanded)}
+						>
+							{expanded ? (
+								<ChevronUpIcon className="h-[16px] w-[16px] stroke-2" />
+							) : (
+								<ChevronDownIcon className="h-[16px] w-[16px] stroke-2" />
+							)}
+						</button>
+					)}
 				</div>
-				{isAdmin && (
-					<button onClick={() => onDelete(id)} className="ml-auto">
-						<TrashIcon className="w-[24px] h-[24px]" />
-					</button>
-				)}
 			</div>
+			<p className="body-small font-semibold whitespace-nowrap ml-auto">
+				{value} ptn.
+			</p>
 		</li>
 	);
 }
