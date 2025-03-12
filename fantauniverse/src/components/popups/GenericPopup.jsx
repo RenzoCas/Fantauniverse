@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
-function GenericPopup({ isOpen, type, children }) {
+function GenericPopup({ isOpen, type, title, message }) {
 	const [fixedPopupHeight, setFixedPopupHeight] = useState(0);
 
 	useEffect(() => {
@@ -18,17 +18,25 @@ function GenericPopup({ isOpen, type, children }) {
 
 	return (
 		<div
-			className={`flex items-center gap-[8px] shadow-lg rounded-[16px] p-[24px] fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px]
-                ${isOpen ? "translate-y-0" : "translate-y-full"}
-                ${type === "success" ? "bg-green-50" : "bg-red-50"}`}
+			className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] border border-(--black-normal)/70 fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px]
+                ${isOpen ? "translate-y-0" : "translate-y-full"}`}
 			style={{ bottom: isOpen ? `${fixedPopupHeight}px` : "0px" }}
 		>
-			{type === "success" ? (
-				<CheckIcon className="w-[24px] h-[24px] flex-shrink-0" />
-			) : (
-				<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
-			)}
-			{children}
+			<div className="flex items-center gap-[4px]">
+				{type === "success" ? (
+					<CheckCircleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-green-500" />
+				) : (
+					<XCircleIcon className="h-[16px] w-[16px] flex-shrink-0 fill-(--error-normal)" />
+				)}
+				<div className="flex flex-col gap-[8px]">
+					<h6 className="body-normal font-semibold text-(--black-normal)">
+						{title}
+					</h6>
+				</div>
+			</div>
+			<p className="body-small font-bold text-(--black-normal)/70 ml-[20px]">
+				{message}
+			</p>
 		</div>
 	);
 }

@@ -18,7 +18,7 @@ function ModalRule({
 		name: "",
 		rule: "",
 		value: "",
-		malus: false,
+		malus: startTabActive === "Malus" ? true : false,
 	});
 	const [errors, setErrors] = useState({});
 	const [tabActive, setTabActive] = useState(startTabActive);
@@ -31,10 +31,10 @@ function ModalRule({
 				name: "",
 				rule: "",
 				value: "",
-				malus: false,
+				malus: startTabActive === "Malus" ? true : false,
 			});
 		}
-	}, [ruleObj]);
+	}, [ruleObj, startTabActive]);
 
 	useEffect(() => {
 		if (isOpen) {

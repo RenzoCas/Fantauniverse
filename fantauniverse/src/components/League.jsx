@@ -14,7 +14,7 @@ export default function Lega({ league }) {
 			className="flex gap-2.5 p-4 border border-gray-300 rounded-lg bg-white cursor-pointer"
 			onClick={handleClick}
 		>
-			<picture className="rounded-lg w-[60px] h-[60px] overflow-hidden">
+			<picture className="rounded-lg min-w-[60px] max-w-[60px] h-[60px] overflow-hidden">
 				<img
 					src={
 						icon != null

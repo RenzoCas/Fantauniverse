@@ -1,20 +1,31 @@
-function Participant({ participant, handleClick, index }) {
-	const { id, user, userPoints } = participant;
-
+function Participant({ participantObj, idx, isRanking }) {
+	const { user, name } = participantObj;
+	const { icon, username } = user;
 	return (
-		<li
-			role="button"
-			tabIndex="0"
-			className={`flex justify-between items-center p-[12px] rounded-lg text-white bg-(--black-normal)/70`}
-			onClick={() => {
-				handleClick(id);
-			}}
-		>
-			<span className="font-bold">#{index + 1}</span>
-			<span className="flex-1 text-center font-semibold">
-				{user.username}
-			</span>
-			<span className="font-bold">{userPoints} pts</span>
+		<li className="flex border-b border-(--black-light) pb-[8px] gap-[16px]">
+			<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
+				<img
+					src={
+						icon != null
+							? `data:image/png;base64,${icon}`
+							: "https://placehold.co/40x40"
+					}
+					alt="immagine giocatore"
+					className="rounded-full h-[40px] w-[40px] object-cover"
+					style={{ cursor: "pointer" }}
+				/>
+			</picture>
+			<div className={`flex flex-col gap-[4px] w-full`}>
+				<p className="body-normal font-semibold">{username}</p>
+				<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+					{name || "nome squadra"}
+				</p>
+			</div>
+			{isRanking && (
+				<p className="body-normal font-semibold flex self-center">
+					{idx + 1}
+				</p>
+			)}
 		</li>
 	);
 }

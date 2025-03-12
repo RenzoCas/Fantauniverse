@@ -98,10 +98,11 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 		if (result && !result.error) {
 			onCreate(
 				"success",
+				`${initialState ? "Lega aggiornata!" : "Lega creata!"}`,
 				`${
 					initialState
-						? "Lega aggiornata con successo!"
-						: "Lega creata con successo!"
+						? "La lega é stata aggiornata con successo!"
+						: "La lega é stata creata con successo!"
 				}`
 			);
 			{
@@ -117,12 +118,16 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 		} else {
 			onCreate(
 				"error",
-				result.error ||
-					`${
-						initialState
-							? "Errore nell'aggiornamento della lega. Riprova."
-							: "Errore nella creazione della lega. Riprova."
-					}`
+				`${
+					initialState
+						? "Aggiornamento non eseguito."
+						: "Creazione non eseguita."
+				}`,
+				`${
+					initialState
+						? "Errore nell'aggiornamento della lega. Riprova."
+						: "Errore nella creazione della lega. Riprova."
+				}`
 			);
 		}
 	};

@@ -8,6 +8,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	const [formData, setFormData] = useState({
 		name: "",
 		price: "",
+		icon: "",
 	});
 	const [errors, setErrors] = useState({});
 
@@ -18,9 +19,31 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 			setFormData({
 				name: "",
 				price: "",
+				icon: "",
 			});
 		}
 	}, [playerObj]);
+
+	const handleFileChange = async (event) => {
+		try {
+			const file = event.target.files[0];
+			if (
+				file &&
+				(file.type === "image/jpeg" || file.type === "image/png")
+			) {
+				const reader = new FileReader();
+				reader.onloadend = async () => {
+					const base64Image = reader.result.split(",")[1];
+					formData.icon = base64Image;
+				};
+				reader.readAsDataURL(file);
+			} else {
+				throw new Error("Per favore seleziona un file JPEG o PNG.");
+			}
+		} catch (error) {
+			alert(error.message);
+		}
+	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -125,6 +148,24 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
+						{isEdit && (
+							<div className="flex flex-col gap-[8px] justify-end">
+								<label
+									htmlFor="immaginePlayer"
+									className="body-small font-semibold text-(--black-normal)"
+								>
+									Aggiungi immagine:
+								</label>
+								<input
+									type="file"
+									name="immaginePlayer"
+									id="immaginePlayer"
+									accept="image/jpeg, image/png"
+									onChange={handleFileChange}
+								/>
+							</div>
+						)}
+
 						<NormalButton
 							text={
 								isEdit ? "Modifica Player" : "Aggiungi Player"

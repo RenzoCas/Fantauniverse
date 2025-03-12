@@ -25,10 +25,11 @@ function PlayerProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del player");
 
-			await response.json();
-			getLeague(league.id);
+			await getLeague(league.id);
+			return true;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	};
 
@@ -46,10 +47,11 @@ function PlayerProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiornamento del player");
 
-			await response.json();
-			getLeague(league.id);
+			await getLeague(league.id);
+			return true;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	};
 
@@ -62,12 +64,15 @@ function PlayerProvider({ children }) {
 				},
 			});
 
-			if (!response.ok)
+			if (!response.ok) {
 				throw new Error("Errore nella cancellazione del player");
+			}
 
-			getLeague(league.id);
+			await getLeague(league.id);
+			return true;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	};
 
@@ -94,3 +99,4 @@ function usePlayer() {
 }
 
 export { PlayerProvider, usePlayer };
+// Compare this snippet from fantauniverse/src/pages/Settings.jsx:

@@ -4,7 +4,8 @@ import GhostButton from "../../atoms/Buttons/GhostButton";
 function ModalConfirmAction({
 	isOpen,
 	onClose,
-	textConfirmAction,
+	text,
+	disclaimer,
 	onConfirmAction,
 }) {
 	return (
@@ -17,16 +18,16 @@ function ModalConfirmAction({
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-lg w-full transition-transform duration-500 ease flex flex-col items-center max-w-[600px] ${
+				className={`bg-white shadow-lg rounded-lg w-full transition-transform duration-500 ease flex flex-col gap-[16px] items-center max-w-[600px] p-[16px] ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>
-				<div className="border-b w-full py-[8px] px-[16px] flex justify-between">
-					<h6 className="font-semibold">Conferma operazione</h6>
-				</div>
-				<div className="py-[16px] px-[16px]">{textConfirmAction}</div>
-				<div className="flex gap-[16px] items-center py-[8px] px-[16px]">
-					<GhostButton action={onClose} text="Annulla" />
+				<h5 className="body-normal font-semibold">{text}</h5>
+				{disclaimer && (
+					<p className="body-small px-[16px]">{disclaimer}</p>
+				)}
+				<div className="flex gap-[16px] items-center">
+					<GhostButton action={onClose} text="Annulla" icon={false} />
 					<NormalButton action={onConfirmAction} text="Conferma" />
 				</div>
 			</div>

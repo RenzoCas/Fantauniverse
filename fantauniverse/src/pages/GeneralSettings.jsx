@@ -11,11 +11,24 @@ import GhostButton from "../atoms/Buttons/GhostButton";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router";
 import GenericInput from "../atoms/Inputs/GenericInput";
+import MdalConfirmAction from "../components/modals/ModalConfirmAction";
+import GenericPopup from "../components/popups/GenericPopup";
 
 function GeneralSettings() {
 	const { league, getLeague, deleteLeague, updateLeague } = useLeague();
-	const { id, name, description, coinName, maxCoins, status } = league;
+	const {
+		id,
+		name,
+		description,
+		coinName,
+		maxCoins,
+		status,
+		leagueInfoCompleted,
+		participants,
+		days,
+	} = league;
 	const [selectedValue, setSelectedValue] = useState(status);
+	const [tempValue, setTempValue] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [isEditing, setIsEditing] = useState({
@@ -30,38 +43,85 @@ function GeneralSettings() {
 		coinName: coinName || "",
 		maxCoins: maxCoins || 0,
 	});
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		title: "",
+		message: "",
+	});
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [textModal, setTextModal] = useState();
+	const [disclaimerModal, setDisclaimerModal] = useState();
 	const navigate = useNavigate();
 
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type, title, message }),
+			2000
+		);
+	};
+
 	const options = [
-		{
-			value: "PENDING",
-			text: "Non pubblicata",
-		},
+		{ value: "PENDING", text: "Non pubblicata" },
 		{
 			value: "NOT_STARTED",
 			text: "Pubblicata",
+			isDisabled: !leagueInfoCompleted,
 		},
 		{
 			value: "STARTED",
 			text: "Avviata",
+			isDisabled: participants.length == 0,
 		},
 		{
 			value: "FINISHED",
 			text: "Terminata",
+			isDisabled: days.length == 0,
 		},
 	];
 
 	const currentIndex = options.findIndex(
 		(opt) => opt.value === league.status
 	);
-
 	const filteredOptions = options.slice(currentIndex, currentIndex + 2);
 	const isEditingAnyField = Object.values(isEditing).some(
 		(isEditing) => isEditing
 	);
 
-	const handleChangeSelect = (value) => {
-		setSelectedValue(value);
+	const showModalConfirmChange = (value) => {
+		if (value === selectedValue) return;
+		setTempValue(value);
+
+		switch (value) {
+			case "NOT_STARTED":
+				setTextModal("Sei sicuro di voler pubblicare la lega?");
+				setDisclaimerModal(
+					"Confermando non sará piú possibile modificare i dati della lega, i player e il regolamento."
+				);
+				break;
+			case "STARTED":
+				setTextModal("Sei sicuro di voler avviare la lega?");
+				setDisclaimerModal(
+					"Confermando non sará piú possibile iscriversi alla lega."
+				);
+				break;
+			case "FINISHED":
+				setTextModal("Sei sicuro di voler terminare la lega?");
+				setDisclaimerModal(null);
+				break;
+			default:
+				break;
+		}
+		setIsModalOpen(true);
+	};
+
+	const handleChangeSelect = async () => {
+		setSelectedValue(tempValue);
+		setIsModalOpen(false);
+		setIsLoading(true);
+		await handleUpdateLeague(tempValue);
+		setIsLoading(false);
 	};
 
 	const handleChange = (e) => {
@@ -74,9 +134,7 @@ function GeneralSettings() {
 				}));
 				return;
 			}
-
 			const numericValue = Number(value);
-
 			if (numericValue > 10000) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
@@ -84,21 +142,11 @@ function GeneralSettings() {
 				}));
 				return;
 			} else {
-				setErrors((prevErrors) => ({
-					...prevErrors,
-					[name]: "",
-				}));
+				setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
 			}
-
-			setFormData({
-				...formData,
-				[name]: numericValue,
-			});
+			setFormData({ ...formData, [name]: numericValue });
 		} else {
-			setFormData({
-				...formData,
-				[name]: value,
-			});
+			setFormData({ ...formData, [name]: value });
 		}
 	};
 
@@ -111,34 +159,68 @@ function GeneralSettings() {
 	};
 
 	const toggleEditing = (field) => {
-		if (isEditing[field] && errors[field]) return;
-
+		if (status !== "PENDING" || (isEditing[field] && errors[field])) return;
 		setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
 	};
 
-	const handleUpdateLeague = async () => {
-		if (!isFormValid()) return;
+	const handleUpdateLeague = async (newStatus) => {
+		if (!isFormValid(newStatus)) return;
 		setIsLoading(true);
-		await updateLeague({ ...league, ...formData, status: selectedValue });
+
+		const result = await updateLeague({
+			...league,
+			...formData,
+			status: newStatus,
+		});
 		await getLeague(id);
+
 		setIsLoading(false);
+
+		if (!result) {
+			showPopup(
+				"error",
+				"Errore nella modifica della lega",
+				"La lega non é stata modificata correttamente. Riprova."
+			);
+			return;
+		}
+		showPopup(
+			"success",
+			"Lega modificata.",
+			"La lega é stata modificata correttamente."
+		);
 	};
 
 	const handleDeleteLeague = async () => {
 		setIsLoading(true);
-		await deleteLeague(id);
+		const result = await deleteLeague(id);
 		setIsLoading(false);
-		navigate("/app");
+		if (!result) {
+			showPopup(
+				"error",
+				"Errore nell'eliminazione della lega",
+				"La lega non é stata eliminata correttamente. Riprova."
+			);
+			return;
+		}
+		showPopup(
+			"success",
+			"Lega eliminata.",
+			"La lega é stata eliminata correttamente."
+		);
+		setTimeout(() => {
+			navigate("/app");
+		}, 2000);
 	};
 
-	const isFormValid = () => {
+	const isFormValid = (newStatus = selectedValue) => {
 		return (
 			!Object.values(errors).some((error) => error !== "") &&
-			((formData.name.trim() !== "" && formData.name.trim() !== name) ||
-				(formData.coinName.trim() !== "" &&
-					formData.coinName.trim() !== coinName) ||
-				(formData.maxCoins > 0 && formData.maxCoins !== maxCoins) ||
-				selectedValue !== status)
+			(formData.name.trim() !== name ||
+				formData.description.trim() !== description ||
+				formData.coinName.trim() !== coinName ||
+				formData.maxCoins !== maxCoins ||
+				newStatus !== status)
 		);
 	};
 
@@ -150,64 +232,86 @@ function GeneralSettings() {
 					<Select
 						options={filteredOptions}
 						selectedValue={selectedValue}
-						handleChange={handleChangeSelect}
+						handleChange={showModalConfirmChange}
 					/>
-
-					{["name", "description", "coinName", "maxCoins"].map(
-						(field) => (
-							<div
-								key={field}
-								className="flex gap-[10px] items-center px-[10px]"
-							>
-								<button
-									className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-									onClick={() => toggleEditing(field)}
+					{status == "PENDING" && (
+						<>
+							{[
+								"name",
+								"description",
+								"coinName",
+								"maxCoins",
+							].map((field) => (
+								<div
+									key={field}
+									className="flex gap-[10px] items-center px-[10px]"
 								>
+									<button
+										className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+										onClick={() => toggleEditing(field)}
+										disabled={status !== "PENDING"}
+									>
+										{isEditing[field] ? (
+											<CheckIcon className="h-[20px] w-[20px]" />
+										) : (
+											<PencilSquareIcon className="h-[20px] w-[20px]" />
+										)}
+									</button>
 									{isEditing[field] ? (
-										<CheckIcon className="h-[20px] w-[20px]" />
+										<GenericInput
+											type={
+												field === "description"
+													? "textarea"
+													: "text"
+											}
+											required
+											placeholder={`Inserisci ${field}`}
+											name={field}
+											value={formData[field]}
+											handleChange={handleChange}
+											handleBlur={handleBlur}
+											messageError={errors[field]}
+										/>
 									) : (
-										<PencilSquareIcon className="h-[20px] w-[20px]" />
+										<p className="body-normal">
+											{formData[field]}
+										</p>
 									)}
-								</button>
-								{isEditing[field] ? (
-									<GenericInput
-										type={
-											field === "description"
-												? "textarea"
-												: "text"
-										}
-										required={true}
-										placeholder={`Inserisci ${field}`}
-										name={field}
-										value={formData[field]}
-										handleChange={handleChange}
-										handleBlur={handleBlur}
-										messageError={errors[field]}
-									/>
-								) : (
-									<p className="body-normal">
-										{formData[field]}
-									</p>
-								)}
-							</div>
-						)
+								</div>
+							))}
+						</>
 					)}
 				</div>
-				<div className="flex flex-col gap-[8px] sticky bottom-[16px] w-full">
-					<NormalButton
-						text="Salva"
-						action={handleUpdateLeague}
-						disabled={!isFormValid() || isEditingAnyField}
-					/>
-					<GhostButton
-						text="Elimina lega"
-						action={handleDeleteLeague}
-						classOpt="text-(--error-normal)"
-						disabled={isEditingAnyField}
-					>
-						<TrashIcon className="w-[24px] h-[24px]" />
-					</GhostButton>
-				</div>
+				{status === "PENDING" && (
+					<div className="flex flex-col gap-[8px] sticky bottom-[16px] w-full">
+						<NormalButton
+							text="Salva"
+							action={handleUpdateLeague}
+							disabled={!isFormValid() || isEditingAnyField}
+						/>
+						<GhostButton
+							text="Elimina lega"
+							action={handleDeleteLeague}
+							classOpt="text-(--error-normal)"
+							disabled={isEditingAnyField}
+						>
+							<TrashIcon className="w-[24px] h-[24px]" />
+						</GhostButton>
+					</div>
+				)}
+				<MdalConfirmAction
+					isOpen={isModalOpen}
+					text={textModal}
+					disclaimer={disclaimerModal}
+					onClose={() => setIsModalOpen(false)}
+					onConfirmAction={handleChangeSelect}
+				></MdalConfirmAction>
+				<GenericPopup
+					isOpen={popupData.isOpen}
+					type={popupData.type}
+					title={popupData.title}
+					message={popupData.message}
+				/>
 			</div>
 		</>
 	);

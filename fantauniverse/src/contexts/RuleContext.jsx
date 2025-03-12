@@ -86,21 +86,14 @@ function RuleProvider({ children }) {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${user.token}`,
 				},
-				body: JSON.stringify({
-					rules: ruleData,
-				}),
+				body: JSON.stringify(ruleData),
 			});
 
 			if (!response.ok) {
-				const errorMessage = await response.text();
-				throw new Error(
-					`Errore nell'aggiornamento della regola: ${errorMessage}`
-				);
+				throw new Error(`Errore nell'aggiornamento della regola`);
 			}
 
 			const updatedRule = await response.json();
-
-			// Aggiorniamo la lista delle regole con la regola aggiornata
 			const updatedRules = state.rules.map((rule) =>
 				rule.id === ruleId ? updatedRule : rule
 			);
@@ -110,11 +103,8 @@ function RuleProvider({ children }) {
 
 			return updatedRule;
 		} catch (error) {
-			console.error(
-				"Errore nell'aggiornamento della regola:",
-				error.message
-			);
-			return { error: error.message };
+			console.error(error.message);
+			return false;
 		}
 	};
 
@@ -137,11 +127,13 @@ function RuleProvider({ children }) {
 			);
 			dispatch({ type: "setRules", payload: updatedRules });
 			await getLeague(league.id);
+			return true;
 		} catch (error) {
 			console.error(
 				"Errore nella cancellazione della regola:",
 				error.message
 			);
+			return false;
 		}
 	};
 

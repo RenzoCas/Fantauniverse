@@ -32,7 +32,7 @@ function reducer(state, action) {
 function ParticipantProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
-	const { league } = useLeague();
+	const { league, getLeague } = useLeague();
 
 	const addParticipant = async (leagueId) => {
 		try {
@@ -54,10 +54,11 @@ function ParticipantProvider({ children }) {
 				type: "addParicipant",
 			});
 
+			await getLeague(leagueId);
 			return true;
 		} catch (error) {
 			console.error(error.message);
-			return null;
+			return false;
 		}
 	};
 
@@ -80,8 +81,11 @@ function ParticipantProvider({ children }) {
 			}
 
 			dispatch({ type: "deleteParticipant", payload: participantId });
+			await getLeague(league.id);
+			return true;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	};
 

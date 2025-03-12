@@ -18,16 +18,17 @@ function Rules() {
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
+		title: "",
 		message: "",
 	});
 	const [tabActive, setTabActive] = useState("Bonus");
 	const [isLoading, setIsLoading] = useState(false);
 	const { addRule, deleteRule, updateRule } = useRule();
 
-	const showPopup = (message, type) => {
-		setPopupData({ isOpen: true, type: type, message });
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
 		setTimeout(
-			() => setPopupData({ isOpen: false, type: type, message }),
+			() => setPopupData({ isOpen: false, type, title, message }),
 			2000
 		);
 	};
@@ -35,9 +36,21 @@ function Rules() {
 	const handleDeleteRule = async (ruleId) => {
 		setIsModalOpen(false);
 		setIsLoading(true);
-		await deleteRule(ruleId);
+		const response = await deleteRule(ruleId);
 		setIsLoading(false);
-		showPopup("Regola eliminata correttamente", "success");
+		if (!response) {
+			showPopup(
+				"error",
+				"Regola non eliminata",
+				"La regola selezionata non é stata eliminato. Riprova."
+			);
+			return;
+		}
+		showPopup(
+			"success",
+			"Regola eliminata",
+			"La regola selezionata é stata eliminata correttamente."
+		);
 	};
 
 	const handleAddRule = async () => {
@@ -58,10 +71,18 @@ function Rules() {
 		const result = await addRule(formData);
 		setIsLoading(false);
 		if (!result) {
-			showPopup("Errore nell'aggiunta della regola", "error");
+			showPopup(
+				"error",
+				"Errore nell'aggiunta della regola",
+				"La regola non é stata aggiunta correttamente. Riprova."
+			);
 			return;
 		}
-		showPopup("Regola aggiunta correttamente", "success");
+		showPopup(
+			"success",
+			"Regola aggiunta",
+			"La regola é stata aggiunta correttamente."
+		);
 	};
 
 	const handleSubmitEdit = async (formData) => {
@@ -70,10 +91,18 @@ function Rules() {
 		const result = await updateRule(formData);
 		setIsLoading(false);
 		if (!result) {
-			showPopup("Errore nell'aggiunta della regola", "error");
+			showPopup(
+				"error",
+				"Errore nella modifica della regola",
+				"La regola non é stata modificata correttamente. Riprova."
+			);
 			return;
 		}
-		showPopup("Regola aggiunta correttamente", "success");
+		showPopup(
+			"success",
+			"Regola modificata",
+			"La regola é stata modificata correttamente."
+		);
 	};
 
 	const handleTabChange = (tab) => {
@@ -162,11 +191,9 @@ function Rules() {
 					<GenericPopup
 						isOpen={popupData.isOpen}
 						type={popupData.type}
-					>
-						<p className="font-bold text-(--black-normal)">
-							{popupData.message}
-						</p>
-					</GenericPopup>
+						title={popupData.title}
+						message={popupData.message}
+					/>
 				</>
 			)}
 		</>

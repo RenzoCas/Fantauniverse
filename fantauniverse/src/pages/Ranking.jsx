@@ -1,14 +1,17 @@
 import Participant from "../components/Participant";
+import { useLeague } from "../contexts/LeagueContext";
 
-function Ranking({ participants, handleClick }) {
+function Ranking() {
+	const { league } = useLeague();
+	const { participants } = league;
 	return (
 		<ul className="flex flex-col gap-[16px]">
 			{participants.map((el, idx) => (
 				<Participant
-					key={el.id}
-					participant={el}
-					handleClick={handleClick}
-					index={idx}
+					key={idx}
+					participantObj={el}
+					idx={idx}
+					isRanking={true}
 				/>
 			))}
 		</ul>

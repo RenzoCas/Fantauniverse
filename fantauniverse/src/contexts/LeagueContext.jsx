@@ -293,8 +293,10 @@ function LeagueProvider({ children }) {
 			}
 
 			dispatchMyLeagues({ type: "deleteLeague", payload: leagueId });
+			return true;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	};
 

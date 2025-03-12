@@ -22,6 +22,7 @@ function Dashboard() {
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
+		title: "",
 		message: "",
 	});
 
@@ -51,9 +52,12 @@ function Dashboard() {
 		resetMyLeague();
 	};
 
-	const showPopup = (type, message) => {
-		setPopupData({ isOpen: true, type, message });
-		setTimeout(() => setPopupData({ isOpen: false, type, message }), 1000);
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type, title, message }),
+			2000
+		);
 	};
 
 	return (
@@ -128,11 +132,9 @@ function Dashboard() {
 					<GenericPopup
 						isOpen={popupData.isOpen}
 						type={popupData.type}
-					>
-						<p className="font-bold text-(--black-normal)">
-							{popupData.message}
-						</p>
-					</GenericPopup>
+						title={popupData.title}
+						message={popupData.message}
+					/>
 				</div>
 			)}
 		</>

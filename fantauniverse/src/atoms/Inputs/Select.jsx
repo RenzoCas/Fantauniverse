@@ -39,17 +39,18 @@ function Select({ options, selectedValue, handleChange, label }) {
 			{isOpen && (
 				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full">
 					{options.map((option) => (
-						<div
+						<button
 							key={option.value}
 							onClick={() => handleOptionClick(option.value)}
-							className={`p-[8px] cursor-pointer ${
+							className={`p-[8px] cursor-pointer w-full text-left ${
 								option.value === selectedValue
 									? "bg-(--black-light)"
 									: ""
-							}`}
+							} ${option.isDisabled && "text-(--black-light)"}`}
+							disabled={option.isDisabled}
 						>
 							{option.text}
-						</div>
+						</button>
 					))}
 				</div>
 			)}

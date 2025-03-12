@@ -17,25 +17,38 @@ function Players() {
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
+		title: "",
 		message: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const { addPlayer, deletePlayer, updatePlayer } = usePlayer();
 
-	const showPopup = (message, type) => {
-		setPopupData({ isOpen: true, type: type, message });
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
 		setTimeout(
-			() => setPopupData({ isOpen: false, type: type, message }),
+			() => setPopupData({ isOpen: false, type, title, message }),
 			2000
 		);
 	};
 
-	const handledeletePlayer = async (ruleId) => {
+	const handledeletePlayer = async (playerId) => {
 		setIsModalOpen(false);
 		setIsLoading(true);
-		await deletePlayer(ruleId);
+		const response = await deletePlayer(playerId);
 		setIsLoading(false);
-		showPopup("Player eliminato correttamente", "success");
+		if (!response) {
+			showPopup(
+				"error",
+				"Player non eliminato",
+				"Il player selezionato non é stato eliminato. Riprova."
+			);
+			return;
+		}
+		showPopup(
+			"success",
+			"Player eliminato",
+			"Il player selezionato é stato eliminato correttamente."
+		);
 	};
 
 	const handleAddPlayer = async () => {
@@ -56,10 +69,18 @@ function Players() {
 		const result = await addPlayer(formData);
 		setIsLoading(false);
 		if (!result) {
-			showPopup("Errore nell'aggiunta del player", "error");
+			showPopup(
+				"error",
+				"Errore nell'aggiunta del player",
+				"Il player non é stato aggiunto correttamente. Riprova."
+			);
 			return;
 		}
-		showPopup("Player aggiunto correttamente", "success");
+		showPopup(
+			"success",
+			"Player aggiunto",
+			"Il player é stato aggiunto correttamente."
+		);
 	};
 
 	const handleSubmitEdit = async (formData) => {
@@ -68,10 +89,18 @@ function Players() {
 		const result = await updatePlayer(formData);
 		setIsLoading(false);
 		if (!result) {
-			showPopup("Errore nell'aggiunta del player", "error");
+			showPopup(
+				"error",
+				"Errore nella modifica del player",
+				"Il player non é stato modificato correttamente. Riprova."
+			);
 			return;
 		}
-		showPopup("Player aggiunta correttamente", "success");
+		showPopup(
+			"success",
+			"Player modificato",
+			"Il player é stato modificato correttamente."
+		);
 	};
 
 	return (
@@ -133,11 +162,9 @@ function Players() {
 					<GenericPopup
 						isOpen={popupData.isOpen}
 						type={popupData.type}
-					>
-						<p className="font-bold text-(--black-normal)">
-							{popupData.message}
-						</p>
-					</GenericPopup>
+						title={popupData.title}
+						message={popupData.message}
+					/>
 				</>
 			)}
 		</>

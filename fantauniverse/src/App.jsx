@@ -17,6 +17,8 @@ import ViewTeam from "./pages/ViewTeam";
 import GenericRules from "./pages/GenericRules";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
+import { ParticipantProvider } from "./contexts/ParticipantContext";
+import { TeamProvider } from "./contexts/TeamContext";
 
 function App() {
 	return (
@@ -24,42 +26,64 @@ function App() {
 			<LeagueProvider>
 				<RuleProvider>
 					<PlayerProvider>
-						<BrowserRouter>
-							<AuthInitializer />
-							<Routes>
-								<Route path="/" element={<Homepage />} />
-								<Route
-									path="registration"
-									element={<Registration />}
-								/>
-								<Route path="login" element={<Login />} />
-								<Route
-									path="rules"
-									element={<GenericRules />}
-								/>
-								<Route path="faq" element={<FAQPage />} />
-								<Route path="account" element={<Account />} />
-								<Route path="*" element={<NotFound />} />
-								<Route
-									path="app"
-									element={
-										<ProtectedRoute>
-											<FantaUniverse />
-										</ProtectedRoute>
-									}
-								>
-									<Route index element={<Dashboard />} />
-									<Route
-										path="league/:id"
-										element={<ViewLeague />}
-									/>
-									<Route
-										path="league/team"
-										element={<ViewTeam />}
-									/>
-								</Route>
-							</Routes>
-						</BrowserRouter>
+						<ParticipantProvider>
+							<TeamProvider>
+								<BrowserRouter>
+									<AuthInitializer />
+									<Routes>
+										<Route
+											path="/"
+											element={<Homepage />}
+										/>
+										<Route
+											path="registration"
+											element={<Registration />}
+										/>
+										<Route
+											path="login"
+											element={<Login />}
+										/>
+										<Route
+											path="rules"
+											element={<GenericRules />}
+										/>
+										<Route
+											path="faq"
+											element={<FAQPage />}
+										/>
+										<Route
+											path="account"
+											element={<Account />}
+										/>
+										<Route
+											path="*"
+											element={<NotFound />}
+										/>
+										<Route
+											path="app"
+											element={
+												<ProtectedRoute>
+													<FantaUniverse />
+												</ProtectedRoute>
+											}
+										>
+											<Route
+												index
+												element={<Dashboard />}
+											/>
+											<Route
+												path="league/:id"
+												element={<ViewLeague />}
+											/>
+											<Route
+												path="league/team"
+												element={<ViewTeam />}
+											/>
+										</Route>
+									</Routes>
+								</BrowserRouter>
+							</TeamProvider>
+						</ParticipantProvider>
 					</PlayerProvider>
 				</RuleProvider>
 			</LeagueProvider>
