@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CardAccountSettings from "../components/CardAccountSettings";
 import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import GenericInput from "../atoms/Inputs/GenericInput";
+import GenericPopup from "../components/popups/GenericPopup";
 
 function Account() {
 	const { user, updateUser } = useUser();
@@ -15,11 +16,27 @@ function Account() {
 	const [textToUpdate, setTextToUpdate] = useState();
 	const [errors, setErrors] = useState({});
 	const [formData, setFormData] = useState({
+		id: "",
 		username: "",
 		email: "",
 		password: "",
 		icon: null,
 	});
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		message: "",
+	});
+
+	useEffect(() => {
+		setFormData({
+			id: user.id,
+			username: user.username,
+			email: user.email,
+			password: user.password,
+			icon: user.icon,
+		});
+	}, [user]);
 
 	const messageError = "Campo obbligatorio";
 	const fileInputRef = useRef(null);
@@ -34,6 +51,14 @@ function Account() {
 		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$/.test(
 			password
 		);
+
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type, title, message }),
+			2000
+		);
+	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -122,8 +147,22 @@ function Account() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
-		await updateUser(formData);
+		const res = await updateUser(formData);
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nell'aggiornamento dell'immagine!",
+				"Immagine non caricata correttamente. Riprova"
+			);
+			return;
+		}
 		setIsLoading(false);
+		showPopup(
+			"success",
+			"Aggiornamento completato!",
+			"Immagine non caricata correttamente. Riprova"
+		);
 	};
 
 	return (
@@ -172,6 +211,12 @@ function Account() {
 							value={icon}
 							onUpdate={handleUpdateImage}
 							viewImage={() => setIsModalImgOpen(true)}
+						/>
+						<GenericPopup
+							isOpen={popupData.isOpen}
+							type={popupData.type}
+							title={popupData.title}
+							message={popupData.message}
 						/>
 					</main>
 

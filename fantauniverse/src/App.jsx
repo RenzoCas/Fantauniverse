@@ -19,6 +19,7 @@ import Login from "./pages/Login";
 import Account from "./pages/Account";
 import { ParticipantProvider } from "./contexts/ParticipantContext";
 import { TeamProvider } from "./contexts/TeamContext";
+import CreateTeam from "./pages/CreateTeam";
 
 function App() {
 	return (
@@ -79,6 +80,10 @@ function App() {
 												path="league/team"
 												element={<ViewTeam />}
 											/>
+											<Route
+												path="league/:id/createTeam"
+												element={<CreateTeam />}
+											/>
 										</Route>
 									</Routes>
 								</BrowserRouter>
@@ -114,7 +119,7 @@ function AuthInitializer() {
 		};
 
 		checkToken();
-	}, [tokenInfo, navigate]);
+	}, [tokenInfo]);
 
 	return null;
 }

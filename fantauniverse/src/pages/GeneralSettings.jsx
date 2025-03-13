@@ -124,7 +124,7 @@ function GeneralSettings() {
 		setIsLoading(false);
 	};
 
-	const handleChange = (e) => {
+	const handleChangeData = (e) => {
 		const { name, value } = e.target;
 		if (name === "maxCoins") {
 			if (!/^\d*$/.test(value)) {
@@ -163,14 +163,14 @@ function GeneralSettings() {
 		setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
 	};
 
-	const handleUpdateLeague = async (newStatus) => {
+	const handleUpdateLeague = async (newStatus = status) => {
 		if (!isFormValid(newStatus)) return;
 		setIsLoading(true);
 
 		const result = await updateLeague({
 			...league,
 			...formData,
-			status: newStatus,
+			status: newStatus ? newStatus : status,
 		});
 		await getLeague(id);
 
@@ -182,6 +182,12 @@ function GeneralSettings() {
 				"Errore nella modifica della lega",
 				"La lega non é stata modificata correttamente. Riprova."
 			);
+			setFormData({
+				name: name,
+				description: description,
+				coinName: coinName,
+				maxCoins: maxCoins,
+			});
 			return;
 		}
 		showPopup(
@@ -268,7 +274,7 @@ function GeneralSettings() {
 											placeholder={`Inserisci ${field}`}
 											name={field}
 											value={formData[field]}
-											handleChange={handleChange}
+											handleChange={handleChangeData}
 											handleBlur={handleBlur}
 											messageError={errors[field]}
 										/>
@@ -283,10 +289,10 @@ function GeneralSettings() {
 					)}
 				</div>
 				{status === "PENDING" && (
-					<div className="flex flex-col gap-[8px] sticky bottom-[16px] w-full">
+					<div className="flex flex-col gap-[8px] w-full">
 						<NormalButton
 							text="Salva"
-							action={handleUpdateLeague}
+							action={() => handleUpdateLeague(null)}
 							disabled={!isFormValid() || isEditingAnyField}
 						/>
 						<GhostButton

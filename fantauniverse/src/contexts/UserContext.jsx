@@ -128,13 +128,13 @@ function UserProvider({ children }) {
 
 			const newUser = response.json();
 			dispatch({ type: "updateUser", payload: newUser });
-			return newUser;
+			return true;
 		} catch (error) {
 			console.error(
 				"Errore nell'aggiornamento dell'utente:",
 				error.message
 			);
-			throw error;
+			return false;
 		}
 	};
 

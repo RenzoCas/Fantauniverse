@@ -212,6 +212,7 @@ function LeagueProvider({ children }) {
 				}
 
 				const data = await response.json();
+				//data.status = "NOT_STARTED";
 				dispatchLeague({ type: "updateLeague", payload: data });
 
 				return data;
@@ -272,10 +273,10 @@ function LeagueProvider({ children }) {
 				payload: updatedLeagueData,
 			});
 
-			return updatedLeagueData;
+			return true;
 		} catch (error) {
 			console.error(error.message);
-			return null;
+			return false;
 		}
 	};
 

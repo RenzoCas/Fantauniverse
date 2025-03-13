@@ -11,6 +11,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 		icon: "",
 	});
 	const [errors, setErrors] = useState({});
+	const [fileKey, setFileKey] = useState(Date.now());
 
 	useEffect(() => {
 		if (isEdit && playerObj) {
@@ -22,7 +23,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 				icon: "",
 			});
 		}
-	}, [playerObj, isEdit]);
+	}, [playerObj, isEdit, isOpen]);
 
 	const handleFileChange = async (event) => {
 		try {
@@ -148,27 +149,32 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
-                        <div className="flex flex-col gap-[8px] justify-end">
-                            <label
-                                htmlFor="immaginePlayer"
-                                className="body-small font-semibold text-(--black-normal)"
-                            >
-                                Aggiungi immagine:
-                            </label>
-                            <input
-                                type="file"
-                                name="immaginePlayer"
-                                id="immaginePlayer"
-                                accept="image/jpeg, image/png"
-                                value={formData.icon}
-                                onChange={handleFileChange}
-                            />
-                        </div>
+						<div className="flex flex-col gap-[8px] justify-end">
+							<label
+								htmlFor="immaginePlayer"
+								className="body-small font-semibold text-(--black-normal)"
+							>
+								{isEdit
+									? "Aggiorna immagine"
+									: "Aggiungi immagine"}
+							</label>
+							<input
+								key={fileKey}
+								type="file"
+								name="immaginePlayer"
+								id="immaginePlayer"
+								accept="image/jpeg, image/png"
+								onChange={handleFileChange}
+							/>
+						</div>
 						<NormalButton
 							text={
 								isEdit ? "Modifica Player" : "Aggiungi Player"
 							}
-							action={() => onSubmit(formData)}
+							action={() => {
+								onSubmit(formData);
+								setFileKey(Date.now());
+							}}
 							disabled={!isFormValid()}
 						/>
 						{isEdit && (

@@ -55,13 +55,11 @@ function TeamProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
-			const team = await response.json();
+			const team = await response.text();
 			dispatch({
 				type: "getTeam",
 				payload: team,
 			});
-
-			await getLeague(league.id);
 			return true;
 		} catch (error) {
 			console.error(error.message);

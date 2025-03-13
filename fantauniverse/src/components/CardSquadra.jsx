@@ -2,23 +2,22 @@ import { BoltIcon } from "@heroicons/react/24/outline";
 import NormalButton from "../atoms/Buttons/NormalButton";
 
 function CardSquadra({ team, handleClick }) {
-	const { id, name, icon, position } = team;
+	const { name, icon, position } = team;
 
 	return (
 		<>
 			{!name ? (
 				<NormalButton
 					text="Crea squadra"
-					action={() => {
-						alert("da implementare");
-					}}
+					action={handleClick}
+					classOpt="sticky bottom-[32px]"
 				/>
 			) : (
 				<div
 					role="button"
 					tabIndex="0"
 					className="flex gap-[10px] bg-(--black-normal) rounded-[16px] p-[8px] sticky bottom-[24px] w-[calc(100vw-32px)] md:max-w-[528px]"
-					onClick={() => handleClick(id)}
+					onClick={handleClick}
 				>
 					<img
 						src={`${icon} || https://placehold.co/83x83`}

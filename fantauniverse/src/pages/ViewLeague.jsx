@@ -12,7 +12,6 @@ import Ranking from "../pages/Ranking";
 import Loader from "../components/Loader";
 import FixedPopup from "../components/popups/FixedPopup";
 import Players from "./Players";
-import ModalLeague from "../components/modals/ModalLeague";
 import GenericPopup from "../components/popups/GenericPopup";
 import GeneralSettings from "./GeneralSettings";
 import NormalButton from "../atoms/Buttons/NormalButton";
@@ -27,23 +26,14 @@ function ViewLega() {
 
 	const { league, getLeague, updateLeague } = useLeague();
 	const { addParticipant } = useParticipant();
-	const { team, getMyTeam } = useTeam();
+	const { team, getMyTeam } = useTeam(null);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
 		message: "",
 	});
-	const initialState = {
-		id: league.id,
-		name: league.name,
-		description: league.description,
-		visibility: league.visibility,
-		coinName: league.coinName,
-		maxCoins: league.maxCoins,
-	};
 	const { id, isAdmin } = state.league;
 	const fileInputRef = useRef(null);
 
@@ -80,23 +70,44 @@ function ViewLega() {
 
 	useEffect(() => {});
 
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type, title, message }),
+			2000
+		);
+	};
+
 	const handleTabChange = (tab) => {
 		setTabActive(tab);
 	};
 
-	const handleAddParticipant = () => {
-		addParticipant(id);
+	const handleAddParticipant = async () => {
+		setIsLoading(true);
+		const res = await addParticipant(id);
+		if (!res) {
+			// Assuming `res` has a success field
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nell'iscrizione alla lega!",
+				"L'iscrizione a questa lega non é andata a buon fine. Riprova."
+			);
+			return;
+		}
+		await getLeague(id);
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Iscrizione effettuata!",
+			"L'iscrizione a questa lega é andata a buon fine."
+		);
 	};
 
 	const handleUpdateImage = () => {
 		if (fileInputRef.current) {
 			fileInputRef.current.click();
 		}
-	};
-
-	const showPopup = (type, message) => {
-		setPopupData({ isOpen: true, type, message });
-		setTimeout(() => setPopupData({ isOpen: false, type, message }), 1000);
 	};
 
 	const handleFileChange = async (event) => {
@@ -111,7 +122,22 @@ function ViewLega() {
 					const base64Image = reader.result.split(",")[1];
 					const updatedLeagueData = { ...league, icon: base64Image };
 					setIsLoading(true);
-					await updateLeague(updatedLeagueData);
+
+					// Make sure res is properly checked, log it for debugging
+					const res = await updateLeague(updatedLeagueData);
+
+					// Check if res is falsy or contains a failure message
+					if (!res) {
+						// Assuming `res` has a success field
+						setIsLoading(false);
+						showPopup(
+							"error",
+							"Errore nell'aggiornamento dell'immagine!",
+							"Immagine non caricata correttamente. Riprova."
+						);
+						return;
+					}
+
 					await getLeague(id);
 					setIsLoading(false);
 				};
@@ -120,7 +146,11 @@ function ViewLega() {
 				throw new Error("Per favore seleziona un file JPEG o PNG.");
 			}
 		} catch (error) {
-			alert(error.message);
+			showPopup(
+				"error",
+				"Errore nell'aggiornamento dell'immagine!",
+				`${error.message}`
+			);
 		}
 	};
 
@@ -207,7 +237,7 @@ function ViewLega() {
 							) : (
 								<CardSquadra
 									team={team}
-									handleClick={() => {}}
+									handleClick={() => navigate("createTeam")}
 									// disabled={true}
 								/>
 							)
@@ -231,23 +261,12 @@ function ViewLega() {
 							)
 						)}
 					</div>
-					<ModalLeague
-						isOpen={isModalOpen}
-						onClose={async () => {
-							setIsModalOpen(false);
-							await getLeague(id);
-						}}
-						onCreate={showPopup}
-						initialState={initialState}
-					/>
 					<GenericPopup
 						isOpen={popupData.isOpen}
 						type={popupData.type}
-					>
-						<p className="font-bold text-(--black-normal)">
-							{popupData.message}
-						</p>
-					</GenericPopup>
+						title={popupData.title}
+						message={popupData.message}
+					/>
 				</>
 			)}
 		</>
