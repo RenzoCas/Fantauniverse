@@ -12,6 +12,7 @@ function reducer(state, action) {
 		case "register":
 		case "login":
 		case "tokenInfo":
+		case "updateUser":
 			return { ...state, user: action.payload, isAuthenticated: true };
 
 		case "logout":
@@ -29,7 +30,7 @@ function UserProvider({ children }) {
 		initialState
 	);
 
-	const urlServer = "https://soviet-glory-vinzo-s-org-50c662e0.koyeb.app";
+	const urlServer = "http://217.61.59.196:8547";
 	// const urlServer = "http://192.168.1.94:8547";
 
 	const register = async (formData) => {
@@ -108,6 +109,35 @@ function UserProvider({ children }) {
 		}
 	};
 
+	const updateUser = async (updatedUser) => {
+		try {
+			const response = await fetch(`${urlServer}/user`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+				body: JSON.stringify(updatedUser),
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nell'aggiornamento dell'utente:",
+				};
+			}
+
+			const newUser = response.json();
+			dispatch({ type: "updateUser", payload: newUser });
+			return newUser;
+		} catch (error) {
+			console.error(
+				"Errore nell'aggiornamento dell'utente:",
+				error.message
+			);
+			throw error;
+		}
+	};
+
 	const deleteUser = async () => {
 		try {
 			const response = await fetch(
@@ -169,6 +199,7 @@ function UserProvider({ children }) {
 				register,
 				login,
 				logout,
+				updateUser,
 				deleteUser,
 				tokenInfo,
 			}}

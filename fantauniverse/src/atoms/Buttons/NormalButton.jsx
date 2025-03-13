@@ -6,6 +6,8 @@ export default function NormalButton({
 	disabled = false,
 	icon = true,
 	classOpt,
+	customIcon = false,
+	children,
 }) {
 	return (
 		<button
@@ -20,7 +22,7 @@ export default function NormalButton({
       `}
 		>
 			<span>{text}</span>
-			{icon && (
+			{icon && !customIcon && (
 				<BoltIcon
 					className={`h-[24px] w-[24px] p-[4px] rounded-full ${
 						disabled
@@ -29,6 +31,7 @@ export default function NormalButton({
 					}`}
 				/>
 			)}
+			{icon && customIcon && children}
 		</button>
 	);
 }

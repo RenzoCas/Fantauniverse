@@ -13,7 +13,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	const [errors, setErrors] = useState({});
 
 	useEffect(() => {
-		if (playerObj) {
+		if (isEdit && playerObj) {
 			setFormData(playerObj);
 		} else {
 			setFormData({
@@ -22,7 +22,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 				icon: "",
 			});
 		}
-	}, [playerObj]);
+	}, [playerObj, isEdit]);
 
 	const handleFileChange = async (event) => {
 		try {
@@ -148,24 +148,22 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
-						{isEdit && (
-							<div className="flex flex-col gap-[8px] justify-end">
-								<label
-									htmlFor="immaginePlayer"
-									className="body-small font-semibold text-(--black-normal)"
-								>
-									Aggiungi immagine:
-								</label>
-								<input
-									type="file"
-									name="immaginePlayer"
-									id="immaginePlayer"
-									accept="image/jpeg, image/png"
-									onChange={handleFileChange}
-								/>
-							</div>
-						)}
-
+                        <div className="flex flex-col gap-[8px] justify-end">
+                            <label
+                                htmlFor="immaginePlayer"
+                                className="body-small font-semibold text-(--black-normal)"
+                            >
+                                Aggiungi immagine:
+                            </label>
+                            <input
+                                type="file"
+                                name="immaginePlayer"
+                                id="immaginePlayer"
+                                accept="image/jpeg, image/png"
+                                value={formData.icon}
+                                onChange={handleFileChange}
+                            />
+                        </div>
 						<NormalButton
 							text={
 								isEdit ? "Modifica Player" : "Aggiungi Player"
