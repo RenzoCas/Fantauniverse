@@ -6,11 +6,23 @@ const TeamContext = createContext();
 
 const initialState = {
 	team: {},
+	teamParticipant: {},
 };
 
 function reducer(state, action) {
 	switch (action.type) {
 		case "getTeam":
+			return {
+				...state,
+				teamParticipant: action.payload,
+			};
+		case "getMyTeam":
+			return {
+				...state,
+				team: action.payload,
+			};
+
+		case "createTeam":
 			return {
 				...state,
 				team: action.payload,
@@ -20,6 +32,12 @@ function reducer(state, action) {
 			return {
 				...state,
 				team: action.payload,
+			};
+
+		case "resetTeamPartecipant":
+			return {
+				...state,
+				teamParticipant: {},
 			};
 
 		case "deleteTeam":
@@ -38,11 +56,10 @@ function TeamProvider({ children }) {
 	const { user, urlServer } = useUser();
 	const { league, getLeague } = useLeague();
 
-	const getMyTeam = async () => {
-		if (!league.id) return;
+	const getMyTeam = async (leagueId) => {
 		try {
 			const response = await fetch(
-				`${urlServer}/team/myTeam/${league.id}`,
+				`${urlServer}/team/myTeam/${leagueId}`,
 				{
 					method: "GET",
 					headers: {
@@ -55,9 +72,11 @@ function TeamProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
-			const team = await response.text();
+			const teamText = (await response.text()).trim();
+			const team = teamText ? JSON.parse(teamText) : null;
+
 			dispatch({
-				type: "getTeam",
+				type: "getMyTeam",
 				payload: team,
 			});
 			return true;
@@ -84,7 +103,36 @@ function TeamProvider({ children }) {
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
 			const team = await response.json();
+			dispatch({
+				type: "getTeam",
+				payload: team,
+			});
 			return team;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
+	const createTeam = async (team) => {
+		try {
+			const response = await fetch(`${urlServer}/team`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(team),
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nella creazione del team.");
+			}
+
+			const data = response.json();
+
+			dispatch({ type: "createTeam", payload: data });
+			return true;
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -115,13 +163,20 @@ function TeamProvider({ children }) {
 		}
 	};
 
+	const resetTeamPartecipant = () => {
+		dispatch({ type: "resetTeamPartecipant" });
+	};
+
 	return (
 		<TeamContext.Provider
 			value={{
 				team: state.team,
+				teamParticipant: state.teamParticipant,
 				getMyTeam,
 				getTeam,
+				createTeam,
 				deleteTeam,
+				resetTeamPartecipant,
 			}}
 		>
 			{children}

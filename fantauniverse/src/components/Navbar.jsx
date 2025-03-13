@@ -12,7 +12,7 @@ import NormalButton from "../atoms/Buttons/NormalButton";
 export default function Navbar() {
 	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const { logout } = useUser();
+	const { logout, user } = useUser();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -43,9 +43,22 @@ export default function Navbar() {
 					isMenuOpen ? "translate-x-0" : "translate-x-full"
 				}`}
 			>
-				<button className="self-end" onClick={toggleMenu}>
-					<XMarkIcon className="h-[24px] w-[24px]" />
-				</button>
+				<div className="flex justify-between gap-[8px] items-center">
+					<img
+						src={
+							user.icon != null
+								? `data:image/png;base64,${user.icon}`
+								: "https://placehold.co/40x40"
+						}
+						alt="immagine giocatore"
+						className="rounded-full h-[40px] w-[40px] object-cover"
+						style={{ cursor: "pointer" }}
+					/>
+					<button onClick={toggleMenu}>
+						<XMarkIcon className="h-[24px] w-[24px]" />
+					</button>
+				</div>
+
 				<NavLink
 					to="/app"
 					className="body-normal font-semibold text-left flex justify-between items-center gap-[4px] mt-[16px]"

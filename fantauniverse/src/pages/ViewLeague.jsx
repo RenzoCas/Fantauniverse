@@ -26,7 +26,7 @@ function ViewLega() {
 
 	const { league, getLeague, updateLeague } = useLeague();
 	const { addParticipant } = useParticipant();
-	const { team, getMyTeam } = useTeam(null);
+	const { team, getMyTeam } = useTeam();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -41,7 +41,7 @@ function ViewLega() {
 		try {
 			setIsLoading(true);
 			await getLeague(id);
-			await getMyTeam();
+			await getMyTeam(id);
 		} catch (error) {
 			console.error(error.message);
 		} finally {
@@ -120,7 +120,7 @@ function ViewLega() {
 				const reader = new FileReader();
 				reader.onloadend = async () => {
 					const base64Image = reader.result.split(",")[1];
-					const updatedLeagueData = { ...league, icon: base64Image };
+					const updatedLeagueData = { id: id, icon: base64Image };
 					setIsLoading(true);
 
 					// Make sure res is properly checked, log it for debugging
@@ -164,7 +164,7 @@ function ViewLega() {
 						<div className="flex items-center justify-between gap-[16px]">
 							<button
 								onClick={() => {
-									navigate("/app");
+									navigate(-1);
 								}}
 								className="flex items-center gap-[4px] text-(--accent-normal)"
 							>
@@ -176,7 +176,7 @@ function ViewLega() {
 							{status === "PENDING" && (
 								<input
 									type="file"
-									name="logo"
+									name="logoLega"
 									id="logoLega"
 									accept="image/jpeg, image/png"
 									onChange={handleFileChange}
@@ -237,17 +237,14 @@ function ViewLega() {
 							) : (
 								<CardSquadra
 									team={team}
-									handleClick={() => navigate("createTeam")}
-									// disabled={true}
+									handleClick={() => navigate("viewTeam")}
 								/>
 							)
 						) : status === "STARTED" && isRegistered ? (
-							// <CardSquadra
-							// 	squadra={team}
-							// 	handleClick={handleClick}
-							// 	disabled={true}
-							// />
-							<p>CardSquadra</p>
+							<CardSquadra
+								team={team}
+								handleClick={() => navigate("viewTeam")}
+							/>
 						) : (
 							status === "STARTED" &&
 							!isRegistered && (

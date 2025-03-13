@@ -1,8 +1,11 @@
-function Participant({ participantObj, idx, isRanking }) {
-	const { user, name } = participantObj;
+function Participant({ participantObj, idx, isRanking, handleClick }) {
+	const { id, user, name } = participantObj;
 	const { icon, username } = user;
 	return (
-		<li className="flex border-b border-(--black-light) pb-[8px] gap-[16px]">
+		<li
+			className="flex border-b border-(--black-light) pb-[8px] gap-[16px]"
+			onClick={() => handleClick(id)}
+		>
 			<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
 				<img
 					src={

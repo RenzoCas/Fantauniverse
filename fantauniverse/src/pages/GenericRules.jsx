@@ -33,12 +33,9 @@ export default function GenericRules() {
 					</button>
 				)}
 
-				<h1 className="title-h4 text-(--primary) font-semibold">
-					Regolamento
-				</h1>
-				<section className="rounded-2xl max-w-[840px] shadow-lg border p-4">
+				<section className="ax-w-[840px]">
 					<ul className="flex flex-col">
-						<li className="flex flex-col gap-2 pb-4 border-b border-b-(--primary)">
+						<li className="flex flex-col gap-2 pb-4 border-b border-b-(--black-light)">
 							<h4 className="title-h6 text-(--white)">
 								Cosa é Fantaworld ?
 							</h4>
@@ -51,7 +48,7 @@ export default function GenericRules() {
 								il Fantagossip.
 							</p>
 						</li>
-						<li className="flex flex-col gap-2 py-4 border-b border-b-(--primary)">
+						<li className="flex flex-col gap-2 py-4 border-b border-b-(--black-light)">
 							<h4 className="title-h6 text-(--white)">
 								Come Funziona?
 							</h4>
@@ -69,16 +66,16 @@ export default function GenericRules() {
 										Creazione di una lega:
 									</span>
 									Chiunque può creare una nuova lega
-									scegliendo le regole, il sistema di
-									punteggio e l&lsquo;argomento.
+									scegliendo l&lsquo;argomento, le regole, i
+									player e i punteggi.
 								</li>
 								<li className="body-small text-(--white)">
 									<span className="font-bold mr-1 text-(--primary)">
 										Partecipazione:
 									</span>
 									Gli utenti si iscrivono alle leghe, creano
-									squadre o formazioni (a seconda del tipo di
-									lega) e iniziano a giocare.
+									la propria squadra squadre e quando la lega
+									vien avviata si inizia a giocare.
 								</li>
 								<li className="body-small text-(--white)">
 									<span className="font-bold mr-1 text-(--primary)">
@@ -98,7 +95,7 @@ export default function GenericRules() {
 								</li>
 							</ul>
 						</li>
-						<li className="flex flex-col gap-2 py-4 border-b border-b-(--primary)">
+						<li className="flex flex-col gap-2 py-4 border-b border-b-(--black-light)">
 							<h4 className="title-h6 text-(--white)">
 								Creazione e gestione della lega
 							</h4>

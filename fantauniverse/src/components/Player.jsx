@@ -14,16 +14,18 @@ function Player({
 	onSelect,
 	onDeselect,
 	playersObj,
+	playerActive,
 }) {
 	const { name, price, points, icon } = playerObj;
 	const { league } = useLeague();
 	const { coinName, status } = league;
-	const isActive = playersObj?.find((el) => el.id == playerObj.id);
+	const isActive =
+		playerActive || playersObj?.find((el) => el.id == playerObj.id);
 
 	return (
 		<li
-			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] ${
-				isActive && "bg-red-50"
+			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] rounded-[8px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
+				isActive && "shadow-lg border p-[8px]"
 			}`}
 		>
 			<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
@@ -64,7 +66,7 @@ function Player({
 				</button>
 			)}
 
-			{createTeam && canAdd && (
+			{createTeam && (
 				<>
 					{isActive ? (
 						<button
@@ -75,8 +77,11 @@ function Player({
 						</button>
 					) : (
 						<button
-							className="flex"
-							onClick={() => onSelect(playerObj)}
+							className={`flex ${
+								!canAdd && "opacity-50 cursor-not-allowed"
+							}`}
+							onClick={() => canAdd && onSelect(playerObj)}
+							disabled={!canAdd}
 						>
 							<PlusCircleIcon className="h-[20px] w-[20px]" />
 						</button>

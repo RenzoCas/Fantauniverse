@@ -38,6 +38,7 @@ function GeneralSettings() {
 		maxCoins: false,
 	});
 	const [formData, setFormData] = useState({
+		id: id,
 		name: name || "",
 		description: description || "",
 		coinName: coinName || "",
@@ -168,7 +169,6 @@ function GeneralSettings() {
 		setIsLoading(true);
 
 		const result = await updateLeague({
-			...league,
 			...formData,
 			status: newStatus ? newStatus : status,
 		});

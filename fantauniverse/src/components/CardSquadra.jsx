@@ -1,42 +1,55 @@
-import { BoltIcon } from "@heroicons/react/24/outline";
+import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import NormalButton from "../atoms/Buttons/NormalButton";
+import { useLeague } from "../contexts/LeagueContext";
 
 function CardSquadra({ team, handleClick }) {
+	const { league } = useLeague();
+	const { status } = league;
+
+	if (!team) {
+		return (
+			<NormalButton
+				text="Crea squadra"
+				action={handleClick}
+				classOpt="sticky bottom-[32px]"
+			/>
+		);
+	}
+
 	const { name, icon, position } = team;
 
 	return (
 		<>
-			{!name ? (
-				<NormalButton
-					text="Crea squadra"
-					action={handleClick}
-					classOpt="sticky bottom-[32px]"
+			<div
+				role="button"
+				tabIndex="0"
+				className="flex items-center gap-[10px] bg-(--black-normal) rounded-[16px] p-[8px] sticky bottom-[24px] w-[calc(100vw-32px)] md:max-w-[528px]"
+				onClick={handleClick}
+			>
+				<img
+					src={
+						icon
+							? `data:image/png;base64,${icon}`
+							: "https://placehold.co/60x60"
+					}
+					alt={`Icona utente`}
+					className="h-full object-cover rounded-[8px]"
 				/>
-			) : (
-				<div
-					role="button"
-					tabIndex="0"
-					className="flex gap-[10px] bg-(--black-normal) rounded-[16px] p-[8px] sticky bottom-[24px] w-[calc(100vw-32px)] md:max-w-[528px]"
-					onClick={handleClick}
-				>
-					<img
-						src={`${icon} || https://placehold.co/83x83`}
-						alt="logo squadra"
-						className="rounded-[8px]"
-					/>
-					<div className="flex flex-col grow-1 justify-between gap-[6px]">
-						<p className="body-normal text-white">
-							La tua squadra:
-						</p>
-						<h4 className="title-h4 text-white">{name}</h4>
-						<p className="body-small text-white">
-							{position + 1}
-							<sup>°</sup> posto in classifica
-						</p>
+				<div className="flex flex-col grow-1 justify-between gap-[6px]">
+					<div className="flex justify-between gap-[8px]">
+						<p className="body-small text-white">La tua squadra:</p>
+						{status == "NOT_STARTED" && (
+							<WrenchScrewdriverIcon className="h-[20px] w-[20px] stroke-white" />
+						)}
 					</div>
-					<BoltIcon className="h-[24px] w-[24px] p-[4px] rounded-full text-(--black-normal) bg-(--black-light) group-hover:bg-(--black-normal) group-hover:text-white" />
+
+					<h4 className="body-regular text-white">{name}</h4>
+					<p className="body-xsmall text-white">
+						{position}
+						<sup>°</sup> posto in classifica
+					</p>
 				</div>
-			)}
+			</div>
 		</>
 	);
 }

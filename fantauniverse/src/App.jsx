@@ -19,7 +19,6 @@ import Login from "./pages/Login";
 import Account from "./pages/Account";
 import { ParticipantProvider } from "./contexts/ParticipantContext";
 import { TeamProvider } from "./contexts/TeamContext";
-import CreateTeam from "./pages/CreateTeam";
 
 function App() {
 	return (
@@ -77,12 +76,8 @@ function App() {
 												element={<ViewLeague />}
 											/>
 											<Route
-												path="league/team"
+												path="league/:id/viewTeam"
 												element={<ViewTeam />}
-											/>
-											<Route
-												path="league/:id/createTeam"
-												element={<CreateTeam />}
 											/>
 										</Route>
 									</Routes>

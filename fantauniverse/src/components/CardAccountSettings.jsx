@@ -10,12 +10,12 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 									{setting}
 								</h5>
 
-								<picture className="rounded-lg min-w-[60px] max-w-[60px] h-[60px] overflow-hidden">
+								<picture className="rounded-lg min-w-[40px] max-w-[40px] h-[40px] overflow-hidden">
 									<img
 										src={
 											value
 												? `data:image/png;base64,${value}`
-												: "https://placehold.co/60x60"
+												: "https://placehold.co/40x40"
 										}
 										alt={`Icona utente`}
 										className="h-full object-cover"

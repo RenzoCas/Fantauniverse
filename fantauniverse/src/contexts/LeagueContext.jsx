@@ -212,7 +212,7 @@ function LeagueProvider({ children }) {
 				}
 
 				const data = await response.json();
-				//data.status = "NOT_STARTED";
+				// data.status = "NOT_STARTED";
 				dispatchLeague({ type: "updateLeague", payload: data });
 
 				return data;
