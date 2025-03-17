@@ -84,6 +84,7 @@ function Dashboard() {
 					"Lega non esistente!",
 					"La lega cercata non esiste. Riprova."
 				);
+				setIsLoading(false);
 				return;
 			}
 			setIsLoading(false);
