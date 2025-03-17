@@ -6,7 +6,10 @@ export default function Lega({ league }) {
 	const { id, name, icon, isAdmin, numberParticipants } = league;
 
 	const handleClick = () => {
-		navigate(`league/${id}`, { state: { league } });
+		navigate(`league/${id}`, {
+			state: { league, deleteLeague: null },
+			replace: true,
+		});
 	};
 
 	return (

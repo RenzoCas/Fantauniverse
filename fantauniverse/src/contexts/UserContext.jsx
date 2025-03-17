@@ -115,6 +115,7 @@ function UserProvider({ children }) {
 				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(updatedUser),
 			});

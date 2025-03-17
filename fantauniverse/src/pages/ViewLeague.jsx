@@ -35,13 +35,16 @@ function ViewLega() {
 		message: "",
 	});
 	const { id, isAdmin } = state.league;
+
 	const fileInputRef = useRef(null);
 
 	const fetchData = useCallback(async () => {
 		try {
 			setIsLoading(true);
 			await getLeague(id);
-			await getMyTeam(id);
+			if (status != "PENDING") {
+				await getMyTeam(id);
+			}
 		} catch (error) {
 			console.error(error.message);
 		} finally {

@@ -7,16 +7,17 @@ import Lega from "../components/League";
 import Loader from "../components/Loader";
 import ModalLeague from "../components/modals/ModalLeague";
 import GenericPopup from "../components/popups/GenericPopup";
+import { useLocation } from "react-router";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [requestDone, setRequestDone] = useState(false);
 	const { user } = useUser();
-	const { resetMyLeague } = useLeague();
+	// const { resetMyLeague } = useLeague();
 	const { myLeagues, getMyLeagues, findLeague } = useLeague();
 	const [formData, setFormData] = useState({
-		name: "",
+		leagueName: "",
 	});
 
 	const [popupData, setPopupData] = useState({
@@ -25,6 +26,30 @@ function Dashboard() {
 		title: "",
 		message: "",
 	});
+	const { state } = useLocation();
+	const [deleteLeague, setDeleteLeague] = useState(
+		state?.deleteLeague ?? null
+	);
+
+	useEffect(() => {
+		if (deleteLeague !== null) {
+			if (deleteLeague) {
+				showPopup(
+					"success",
+					"Lega eliminata.",
+					"La lega è stata eliminata correttamente."
+				);
+			} else {
+				showPopup(
+					"error",
+					"Errore nell'eliminazione della lega",
+					"La lega non è stata eliminata correttamente. Riprova."
+				);
+			}
+
+			setTimeout(() => setDeleteLeague(null), 0);
+		}
+	}, [deleteLeague]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -47,9 +72,13 @@ function Dashboard() {
 		});
 	};
 
-	const handleSubmit = async () => {
-		findLeague();
-		resetMyLeague();
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (formData.leagueName.trim() != "") {
+			const res = await findLeague(formData.leagueName);
+			const data = await res.json();
+			console.log(data);
+		}
 	};
 
 	const showPopup = (type, title, message) => {
@@ -90,11 +119,11 @@ function Dashboard() {
 						</div>
 						<form onSubmit={handleSubmit}>
 							<GenericInput
-								type="search"
-								name="cercaLega"
-								id="cercaLega"
+								type="text"
+								name="leagueName"
+								id="searchLeaga"
 								placeholder="Cerca una lega a cui iscriverti"
-								value={formData.rule}
+								value={formData.leagueName}
 								handleChange={handleChange}
 							/>
 						</form>

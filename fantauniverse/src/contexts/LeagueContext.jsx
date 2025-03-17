@@ -144,7 +144,7 @@ function LeagueProvider({ children }) {
 				if (!user || !user.token) return;
 
 				const response = await fetch(
-					`${urlServer}/league/filter?name=${name}`,
+					`${urlServer}/league/filter?nameOrCode=${name}`,
 					{
 						method: "GET",
 						headers: {
@@ -198,7 +198,7 @@ function LeagueProvider({ children }) {
 				if (!user || !user.token) return;
 
 				const response = await fetch(
-					`${urlServer}/league/filter?id=${leagueId}`,
+					`${urlServer}/league/${leagueId}`,
 					{
 						method: "GET",
 						headers: {

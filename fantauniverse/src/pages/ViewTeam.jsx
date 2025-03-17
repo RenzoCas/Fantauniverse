@@ -12,20 +12,20 @@ import Loader from "../components/Loader";
 import { useTeam } from "../contexts/TeamContext";
 import { useNavigate } from "react-router";
 import GenericPopup from "../components/popups/GenericPopup";
-import { useUser } from "../contexts/UserContext";
 
 function ViewTeam() {
 	const { league } = useLeague();
-	const { user } = useUser();
-	const { team, teamParticipant, createTeam, resetTeamPartecipant } =
-		useTeam();
-	const { maxCoins, coinName, players, participants, status } = league;
+	const {
+		team,
+		teamParticipant,
+		createTeam,
+		updateTeam,
+		resetTeamPartecipant,
+	} = useTeam();
+	const { maxCoins, coinName, players, status } = league;
 
-	const participant = participants.find((p) => p.user.id == user.id);
 	const [tempTeam, setTempTeam] = useState({
-		referredTo: {
-			id: participant.id,
-		},
+		id: teamParticipant?.id || team?.id || null,
 		name: teamParticipant?.name || team?.name || "",
 		icon: teamParticipant?.icon || team?.icon || null,
 		players: teamParticipant?.players || team?.players || [],
@@ -148,29 +148,17 @@ function ViewTeam() {
 				(file.type === "image/jpeg" || file.type === "image/png")
 			) {
 				const reader = new FileReader();
-				// reader.onloadend = async () => {
-				// 	const base64Image = reader.result.split(",")[1];
-				// 	const updatedLeagueData = { ...league, icon: base64Image };
-				// 	setIsLoading(true);
+				reader.onloadend = async () => {
+					const base64Image = reader.result.split(",")[1];
+					setIsLoading(true);
 
-				// 	// Make sure res is properly checked, log it for debugging
-				// 	const res = await updateLeague(updatedLeagueData);
-
-				// 	// Check if res is falsy or contains a failure message
-				// 	if (!res) {
-				// 		// Assuming `res` has a success field
-				// 		setIsLoading(false);
-				// 		showPopup(
-				// 			"error",
-				// 			"Errore nell'aggiornamento dell'immagine!",
-				// 			"Immagine non caricata correttamente. Riprova."
-				// 		);
-				// 		return;
-				// 	}
-
-				// 	await getLeague(id);
-				// 	setIsLoading(false);
-				// };
+					// Make sure res is properly checked, log it for debugging
+					setTempTeam((prev) => ({
+						...prev,
+						icon: base64Image,
+					}));
+					setIsLoading(false);
+				};
 				reader.readAsDataURL(file);
 			} else {
 				throw new Error("Per favore seleziona un file JPEG o PNG.");
@@ -186,7 +174,13 @@ function ViewTeam() {
 
 	const handleSubmitTeam = async () => {
 		setIsLoading(true);
-		const res = await createTeam(tempTeam);
+		let res = null;
+		if (team) {
+			res = await updateTeam(tempTeam);
+		} else {
+			res = await createTeam(tempTeam);
+		}
+
 		if (!res) {
 			setIsLoading(false);
 			showPopup(
@@ -251,8 +245,8 @@ function ViewTeam() {
 						>
 							<img
 								src={
-									team?.icon != null
-										? `data:image/png;base64,${team?.icon}`
+									tempTeam?.icon != null
+										? `data:image/png;base64,${tempTeam?.icon}`
 										: "https://placehold.co/360x202"
 								}
 								alt="Logo lega"

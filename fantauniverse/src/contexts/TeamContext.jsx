@@ -139,6 +139,31 @@ function TeamProvider({ children }) {
 		}
 	};
 
+	const updateTeam = async (team) => {
+		try {
+			const response = await fetch(`${urlServer}/team`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(team),
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nell'aggiornamento del team.");
+			}
+
+			const data = response.json();
+
+			dispatch({ type: "updateTeam", payload: data });
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	const deleteTeam = async () => {
 		try {
 			if (!league.id) throw new Error("Nessuna team selezionata.");
@@ -175,6 +200,7 @@ function TeamProvider({ children }) {
 				getMyTeam,
 				getTeam,
 				createTeam,
+				updateTeam,
 				deleteTeam,
 				resetTeamPartecipant,
 			}}

@@ -50,7 +50,10 @@ function GeneralSettings() {
 		title: "",
 		message: "",
 	});
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
 	const navigate = useNavigate();
@@ -114,12 +117,20 @@ function GeneralSettings() {
 			default:
 				break;
 		}
-		setIsModalOpen(true);
+		setIsModalConfirmOpen({ action: "select", value: true });
+	};
+
+	const showModalConfirmDelete = () => {
+		setTextModal("Sei sicuro di voler eliminare la lega?");
+		setDisclaimerModal(
+			"Confermando non sará piú possibile accedere ai dati di questa lega."
+		);
+		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
 	const handleChangeSelect = async () => {
 		setSelectedValue(tempValue);
-		setIsModalOpen(false);
+		setIsModalConfirmOpen({ action: "select", value: false });
 		setIsLoading(true);
 		await handleUpdateLeague(tempValue);
 		setIsLoading(false);
@@ -200,23 +211,13 @@ function GeneralSettings() {
 	const handleDeleteLeague = async () => {
 		setIsLoading(true);
 		const result = await deleteLeague(id);
+
+		navigate(`/app`, {
+			state: { deleteLeague: result ? true : false },
+			replace: true,
+		});
+
 		setIsLoading(false);
-		if (!result) {
-			showPopup(
-				"error",
-				"Errore nell'eliminazione della lega",
-				"La lega non é stata eliminata correttamente. Riprova."
-			);
-			return;
-		}
-		showPopup(
-			"success",
-			"Lega eliminata.",
-			"La lega é stata eliminata correttamente."
-		);
-		setTimeout(() => {
-			navigate("/app");
-		}, 2000);
 	};
 
 	const isFormValid = (newStatus = selectedValue) => {
@@ -297,7 +298,7 @@ function GeneralSettings() {
 						/>
 						<GhostButton
 							text="Elimina lega"
-							action={handleDeleteLeague}
+							action={showModalConfirmDelete}
 							classOpt="text-(--error-normal)"
 							disabled={isEditingAnyField}
 						>
@@ -306,11 +307,17 @@ function GeneralSettings() {
 					</div>
 				)}
 				<MdalConfirmAction
-					isOpen={isModalOpen}
+					isOpen={isModalConfirmOpen.value}
 					text={textModal}
 					disclaimer={disclaimerModal}
-					onClose={() => setIsModalOpen(false)}
-					onConfirmAction={handleChangeSelect}
+					onClose={() =>
+						setIsModalConfirmOpen({ action: null, value: false })
+					}
+					onConfirmAction={
+						isModalConfirmOpen.action == "select"
+							? handleChangeSelect
+							: handleDeleteLeague
+					}
 				></MdalConfirmAction>
 				<GenericPopup
 					isOpen={popupData.isOpen}

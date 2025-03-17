@@ -21,7 +21,7 @@ export default function GenericInput({
 }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPasswordType = type === "password";
-	const isSearchType = type === "search";
+	const isSearchType = id.includes("search");
 	const isTextarea = type === "textarea";
 
 	const togglePasswordVisibility = () => {
