@@ -14,7 +14,6 @@ function Dashboard() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [requestDone, setRequestDone] = useState(false);
 	const { user } = useUser();
-	// const { resetMyLeague } = useLeague();
 	const { myLeagues, getMyLeagues, findLeague } = useLeague();
 	const [formData, setFormData] = useState({
 		leagueName: "",

@@ -132,7 +132,7 @@ function TeamProvider({ children }) {
 			const data = response.json();
 
 			dispatch({ type: "createTeam", payload: data });
-			return true;
+			return data;
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -157,7 +157,7 @@ function TeamProvider({ children }) {
 			const data = response.json();
 
 			dispatch({ type: "updateTeam", payload: data });
-			return true;
+			return data;
 		} catch (error) {
 			console.error(error.message);
 			return false;

@@ -189,8 +189,25 @@ function ViewTeam() {
 				"La creazione della squadra non é andata a buon fine. Riprova."
 			);
 		}
+
 		setIsLoading(false);
-		navigate(-1);
+		const totalCost = res.players.reduce((acc, p) => acc + p.price, 0);
+		setTempMaxCoins(maxCoins - totalCost);
+		setTempTeam(res);
+
+		if (team) {
+			showPopup(
+				"success",
+				"Squadra aggiornata!",
+				"L'aggiornamento della squadra é andato a buon fine."
+			);
+		} else {
+			showPopup(
+				"success",
+				"Squadra creata!",
+				"La squadra é stata creata con successo."
+			);
+		}
 	};
 
 	return (
