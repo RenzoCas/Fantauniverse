@@ -18,7 +18,7 @@ function ModalConfirmAction({
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-lg w-full transition-transform duration-500 ease flex flex-col gap-[16px] items-center max-w-[600px] p-[16px] ${
+				className={`bg-white shadow-lg rounded-t-[12px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] items-center max-w-[600px] p-[16px] ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>

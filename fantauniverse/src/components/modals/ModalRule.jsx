@@ -115,7 +115,7 @@ function ModalRule({
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-t-lg p-4 w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-100 ${
+				className={`bg-white shadow-lg rounded-t-[12px] p-4 w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-100 ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>

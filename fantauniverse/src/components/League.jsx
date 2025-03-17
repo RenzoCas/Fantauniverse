@@ -35,7 +35,9 @@ export default function Lega({ league }) {
 					{isAdmin && <WrenchScrewdriverIcon className="w-5 h-5" />}
 				</div>
 				<p className="text-sm text-gray-600">
-					{numberParticipants} partecipanti
+					{`${numberParticipants} ${
+						numberParticipants > 1 ? "Partecipanti" : "Partecipante"
+					}`}
 				</p>
 			</div>
 		</li>

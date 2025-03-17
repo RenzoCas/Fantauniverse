@@ -35,7 +35,7 @@ function allLeaguesReducer(state, action) {
 			return { ...state, allLeagues: action.payload };
 
 		case "findLeague":
-			return action.payload;
+			return { ...state, allLeagues: action.payload };
 
 		default:
 			return state;
@@ -158,7 +158,7 @@ function LeagueProvider({ children }) {
 				}
 
 				const data = await response.json();
-				dispatchLeague({ type: "updateLeague", payload: data });
+				dispatchAllLeagues({ type: "findLeague", payload: data });
 
 				return data;
 			} catch (error) {

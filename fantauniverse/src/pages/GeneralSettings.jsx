@@ -3,6 +3,7 @@ import { useLeague } from "../contexts/LeagueContext";
 import Select from "../atoms/Inputs/Select";
 import {
 	CheckIcon,
+	ClipboardIcon,
 	PencilSquareIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -26,6 +27,8 @@ function GeneralSettings() {
 		leagueInfoCompleted,
 		participants,
 		days,
+		visibility,
+		code,
 	} = league;
 	const [selectedValue, setSelectedValue] = useState(status);
 	const [tempValue, setTempValue] = useState();
@@ -231,6 +234,25 @@ function GeneralSettings() {
 		);
 	};
 
+	const handleCopy = () => {
+		navigator.clipboard
+			.writeText(code)
+			.then(() =>
+				showPopup(
+					"success",
+					"Codice copiato!",
+					"Il codice é stato copiato correttamente. Condividilo con i tuoi amici."
+				)
+			)
+			.catch(() =>
+				showPopup(
+					"success",
+					"Codice non copiato!",
+					"Il codice non é stato copiato. Riprova."
+				)
+			);
+	};
+
 	return (
 		<>
 			{isLoading && <Loader />}
@@ -287,6 +309,24 @@ function GeneralSettings() {
 								</div>
 							))}
 						</>
+					)}
+					{status == "NOT_STARTED" && visibility == "PRIVATE" && (
+						<div className="flex flex-col gap-[4px]">
+							<p className="body-small font-semibold">
+								Condividi il codice della lega con i tuoi amici:
+							</p>
+							<div className="flex items-center gap-2">
+								<button
+									onClick={handleCopy}
+									className="hover:bg-gray-300"
+								>
+									<ClipboardIcon className="h-5 w-5 text-gray-600" />
+								</button>
+								<p className="font-mono bg-gray-100 p-2 rounded">
+									{code}
+								</p>
+							</div>
+						</div>
 					)}
 				</div>
 				{status === "PENDING" && (

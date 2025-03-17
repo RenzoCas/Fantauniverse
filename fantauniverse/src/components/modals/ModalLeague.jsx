@@ -142,9 +142,9 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] ${
+				className={`bg-white shadow-lg rounded-t-[12px] p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] ${
 					isOpen ? "translate-y-0" : "translate-y-full"
-				} md:max-w-[600px] md:rounded-lg md:items-center md:justify-center`}
+				} md:max-w-[600px] md:items-center md:justify-center`}
 			>
 				<button onClick={onClose} className="flex self-end">
 					<XMarkIcon className="h-[24px] w-[24px]" />
