@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function Lega({ league }) {
 	const navigate = useNavigate();
-	const { id, name, icon, isAdmin, numberParticipants } = league;
+	const { id, name, icon, isAdmin } = league;
+	const numParticipants = league.participants
+		? league.participants?.length
+		: league.numberParticipants;
 
 	const handleClick = () => {
 		navigate(`league/${id}`, {
@@ -14,7 +17,7 @@ export default function Lega({ league }) {
 
 	return (
 		<li
-			className="flex gap-2.5 p-4 border border-gray-300 rounded-lg bg-white cursor-pointer"
+			className="flex gap-[8px] p-[8px] border border-gray-300 rounded-lg bg-white cursor-pointer"
 			onClick={handleClick}
 		>
 			<picture className="rounded-lg min-w-[60px] max-w-[60px] h-[60px] overflow-hidden">
@@ -35,8 +38,8 @@ export default function Lega({ league }) {
 					{isAdmin && <WrenchScrewdriverIcon className="w-5 h-5" />}
 				</div>
 				<p className="text-sm text-gray-600">
-					{`${numberParticipants} ${
-						numberParticipants > 1 ? "Partecipanti" : "Partecipante"
+					{`${numParticipants} ${
+						numParticipants == 1 ? "Partecipante" : "Partecipanti"
 					}`}
 				</p>
 			</div>

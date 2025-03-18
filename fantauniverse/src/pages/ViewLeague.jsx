@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useCallback } from "react";
 import {
-	ArrowLeftCircleIcon,
+	// ArrowLeftCircleIcon,
 	PencilSquareIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -41,8 +41,10 @@ function ViewLega() {
 	const fetchData = useCallback(async () => {
 		try {
 			setIsLoading(true);
-			await getLeague(id);
-			if (status != "PENDING") {
+			if (!league || league.id != id) {
+				await getLeague(id);
+			}
+			if ((status != "PENDING" && !team) || league.id != id) {
 				await getMyTeam(id);
 			}
 		} catch (error) {
@@ -164,7 +166,7 @@ function ViewLega() {
 			) : (
 				<>
 					<div className="flex flex-col gap-[16px] flex-1">
-						<div className="flex items-center justify-between gap-[16px]">
+						{/* <div className="flex items-center justify-between gap-[16px]">
 							<button
 								onClick={() => {
 									navigate(-1);
@@ -174,7 +176,7 @@ function ViewLega() {
 								<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
 								<p className="body-normal">Indietro</p>
 							</button>
-						</div>
+						</div> */}
 						<div className="top flex flex-col gap-[16px] flex-1">
 							{status === "PENDING" && (
 								<input
@@ -236,6 +238,7 @@ function ViewLega() {
 								<NormalButton
 									text="Unisciti alla lega"
 									action={handleAddParticipant}
+									classOpt="sticky bottom-[32px]"
 								/>
 							) : (
 								<CardSquadra
