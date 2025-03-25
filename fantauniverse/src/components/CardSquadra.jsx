@@ -46,15 +46,17 @@ function CardSquadra({ team, handleClick }) {
 
 			{/* Contenuto principale della card */}
 			<div className="flex items-center gap-[10px]">
-				<img
-					src={
-						icon
-							? `data:image/png;base64,${icon}`
-							: "https://placehold.co/60x60"
-					}
-					alt={`Icona utente`}
-					className="h-full object-cover rounded-[8px]"
-				/>
+				<picture className="rounded-lg min-w-[60px] max-w-[60px] h-[60px] overflow-hidden">
+					<img
+						src={
+							icon
+								? `data:image/png;base64,${icon}`
+								: "https://placehold.co/60x60"
+						}
+						alt={`Icona utente`}
+						className="h-full object-cover"
+					/>
+				</picture>
 				<div className="flex flex-col grow-1 justify-between gap-[6px]">
 					<div className="flex justify-between gap-[8px]">
 						<p className="body-small text-white">La tua squadra:</p>

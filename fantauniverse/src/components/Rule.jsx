@@ -1,16 +1,23 @@
 import {
 	ChevronDownIcon,
 	ChevronUpIcon,
+	MinusCircleIcon,
 	PencilSquareIcon,
+	PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-function Rule({ ruleObj, canEdit, onEdit }) {
+function Rule({ ruleObj, canEdit, onEdit, isAddPoints }) {
 	const { name, rule, value } = ruleObj;
 	const [expanded, setExpanded] = useState(false);
+	const [isSelected, setIsSelected] = useState(false);
 
 	return (
-		<li className="flex border-b border-(--black-light) pb-[8px] gap-[20px]">
+		<li
+			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
+				isSelected && "shadow-lg border p-[8px] rounded-[8px]"
+			}`}
+		>
 			{canEdit && (
 				<button className="flex" onClick={() => onEdit(ruleObj)}>
 					<PencilSquareIcon className="h-[20px] w-[20px]" />
@@ -40,9 +47,30 @@ function Rule({ ruleObj, canEdit, onEdit }) {
 					)}
 				</div>
 			</div>
-			<p className="body-small font-semibold whitespace-nowrap ml-auto">
-				{value} ptn.
-			</p>
+			<div className="flex gap-[8px] ml-auto">
+				<p className="body-small font-semibold whitespace-nowrap">
+					{value} ptn.
+				</p>
+				{isAddPoints && (
+					<>
+						{isSelected ? (
+							<button
+								className="flex self-center"
+								onClick={() => setIsSelected(false)}
+							>
+								<MinusCircleIcon className="h-[20px] w-[20px]" />
+							</button>
+						) : (
+							<button
+								className="flex self-center"
+								onClick={() => setIsSelected(true)}
+							>
+								<PlusCircleIcon className="h-[20px] w-[20px]" />
+							</button>
+						)}
+					</>
+				)}
+			</div>
 		</li>
 	);
 }

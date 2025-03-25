@@ -15,6 +15,8 @@ function Player({
 	onDeselect,
 	playersObj,
 	playerActive,
+	addPoints,
+	handleAddPoints,
 }) {
 	const { name, price, points, icon } = playerObj;
 	const { league } = useLeague();
@@ -62,6 +64,11 @@ function Player({
 			</div>
 			{canEdit && status == "PENDING" && (
 				<button className="flex" onClick={() => onEdit(playerObj)}>
+					<PencilSquareIcon className="h-[20px] w-[20px]" />
+				</button>
+			)}
+			{addPoints && (
+				<button className="flex" onClick={handleAddPoints}>
 					<PencilSquareIcon className="h-[20px] w-[20px]" />
 				</button>
 			)}

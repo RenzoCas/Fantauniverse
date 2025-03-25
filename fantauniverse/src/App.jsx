@@ -19,6 +19,7 @@ import Login from "./pages/Login";
 import Account from "./pages/Account";
 import { ParticipantProvider } from "./contexts/ParticipantContext";
 import { TeamProvider } from "./contexts/TeamContext";
+import CreateDay from "./pages/CreateDay";
 
 function App() {
 	return (
@@ -78,6 +79,10 @@ function App() {
 											<Route
 												path="league/:id/viewTeam"
 												element={<ViewTeam />}
+											/>
+											<Route
+												path="league/:id/createDay"
+												element={<CreateDay />}
 											/>
 										</Route>
 									</Routes>

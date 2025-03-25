@@ -17,7 +17,9 @@ function ModalSearchLeague({ isOpen, onClose, leaguesFound }) {
 				} md:max-w-[600px] md:rounded-lg md:items-center md:justify-center`}
 			>
 				<div className="flex item-center justify-between gap-[8px] sticky top-0 py-[12px] bg-white w-full">
-					<h4 className="title-h5 font-semibold">Lege trovate:</h4>
+					<h4 className="body-regular font-semibold">
+						Leghe trovate:
+					</h4>
 					<button onClick={onClose}>
 						<XMarkIcon className="h-[24px] w-[24px]" />
 					</button>

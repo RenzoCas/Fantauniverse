@@ -12,19 +12,24 @@ import Loader from "../components/Loader";
 import { useTeam } from "../contexts/TeamContext";
 import { useNavigate } from "react-router";
 import GenericPopup from "../components/popups/GenericPopup";
+import { useUser } from "../contexts/UserContext";
 
 function ViewTeam() {
 	const { league } = useLeague();
+	const { user } = useUser();
 	const {
 		team,
 		teamParticipant,
 		createTeam,
+		getMyTeam,
 		updateTeam,
 		resetTeamPartecipant,
 	} = useTeam();
-	const { maxCoins, coinName, players, status } = league;
+	const { maxCoins, coinName, players, status, id, participants } = league;
+	const participant = participants.find((p) => p.user.id === user.id);
 
 	const [tempTeam, setTempTeam] = useState({
+		referredTo: { id: participant?.id },
 		id: teamParticipant?.id || team?.id || null,
 		name: teamParticipant?.name || team?.name || "",
 		icon: teamParticipant?.icon || team?.icon || null,
@@ -181,6 +186,8 @@ function ViewTeam() {
 			res = await createTeam(tempTeam);
 		}
 
+		await getMyTeam(id);
+
 		if (!res) {
 			setIsLoading(false);
 			showPopup(
@@ -229,13 +236,14 @@ function ViewTeam() {
 						{status == "NOT_STARTED" ? (
 							<>
 								<h1 className="title-h4 font-semibold text-(--black-normal)">
-									{team ? "Modifica" : "Crea"} la tua squadra
+									{tempTeam ? "Modifica" : "Crea"} la tua
+									squadra
 								</h1>
 							</>
 						) : (
 							<>
 								<h1 className="title-h4 font-semibold text-(--black-normal)">
-									{team.name}
+									{tempTeam.name}
 								</h1>
 							</>
 						)}

@@ -131,7 +131,23 @@ function Account() {
 					const base64Image = reader.result.split(",")[1];
 					const updatedUserData = { ...user, icon: base64Image };
 					setIsLoading(true);
-					await updateUser(updatedUserData);
+                    const res = await updateUser(updatedUserData);
+                    if (!res) {
+                        setIsLoading(false);
+                        showPopup(
+                            "error",
+                            "Errore nell'aggiornamento dell'immagine!",
+                            "Immagine non aggiornata. Riprova"
+                        );
+                        return;
+                    }
+                    setIsLoading(false);
+                    showPopup(
+                        "success",
+                        "Aggiornamento completato!",
+                        "Immagine modificata correttamente."
+                    );
+                    setIsLoading(false);
 				};
 				reader.readAsDataURL(file);
 			} else {
@@ -152,8 +168,8 @@ function Account() {
 			setIsLoading(false);
 			showPopup(
 				"error",
-				"Errore nell'aggiornamento dell'immagine!",
-				"Immagine non caricata correttamente. Riprova"
+				"Errore nell'aggiornamento dell'utente!",
+				"Dati non modificati. Riprova"
 			);
 			return;
 		}
@@ -161,7 +177,7 @@ function Account() {
 		showPopup(
 			"success",
 			"Aggiornamento completato!",
-			"Immagine non caricata correttamente. Riprova"
+			"Dati modificati correttamente."
 		);
 	};
 

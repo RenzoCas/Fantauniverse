@@ -6,7 +6,8 @@ import { useNavigate } from "react-router";
 
 function Participant({ participantObj, idx, isRanking, handleClick }) {
 	const navigate = useNavigate();
-	const { id, user: participantUser, name } = participantObj;
+	const { id, user: participantUser, team } = participantObj;
+	const name = team?.name;
 	const { icon, username } = participantUser;
 	const { user: currentUser } = useUser();
 	const { league } = useLeague();
@@ -26,16 +27,16 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 	};
 
 	const handleViewPartecipant = async () => {
-		if (participantUser.id === currentUser.id) {
+		if (status === "STARTED") {
+			await handleClick(id);
+		} else if (participantUser.id === currentUser.id) {
 			navigate("viewTeam");
-		} else if (status != "STARTED") {
+		} else {
 			showPopup(
 				"error",
 				"Squadra non visibile!",
 				"Potrai visualizzare la squadra degli altri giocatori solo quando la lega sará avviata."
 			);
-		} else {
-			await handleClick(id);
 		}
 	};
 
@@ -60,7 +61,7 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 				<div className={`flex flex-col gap-[4px] w-full`}>
 					<p className="body-normal font-semibold">{username}</p>
 					<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
-						{name || "nome squadra"}
+						{name || "Squadra non presente."}
 					</p>
 				</div>
 				{isRanking && (

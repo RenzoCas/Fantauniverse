@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useCallback } from "react";
 import {
-	// ArrowLeftCircleIcon,
+	ArrowLeftCircleIcon,
 	PencilSquareIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -19,6 +19,7 @@ import { useParticipant } from "../contexts/ParticipantContext";
 import Participants from "./Participants";
 import CardSquadra from "../components/CardSquadra";
 import { useTeam } from "../contexts/TeamContext";
+import Points from "./Points";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -41,12 +42,11 @@ function ViewLega() {
 	const fetchData = useCallback(async () => {
 		try {
 			setIsLoading(true);
-			if (!league || league.id != id) {
-				await getLeague(id);
-			}
-			if ((status != "PENDING" && !team) || league.id != id) {
-				await getMyTeam(id);
-			}
+
+			await getLeague(id);
+			await getMyTeam(id);
+			// if ((status != "PENDING" && !team) || league.id != id) {
+			// }
 		} catch (error) {
 			console.error(error.message);
 		} finally {
@@ -166,17 +166,17 @@ function ViewLega() {
 			) : (
 				<>
 					<div className="flex flex-col gap-[16px] flex-1">
-						{/* <div className="flex items-center justify-between gap-[16px]">
+						<div className="flex items-center justify-between gap-[16px]">
 							<button
 								onClick={() => {
-									navigate(-1);
+									navigate("/app");
 								}}
 								className="flex items-center gap-[4px] text-(--accent-normal)"
 							>
 								<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
 								<p className="body-normal">Indietro</p>
 							</button>
-						</div> */}
+						</div>
 						<div className="top flex flex-col gap-[16px] flex-1">
 							{status === "PENDING" && (
 								<input
@@ -229,7 +229,9 @@ function ViewLega() {
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
-							{tabActive === "Points" && <p>punti</p>}
+							{tabActive === "Points" && (
+								<Points isAdmin={isAdmin} />
+							)}
 							{tabActive === "Players" && <Players />}
 							{tabActive === "Participants" && <Participants />}
 						</div>

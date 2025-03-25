@@ -18,7 +18,7 @@ function ModalRule({
 		name: "",
 		rule: "",
 		value: "",
-		malus: startTabActive === "Malus" ? true : false,
+		malus: startTabActive == "Malus" ? true : false,
 	});
 	const [errors, setErrors] = useState({});
 	const [tabActive, setTabActive] = useState(startTabActive);
@@ -31,7 +31,7 @@ function ModalRule({
 				name: "",
 				rule: "",
 				value: "",
-				malus: startTabActive === "Malus" ? true : false,
+				malus: startTabActive == "Malus" ? true : false,
 			});
 		}
 	}, [ruleObj, startTabActive]);

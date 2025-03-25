@@ -24,10 +24,10 @@ function GeneralSettings() {
 		coinName,
 		maxCoins,
 		status,
-		leagueInfoCompleted,
+		players,
+		rules,
 		participants,
 		days,
-		visibility,
 		code,
 	} = league;
 	const [selectedValue, setSelectedValue] = useState(status);
@@ -74,7 +74,7 @@ function GeneralSettings() {
 		{
 			value: "NOT_STARTED",
 			text: "Pubblicata",
-			isDisabled: !leagueInfoCompleted,
+			isDisabled: players.length == 0 || rules.length == 0,
 		},
 		{
 			value: "STARTED",
@@ -88,10 +88,10 @@ function GeneralSettings() {
 		},
 	];
 
-	const currentIndex = options.findIndex(
-		(opt) => opt.value === league.status
-	);
-	const filteredOptions = options.slice(currentIndex, currentIndex + 2);
+	// const currentIndex = options.findIndex(
+	// 	(opt) => opt.value === league.status
+	// );
+	// const filteredOptions = options.slice(currentIndex, currentIndex + 2);
 	const isEditingAnyField = Object.values(isEditing).some(
 		(isEditing) => isEditing
 	);
@@ -259,7 +259,7 @@ function GeneralSettings() {
 			<div className="flex flex-col items-between gap-[40px]">
 				<div className="flex flex-col gap-[16px]">
 					<Select
-						options={filteredOptions}
+						options={options}
 						selectedValue={selectedValue}
 						handleChange={showModalConfirmChange}
 					/>
@@ -310,7 +310,7 @@ function GeneralSettings() {
 							))}
 						</>
 					)}
-					{status == "NOT_STARTED" && visibility == "PRIVATE" && (
+					{status == "NOT_STARTED" && (
 						<div className="flex flex-col gap-[4px]">
 							<p className="body-small font-semibold">
 								Condividi il codice della lega con i tuoi amici:
