@@ -229,7 +229,7 @@ function ViewLega() {
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
-							{tabActive === "Points" && (
+							{tabActive === "Days" && (
 								<Points isAdmin={isAdmin} />
 							)}
 							{tabActive === "Players" && <Players />}
@@ -249,10 +249,14 @@ function ViewLega() {
 								/>
 							)
 						) : status === "STARTED" && isRegistered ? (
-							<CardSquadra
-								team={team}
-								handleClick={() => navigate("viewTeam")}
-							/>
+							<>
+								{tabActive == "Ranking" && (
+									<CardSquadra
+										team={team}
+										handleClick={() => navigate("viewTeam")}
+									/>
+								)}
+							</>
 						) : (
 							status === "STARTED" &&
 							!isRegistered && (

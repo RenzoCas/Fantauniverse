@@ -4,7 +4,7 @@ import Lega from "../League";
 function ModalSearchLeague({ isOpen, onClose, leaguesFound }) {
 	return (
 		<div
-			id="modalLeague"
+			id="modalSearchLeague"
 			tabIndex="-1"
 			aria-hidden={!isOpen}
 			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 ${

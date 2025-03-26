@@ -280,6 +280,35 @@ function LeagueProvider({ children }) {
 		}
 	};
 
+	const createDay = async (dataDay) => {
+		try {
+			const response = await fetch(`${urlServer}/day`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(dataDay),
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nella creazione della giornata.");
+			}
+
+			const updatedLeagueData = await response.json();
+
+			dispatchMyLeagues({
+				type: "updateLeague",
+				payload: updatedLeagueData,
+			});
+
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	const deleteLeague = async (leagueId) => {
 		try {
 			const response = await fetch(`${urlServer}/league/${leagueId}`, {
@@ -317,6 +346,7 @@ function LeagueProvider({ children }) {
 				getLeague,
 				createLeague,
 				updateLeague,
+				createDay,
 				deleteLeague,
 				resetMyLeague,
 			}}

@@ -13,8 +13,8 @@ export default function GhostButton({
 		<button
 			onClick={action}
 			disabled={disabled}
-            type="button"
-			className={`group w-full flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-(--black-normal) ${classOpt}
+			type="button"
+			className={`group w-full flex items-center justify-center gap-[8px] rounded-full px-[24px] py-[12px] text-(--black-normal) ${classOpt}
                 ${
 					disabled
 						? "text-(--black-normal)/25 cursor-not-allowed"

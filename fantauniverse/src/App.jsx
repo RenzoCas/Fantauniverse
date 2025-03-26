@@ -81,7 +81,7 @@ function App() {
 												element={<ViewTeam />}
 											/>
 											<Route
-												path="league/:id/createDay"
+												path="league/:id/setDay"
 												element={<CreateDay />}
 											/>
 										</Route>

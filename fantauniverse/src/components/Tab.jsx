@@ -68,10 +68,10 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 								<p className="body-normal">Classifica</p>
 							</TabButton>
 							<TabButton
-								handleClick={() => handleTabChange("Points")}
-								active={tabActive === "Points"}
+								handleClick={() => handleTabChange("Days")}
+								active={tabActive === "Days"}
 							>
-								<p className="body-normal">Punteggi</p>
+								<p className="body-normal">Giornate</p>
 							</TabButton>
 							<TabButton
 								handleClick={() => handleTabChange("Rules")}
@@ -112,10 +112,10 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 						<p className="body-normal">Classifica</p>
 					</TabButton>
 					<TabButton
-						handleClick={() => handleTabChange("Points")}
-						active={tabActive === "Points"}
+						handleClick={() => handleTabChange("Days")}
+						active={tabActive === "Days"}
 					>
-						<p className="body-normal">Punteggi</p>
+						<p className="body-normal">Giornate</p>
 					</TabButton>
 					<TabButton
 						handleClick={() => handleTabChange("Rules")}

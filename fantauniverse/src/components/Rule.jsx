@@ -7,11 +7,25 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-function Rule({ ruleObj, canEdit, onEdit, isAddPoints }) {
+function Rule({
+	ruleObj,
+	canEdit,
+	onEdit,
+	isAddPoints,
+	selectedRules,
+	setSelectedRules,
+}) {
 	const { name, rule, value } = ruleObj;
 	const [expanded, setExpanded] = useState(false);
-	const [isSelected, setIsSelected] = useState(false);
+	const isSelected = selectedRules.includes(rule);
 
+	const toggleRuleSelection = () => {
+		setSelectedRules((prev) =>
+			prev.includes(rule)
+				? prev.filter((r) => r !== rule)
+				: [...prev, rule]
+		);
+	};
 	return (
 		<li
 			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
@@ -52,23 +66,16 @@ function Rule({ ruleObj, canEdit, onEdit, isAddPoints }) {
 					{value} ptn.
 				</p>
 				{isAddPoints && (
-					<>
+					<button
+						className="flex self-center"
+						onClick={toggleRuleSelection}
+					>
 						{isSelected ? (
-							<button
-								className="flex self-center"
-								onClick={() => setIsSelected(false)}
-							>
-								<MinusCircleIcon className="h-[20px] w-[20px]" />
-							</button>
+							<MinusCircleIcon className="h-[20px] w-[20px]" />
 						) : (
-							<button
-								className="flex self-center"
-								onClick={() => setIsSelected(true)}
-							>
-								<PlusCircleIcon className="h-[20px] w-[20px]" />
-							</button>
+							<PlusCircleIcon className="h-[20px] w-[20px]" />
 						)}
-					</>
+					</button>
 				)}
 			</div>
 		</li>

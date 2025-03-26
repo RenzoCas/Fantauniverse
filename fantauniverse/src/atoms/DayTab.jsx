@@ -1,4 +1,4 @@
-function DayTab({ isActive, numDay, handleClick }) {
+function DayTab({ isActive, day, handleClick }) {
 	return (
 		<div
 			onClick={handleClick}
@@ -8,7 +8,7 @@ function DayTab({ isActive, numDay, handleClick }) {
 					: "bg-(--black-light) text-(--black-light-active)"
 			}`}
 		>
-			<h4 className="body-normal">{numDay}a Giornata</h4>
+			<h4 className="body-normal">{day.name}</h4>
 		</div>
 	);
 }

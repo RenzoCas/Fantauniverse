@@ -26,8 +26,8 @@ function Player({
 
 	return (
 		<li
-			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] rounded-[8px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
-				isActive && "shadow-lg border p-[8px]"
+			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
+				isActive && "shadow-lg border p-[8px] rounded-[8px]"
 			}`}
 		>
 			<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
@@ -68,7 +68,10 @@ function Player({
 				</button>
 			)}
 			{addPoints && (
-				<button className="flex" onClick={handleAddPoints}>
+				<button
+					className="flex"
+					onClick={() => handleAddPoints(playerObj)}
+				>
 					<PencilSquareIcon className="h-[20px] w-[20px]" />
 				</button>
 			)}
