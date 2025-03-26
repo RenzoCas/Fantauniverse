@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -6,18 +6,24 @@ import DayTab from "../atoms/DayTab";
 import DayPlayer from "../components/DayPlayer";
 import { useLeague } from "../contexts/LeagueContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
-import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+	PlusCircleIcon,
+	PlusIcon,
+	TrashIcon,
+	WrenchScrewdriverIcon,
+} from "@heroicons/react/24/outline";
 import ModalCreateDay from "../components/modals/ModalCreateDay";
 import Loader from "../components/Loader";
 import GenericPopup from "../components/popups/GenericPopup";
 import { useNavigate } from "react-router";
+import GhostButton from "../atoms/Buttons/GhostButton";
 
 function Points({ isAdmin }) {
 	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
-	const { league, createDay, getLeague } = useLeague();
+	const { league, getLeague, createDay, deleteDay } = useLeague();
 	const { id, days } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -25,6 +31,12 @@ function Points({ isAdmin }) {
 		type: "",
 		message: "",
 	});
+
+	const [activeDay, setActiveDay] = useState();
+
+	useEffect(() => {
+		setActiveDay(days[activeIndex]);
+	}, [activeIndex]);
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -69,6 +81,38 @@ function Points({ isAdmin }) {
 			"Giornata aggiunta!",
 			"La giornata é stata creata correttamente."
 		);
+	};
+
+	const handleDeleteDay = async () => {
+		setIsLoading(true);
+		const result = await deleteDay(activeDay.id);
+		await getLeague(id);
+		setIsLoading(false);
+		if (!result) {
+			showPopup(
+				"error",
+				"Errore nell'eliminazione della giornata!",
+				"La giornata non é stata eliminata correttamente. Riprova."
+			);
+			return;
+		}
+		showPopup(
+			"success",
+			"Giornata eliminata!",
+			"La giornata é stata eliminata correttamente."
+		);
+		setActiveIndex((prevIndex) => {
+			const newIndex =
+				days.length - 1 > 0 ? Math.max(0, prevIndex - 1) : 0;
+
+			setTimeout(() => {
+				if (swiperInstance) {
+					swiperInstance.slideTo(newIndex);
+				}
+			}, 100);
+
+			return newIndex;
+		});
 	};
 
 	return (
@@ -148,11 +192,27 @@ function Points({ isAdmin }) {
 								Punteggi di giornata non ancora inseriti
 							</p>
 							{isAdmin && (
-								<NormalButton
-									text="Modifica giornata"
-									icon={false}
-									action={() => navigate("setDay")}
-								/>
+								<div className="flex gap-[8px]">
+									<GhostButton
+										text="Elimina"
+										customIcon={true}
+										action={handleDeleteDay}
+										classOpt="border border-solid bg-white"
+									>
+										<TrashIcon className="h-[20px] w-[20px]" />
+									</GhostButton>
+									<NormalButton
+										text="Modifica"
+										customIcon={true}
+										action={() =>
+											navigate("setDay", {
+												state: activeDay,
+											})
+										}
+									>
+										<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+									</NormalButton>
+								</div>
 							)}
 						</>
 					)}

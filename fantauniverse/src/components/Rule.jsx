@@ -15,15 +15,13 @@ function Rule({
 	selectedRules,
 	setSelectedRules,
 }) {
-	const { name, rule, value } = ruleObj;
+	const { name, rule, value, id } = ruleObj;
 	const [expanded, setExpanded] = useState(false);
-	const isSelected = selectedRules.includes(rule);
+	const isSelected = selectedRules?.includes(id);
 
 	const toggleRuleSelection = () => {
 		setSelectedRules((prev) =>
-			prev.includes(rule)
-				? prev.filter((r) => r !== rule)
-				: [...prev, rule]
+			prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]
 		);
 	};
 	return (

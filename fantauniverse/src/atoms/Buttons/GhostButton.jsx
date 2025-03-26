@@ -22,7 +22,7 @@ export default function GhostButton({
 				}
             `}
 		>
-			<span>{text}</span>
+			{text && <span>{text}</span>}
 
 			{icon && !customIcon && (
 				<BoltIcon

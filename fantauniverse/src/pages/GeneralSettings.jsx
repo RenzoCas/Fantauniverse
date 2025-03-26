@@ -88,10 +88,13 @@ function GeneralSettings() {
 		},
 	];
 
-	// const currentIndex = options.findIndex(
-	// 	(opt) => opt.value === league.status
-	// );
-	// const filteredOptions = options.slice(currentIndex, currentIndex + 2);
+	const currentIndex = options.findIndex(
+		(opt) => opt.value === selectedValue
+	);
+
+	const filteredOptions =
+		currentIndex !== -1 ? options.slice(currentIndex) : options;
+
 	const isEditingAnyField = Object.values(isEditing).some(
 		(isEditing) => isEditing
 	);
@@ -259,7 +262,7 @@ function GeneralSettings() {
 			<div className="flex flex-col items-between gap-[40px]">
 				<div className="flex flex-col gap-[16px]">
 					<Select
-						options={options}
+						options={filteredOptions}
 						selectedValue={selectedValue}
 						handleChange={showModalConfirmChange}
 					/>

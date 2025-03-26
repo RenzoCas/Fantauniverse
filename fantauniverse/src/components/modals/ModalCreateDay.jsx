@@ -56,6 +56,17 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 						text="Conferma"
 						action={(e) => {
 							e.preventDefault();
+							setFormData({
+								leagueId: league.id,
+								days: [
+									{
+										name: "",
+										date: new Date()
+											.toISOString()
+											.split("T")[0],
+									},
+								],
+							});
 							handleSubmit(formData);
 						}}
 						disabled={!isFormValid()}

@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Aggiungi useEffect
 import TabButton from "../../atoms/Buttons/TabButton";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../../contexts/LeagueContext";
 import Rule from "../Rule";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 
-function ModalAddPoints({ isOpen, onClose, playerObj }) {
+function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 	const [tabActive, setTabActive] = useState("Bonus");
 	const { league } = useLeague();
 	const { rules } = league;
 	const { name } = playerObj;
 	const [selectedRules, setSelectedRules] = useState([]);
+
+	useEffect(() => {
+		if (dataDay?.players) {
+			const player = dataDay?.players.find((p) => p.id === playerObj.id);
+			if (player) {
+				setSelectedRules(player.rules);
+			} else {
+				setSelectedRules([]);
+			}
+		}
+	}, [dataDay, playerObj.id]);
 
 	return (
 		<div
@@ -28,7 +39,6 @@ function ModalAddPoints({ isOpen, onClose, playerObj }) {
 			>
 				<button
 					onClick={() => {
-						setSelectedRules([]);
 						onClose();
 					}}
 					className="flex self-end"
@@ -70,7 +80,10 @@ function ModalAddPoints({ isOpen, onClose, playerObj }) {
 							))}
 					</ul>
 					<NormalButton
-						action={() => {}}
+						action={() => {
+							onConfirm(playerObj, selectedRules);
+							onClose();
+						}}
 						icon={false}
 						text="Conferma"
 						disabled={selectedRules.length == 0}

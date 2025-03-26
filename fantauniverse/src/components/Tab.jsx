@@ -16,7 +16,7 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 							handleClick={() => handleTabChange("Players")}
 							active={tabActive === "Players"}
 						>
-							<p className="body-normal">Players</p>
+							<p className="body-normal">Giocatori</p>
 						</TabButton>
 						<TabButton
 							handleClick={() => handleTabChange("Rules")}
@@ -37,13 +37,13 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 							handleClick={() => handleTabChange("Participants")}
 							active={tabActive === "Participants"}
 						>
-							<p className="body-normal">Giocatori</p>
+							<p className="body-normal">Partecipanti</p>
 						</TabButton>
 						<TabButton
 							handleClick={() => handleTabChange("Players")}
 							active={tabActive === "Players"}
 						>
-							<p className="body-normal">Players</p>
+							<p className="body-normal">Giocatori</p>
 						</TabButton>
 						<TabButton
 							handleClick={() => handleTabChange("Rules")}
@@ -88,13 +88,13 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 						handleClick={() => handleTabChange("Participants")}
 						active={tabActive === "Participants"}
 					>
-						<p className="body-normal">Giocatori</p>
+						<p className="body-normal">Partecipanti</p>
 					</TabButton>
 					<TabButton
 						handleClick={() => handleTabChange("Players")}
 						active={tabActive === "Players"}
 					>
-						<p className="body-normal">Players</p>
+						<p className="body-normal">Giocatori</p>
 					</TabButton>
 					<TabButton
 						handleClick={() => handleTabChange("Rules")}

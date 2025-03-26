@@ -71,8 +71,7 @@ function UserProvider({ children }) {
 			});
 
 			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(errorData.message || "Errore nella login");
+				throw new Error("Errore nella login");
 			}
 
 			const user = await response.json();
@@ -127,7 +126,7 @@ function UserProvider({ children }) {
 				};
 			}
 
-			const newUser = response.json();
+			const newUser = await response.json();
 			dispatch({ type: "updateUser", payload: newUser });
 			return true;
 		} catch (error) {

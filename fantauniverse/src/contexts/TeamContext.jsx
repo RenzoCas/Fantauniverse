@@ -129,7 +129,7 @@ function TeamProvider({ children }) {
 				throw new Error("Errore nella creazione del team.");
 			}
 
-			const data = response.json();
+			const data = await response.json();
 
 			dispatch({ type: "createTeam", payload: data });
 			return data;
@@ -154,7 +154,7 @@ function TeamProvider({ children }) {
 				throw new Error("Errore nell'aggiornamento del team.");
 			}
 
-			const data = response.json();
+			const data = await response.json();
 
 			dispatch({ type: "updateTeam", payload: data });
 			return data;

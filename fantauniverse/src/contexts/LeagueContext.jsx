@@ -309,6 +309,26 @@ function LeagueProvider({ children }) {
 		}
 	};
 
+	const deleteDay = async (dayId) => {
+		try {
+			const response = await fetch(`${urlServer}/day/${dayId}`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nella cancellazione della giornata.");
+			}
+
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	const deleteLeague = async (leagueId) => {
 		try {
 			const response = await fetch(`${urlServer}/league/${leagueId}`, {
@@ -347,6 +367,7 @@ function LeagueProvider({ children }) {
 				createLeague,
 				updateLeague,
 				createDay,
+				deleteDay,
 				deleteLeague,
 				resetMyLeague,
 			}}

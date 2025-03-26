@@ -21,11 +21,10 @@ function ViewTeam() {
 		team,
 		teamParticipant,
 		createTeam,
-		getMyTeam,
 		updateTeam,
 		resetTeamPartecipant,
 	} = useTeam();
-	const { maxCoins, coinName, players, status, id, participants } = league;
+	const { maxCoins, coinName, players, status, participants } = league;
 	const participant = participants.find((p) => p.user.id === user.id);
 
 	const [tempTeam, setTempTeam] = useState({
@@ -185,8 +184,6 @@ function ViewTeam() {
 		} else {
 			res = await createTeam(tempTeam);
 		}
-
-		await getMyTeam(id);
 
 		if (!res) {
 			setIsLoading(false);

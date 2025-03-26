@@ -22,7 +22,7 @@ export default function NormalButton({
 		}
       `}
 		>
-			<span>{text}</span>
+			{text && <span>{text}</span>}
 			{icon && !customIcon && (
 				<BoltIcon
 					className={`h-[24px] w-[24px] p-[4px] rounded-full ${

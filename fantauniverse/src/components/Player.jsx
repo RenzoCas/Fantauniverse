@@ -16,13 +16,35 @@ function Player({
 	playersObj,
 	playerActive,
 	addPoints,
+	dataDay,
 	handleAddPoints,
 }) {
-	const { name, price, points, icon } = playerObj;
+	const { name, price, points, icon, id } = playerObj;
 	const { league } = useLeague();
-	const { coinName, status } = league;
+	const { coinName, status, rules } = league;
 	const isActive =
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
+
+	const totalPoints = dataDay?.players
+		.filter((p) => p.id === id) // Trova il player con id corretto
+		.map((player) => {
+			return player.rules.reduce((total, ruleId) => {
+				// Trova la regola completa corrispondente all'ID
+				const rule = rules.find((r) => r.id === ruleId);
+
+				// Se la regola è trovata, calcola i punti
+				if (rule) {
+					if (rule.malus) {
+						// Se la regola è un malus, sottrai il valore
+						return total - rule.value;
+					} else {
+						// Se la regola è un bonus, somma il valore
+						return total + rule.value;
+					}
+				}
+				return total; // Se non trovi la regola, non fare nulla
+			}, 0); // Inizializza il total a 0
+		})[0]; // [0] per prendere il risultato del primo (e unico) giocatore trovato
 
 	return (
 		<li
@@ -56,9 +78,20 @@ function Player({
 					</>
 				) : (
 					<>
-						<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
-							{points} ptn.
-						</p>
+						{addPoints ? (
+							<>
+								<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+									{points} ptn. totali
+								</p>
+								<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+									{totalPoints || 0} ptn. giornata
+								</p>
+							</>
+						) : (
+							<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+								{points} ptn.
+							</p>
+						)}
 					</>
 				)}
 			</div>
