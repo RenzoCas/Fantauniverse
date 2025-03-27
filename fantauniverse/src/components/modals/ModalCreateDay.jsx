@@ -33,16 +33,16 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 				}`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-6 w-6" />
+					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 				<h4 className="font-semibold text-black">Crea giornata</h4>
-				<form className="flex flex-col gap-4 w-full">
+				<form className="flex flex-col gap-[16px] w-full">
 					<input
 						type="date"
 						name="date"
 						value={formData.days[0].date}
 						onChange={handleChange}
-						className="py-2 px-4 border border-solid rounded-lg"
+						className="py-[8px] px-[16px] border border-solid rounded-lg w-full"
 					/>
 					<GenericInput
 						type="text"

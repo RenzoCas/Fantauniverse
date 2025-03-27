@@ -131,23 +131,23 @@ function Account() {
 					const base64Image = reader.result.split(",")[1];
 					const updatedUserData = { ...user, icon: base64Image };
 					setIsLoading(true);
-                    const res = await updateUser(updatedUserData);
-                    if (!res) {
-                        setIsLoading(false);
-                        showPopup(
-                            "error",
-                            "Errore nell'aggiornamento dell'immagine!",
-                            "Immagine non aggiornata. Riprova"
-                        );
-                        return;
-                    }
-                    setIsLoading(false);
-                    showPopup(
-                        "success",
-                        "Aggiornamento completato!",
-                        "Immagine modificata correttamente."
-                    );
-                    setIsLoading(false);
+					const res = await updateUser(updatedUserData);
+					if (!res) {
+						setIsLoading(false);
+						showPopup(
+							"error",
+							"Errore nell'aggiornamento dell'immagine!",
+							"Immagine non aggiornata. Riprova"
+						);
+						return;
+					}
+					setIsLoading(false);
+					showPopup(
+						"success",
+						"Aggiornamento completato!",
+						"Immagine modificata correttamente."
+					);
+					setIsLoading(false);
 				};
 				reader.readAsDataURL(file);
 			} else {
@@ -262,11 +262,21 @@ function Account() {
 										</NormalButton>
 									</>
 								) : (
-									<img
-										src={`data:image/png;base64,${icon}`}
-										alt="Icona utente"
-										className="max-w-full max-h-[400px] rounded-lg"
-									/>
+									<>
+										<button
+											onClick={() =>
+												setIsModalImgOpen(false)
+											}
+											className="flex self-end"
+										>
+											<XMarkIcon className="h-[24px] w-[24px]" />
+										</button>
+										<img
+											src={`data:image/png;base64,${icon}`}
+											alt="Icona utente"
+											className="max-w-full max-h-[400px] rounded-lg"
+										/>
+									</>
 								)}
 							</div>
 						</div>

@@ -156,7 +156,7 @@ function Points({ isAdmin }) {
 					</p>
 				)
 			) : (
-				<div className="flex flex-col gap-[12px]">
+				<div className="flex flex-col gap-[16px] flex-1">
 					<div className="flex flex-col gap-[12px]">
 						<Swiper
 							slidesPerView={3}
@@ -197,45 +197,76 @@ function Points({ isAdmin }) {
 					</div>
 					{infoDay?.players.length > 0 ? (
 						<>
+							<button
+								onClick={() =>
+									navigate("setDay", {
+										state: activeDay,
+									})
+								}
+								className="flex items-center gap-[8px] justify-center"
+							>
+								<p className="body-normal">Modifica punteggi</p>
+								<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+							</button>
 							<ul className="flex flex-col">
 								{infoDay?.players?.map((el) => (
 									<DayPlayer
 										key={el.id}
 										playerObj={el.player}
 										rules={el.rules}
+										dayPoints={el.points}
 									/>
 								))}
 							</ul>
 						</>
 					) : (
 						<>
-							<p className="body-normal text-black text-center">
+							<p className="body-normal text-(black-normal) font-semibold text-center">
 								Punteggi di giornata non ancora inseriti
 							</p>
-							{isAdmin && (
-								<div className="flex gap-[8px]">
-									<GhostButton
-										text="Elimina"
-										customIcon={true}
-										action={handleDeleteDay}
-										classOpt="border border-solid bg-white"
-									>
-										<TrashIcon className="h-[20px] w-[20px]" />
-									</GhostButton>
-									<NormalButton
-										text="Modifica"
-										customIcon={true}
-										action={() =>
-											navigate("setDay", {
-												state: activeDay,
-											})
-										}
-									>
-										<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
-									</NormalButton>
-								</div>
-							)}
+							{/* {isAdmin && (
+								<NormalButton
+									text="Inserisci punteggi"
+									customIcon={true}
+									icon={false}
+									action={() =>
+										navigate("setDay", {
+											state: activeDay,
+										})
+									}
+									classOpt="w-3/4 mt-auto flex self-center"
+								>
+									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+								</NormalButton>
+							)} */}
 						</>
+					)}
+					{isAdmin && (
+						<div className="flex gap-[8px] mt-auto justify-center">
+							<GhostButton
+								text="Elimina"
+								customIcon={true}
+								action={handleDeleteDay}
+								classOpt={`w-3/4 self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white`}
+							>
+								<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
+							</GhostButton>
+							{infoDay?.players.length == 0 && (
+								<NormalButton
+									text="Inserisci punteggi"
+									customIcon={true}
+									icon={false}
+									action={() =>
+										navigate("setDay", {
+											state: activeDay,
+										})
+									}
+									classOpt="w-3/4"
+								>
+									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+								</NormalButton>
+							)}
+						</div>
 					)}
 				</div>
 			)}

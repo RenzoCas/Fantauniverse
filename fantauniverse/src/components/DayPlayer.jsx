@@ -1,12 +1,15 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-function DayPlayer({ playerObj, rules }) {
-	const { name, icon, totalPoints } = playerObj;
+function DayPlayer({ playerObj, rules, dayPoints }) {
+	const { name, icon } = playerObj;
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<li className="flex flex-col gap-[8px] py-[8px] border-b border-b-(--black-light)">
+		<li
+			className="flex flex-col gap-[8px] py-[8px] border-b border-b-(--black-light)"
+			onClick={() => setExpanded(!expanded)}
+		>
 			<div className="flex items-center gap-[20px]">
 				<picture className="rounded-[3px] h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
 					<img
@@ -21,20 +24,15 @@ function DayPlayer({ playerObj, rules }) {
 					/>
 				</picture>
 				<h5 className="body-normal font-semibold flex-1">{name}</h5>
-				<div className="flex gap-[10px]">
+				<div className="flex items-center gap-[10px]">
 					<p className="body-normal font-semibold">
-						{totalPoints} ptn.
+						{dayPoints} ptn.
 					</p>
-					<button
-						className="flex"
-						onClick={() => setExpanded(!expanded)}
-					>
-						{expanded ? (
-							<ChevronUpIcon className="h-[16px] w-[16px] stroke-2" />
-						) : (
-							<ChevronDownIcon className="h-[16px] w-[16px] stroke-2" />
-						)}
-					</button>
+					{expanded ? (
+						<ChevronUpIcon className="h-[16px] w-[16px] stroke-2" />
+					) : (
+						<ChevronDownIcon className="h-[16px] w-[16px] stroke-2" />
+					)}
 				</div>
 			</div>
 			{expanded && (

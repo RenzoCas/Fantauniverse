@@ -45,8 +45,6 @@ function ViewLega() {
 
 			await getLeague(id);
 			await getMyTeam(id);
-			// if ((status != "PENDING" && !team) || league.id != id) {
-			// }
 		} catch (error) {
 			console.error(error.message);
 		} finally {
@@ -59,7 +57,7 @@ function ViewLega() {
 	}, [fetchData]);
 
 	const { description, name, status, isRegistered, icon } = league;
-	const [tabActive, setTabActive] = useState("Rules");
+	const [tabActive, setTabActive] = useState();
 
 	useEffect(() => {
 		setTabActive(
@@ -91,7 +89,6 @@ function ViewLega() {
 		setIsLoading(true);
 		const res = await addParticipant(id);
 		if (!res) {
-			// Assuming `res` has a success field
 			setIsLoading(false);
 			showPopup(
 				"error",
@@ -128,12 +125,9 @@ function ViewLega() {
 					const updatedLeagueData = { id: id, icon: base64Image };
 					setIsLoading(true);
 
-					// Make sure res is properly checked, log it for debugging
 					const res = await updateLeague(updatedLeagueData);
 
-					// Check if res is falsy or contains a failure message
 					if (!res) {
-						// Assuming `res` has a success field
 						setIsLoading(false);
 						showPopup(
 							"error",
@@ -213,7 +207,7 @@ function ViewLega() {
 								<>
 									<h2 className="title-h4">{name}</h2>
 									{description != null && (
-										<p className="body-small text-(--black-normal)">
+										<p className="body-normal text-(--black-normal)">
 											{description}
 										</p>
 									)}
