@@ -47,7 +47,7 @@ function ViewTeam() {
 	const fileInputRef = useRef(null);
 
 	useEffect(() => {
-		if (team) {
+		if (!teamParticipant && team) {
 			const initialPlayers = team.players || [];
 			const initialMaxCoins =
 				maxCoins - initialPlayers.reduce((sum, p) => sum + p.price, 0);
