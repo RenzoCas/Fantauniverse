@@ -26,25 +26,17 @@ function Player({
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
 
 	const totalPoints = dataDay?.players
-		.filter((p) => p.id === id) // Trova il player con id corretto
+		.filter((p) => p.player.id === id)
 		.map((player) => {
-			return player.rules.reduce((total, ruleId) => {
-				// Trova la regola completa corrispondente all'ID
-				const rule = rules.find((r) => r.id === ruleId);
+			return player.rules.reduce((total, ruleObj) => {
+				const rule = rules.find((r) => r.id === ruleObj.id);
 
-				// Se la regola è trovata, calcola i punti
 				if (rule) {
-					if (rule.malus) {
-						// Se la regola è un malus, sottrai il valore
-						return total - rule.value;
-					} else {
-						// Se la regola è un bonus, somma il valore
-						return total + rule.value;
-					}
+					return rule.malus ? total - rule.value : total + rule.value;
 				}
-				return total; // Se non trovi la regola, non fare nulla
-			}, 0); // Inizializza il total a 0
-		})[0]; // [0] per prendere il risultato del primo (e unico) giocatore trovato
+				return total;
+			}, 0);
+		})[0];
 
 	return (
 		<li

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 // import GhostButton from "../atoms/Buttons/GhostButton";
 import Navbar from "../components/Navbar";
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { useUser } from "../contexts/UserContext";
 import Logo from "../atoms/Logo";
 
@@ -28,7 +28,7 @@ export default function GenericRules() {
 						}}
 						className="flex items-center gap-[4px] text-(--accent-normal)"
 					>
-						<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
+						<ChevronLeftIcon className="h-[20px] w-[20px]" />
 						<p className="body-normal">Indietro</p>
 					</button>
 				)}

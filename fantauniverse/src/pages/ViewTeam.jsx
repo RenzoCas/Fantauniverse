@@ -6,7 +6,7 @@ import NormalButton from "../atoms/Buttons/NormalButton";
 import {
 	UserGroupIcon,
 	PencilSquareIcon,
-	ArrowLeftCircleIcon,
+	ChevronLeftIcon,
 } from "@heroicons/react/24/outline";
 import Loader from "../components/Loader";
 import { useTeam } from "../contexts/TeamContext";
@@ -226,7 +226,7 @@ function ViewTeam() {
 						}}
 						className="flex items-center gap-[4px] text-(--accent-normal)"
 					>
-						<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
+						<ChevronLeftIcon className="h-[20px] w-[20px]" />
 						<p className="body-normal">Indietro</p>
 					</button>
 					<div className="flex flex-col gap-[4px]">

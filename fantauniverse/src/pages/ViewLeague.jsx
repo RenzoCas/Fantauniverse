@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useCallback } from "react";
 import {
-	ArrowLeftCircleIcon,
+	ChevronLeftIcon,
 	PencilSquareIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -173,7 +173,7 @@ function ViewLega() {
 								}}
 								className="flex items-center gap-[4px] text-(--accent-normal)"
 							>
-								<ArrowLeftCircleIcon className="h-[24px] w-[24px]" />
+								<ChevronLeftIcon className="h-[20px] w-[20px]" />
 								<p className="body-normal">Indietro</p>
 							</button>
 						</div>

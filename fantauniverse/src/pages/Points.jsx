@@ -17,13 +17,15 @@ import Loader from "../components/Loader";
 import GenericPopup from "../components/popups/GenericPopup";
 import { useNavigate } from "react-router";
 import GhostButton from "../atoms/Buttons/GhostButton";
+import { useDay } from "../contexts/DayContext";
 
 function Points({ isAdmin }) {
 	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
-	const { league, getLeague, createDay, deleteDay } = useLeague();
+	const { league, getLeague, createDay } = useLeague();
+	const { getDay, deleteDay } = useDay();
 	const { id, days } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -33,10 +35,25 @@ function Points({ isAdmin }) {
 	});
 
 	const [activeDay, setActiveDay] = useState();
+	const [infoDay, setInfoDay] = useState();
 
 	useEffect(() => {
-		setActiveDay(days[activeIndex]);
+		const newActiveDay = days[activeIndex];
+		setActiveDay(newActiveDay);
+
+		if (newActiveDay?.id) {
+			fetchInfoDay(newActiveDay.id);
+		}
 	}, [activeIndex]);
+
+	const fetchInfoDay = async (dayId) => {
+		try {
+			const response = await getDay(dayId);
+			setInfoDay(response);
+		} catch (error) {
+			console.error("Errore nel recupero di infoDay:", error);
+		}
+	};
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -178,11 +195,15 @@ function Points({ isAdmin }) {
 							Giocata il {formatDate(days[activeIndex].date)}
 						</p>
 					</div>
-					{days[activeIndex].players ? (
+					{infoDay?.players.length > 0 ? (
 						<>
 							<ul className="flex flex-col">
-								{days[activeIndex].players?.map((el) => (
-									<DayPlayer key={el.id} playerObj={el} />
+								{infoDay?.players?.map((el) => (
+									<DayPlayer
+										key={el.id}
+										playerObj={el.player}
+										rules={el.rules}
+									/>
 								))}
 							</ul>
 						</>

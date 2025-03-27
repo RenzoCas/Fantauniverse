@@ -113,17 +113,15 @@ function Dashboard() {
 							Le tue leghe
 						</p>
 						{myLeagues.length > 0 && (
-							<div className="flex gap-[8px] items-center">
+							<button
+								onClick={() => setIsModalOpen(true)}
+								className="flex gap-[8px] items-center"
+							>
 								<p className="body-small whitespace-nowrap">
 									Crea lega
 								</p>
-								<button
-									onClick={() => setIsModalOpen(true)}
-									className="p-[4px] bg-(--black-light) rounded-full"
-								>
-									<PlusIcon className="h-[16px] w-[16px]" />
-								</button>
-							</div>
+								<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full" />
+							</button>
 						)}
 					</div>
 					<form onSubmit={handleSubmit}>

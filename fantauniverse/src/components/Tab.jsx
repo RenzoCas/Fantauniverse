@@ -10,7 +10,7 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 							handleClick={() => handleTabChange("General")}
 							active={tabActive === "General"}
 						>
-							<p className="body-normal">Generale</p>
+							<p className="body-normal">Info</p>
 						</TabButton>
 						<TabButton
 							handleClick={() => handleTabChange("Players")}
@@ -31,7 +31,7 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 							handleClick={() => handleTabChange("General")}
 							active={tabActive === "General"}
 						>
-							<p className="body-normal">Generale</p>
+							<p className="body-normal">Info</p>
 						</TabButton>
 						<TabButton
 							handleClick={() => handleTabChange("Participants")}
@@ -59,7 +59,7 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 								handleClick={() => handleTabChange("General")}
 								active={tabActive === "General"}
 							>
-								<p className="body-normal">Generale</p>
+								<p className="body-normal">Info</p>
 							</TabButton>
 							<TabButton
 								handleClick={() => handleTabChange("Ranking")}

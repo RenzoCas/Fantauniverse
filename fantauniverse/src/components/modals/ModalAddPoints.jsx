@@ -14,9 +14,11 @@ function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 
 	useEffect(() => {
 		if (dataDay?.players) {
-			const player = dataDay?.players.find((p) => p.id === playerObj.id);
+			const player = dataDay.players.find(
+				(p) => p.player.id === playerObj.id
+			);
 			if (player) {
-				setSelectedRules(player.rules);
+				setSelectedRules(player.rules.map((ruleObj) => ruleObj.id));
 			} else {
 				setSelectedRules([]);
 			}
