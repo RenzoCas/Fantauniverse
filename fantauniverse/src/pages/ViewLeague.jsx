@@ -24,7 +24,6 @@ import Points from "./Points";
 function ViewLega() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
-
 	const { league, getLeague, updateLeague } = useLeague();
 	const { addParticipant } = useParticipant();
 	const { team, getMyTeam } = useTeam();
@@ -42,9 +41,10 @@ function ViewLega() {
 	const fetchData = useCallback(async () => {
 		try {
 			setIsLoading(true);
-
-			await getLeague(id);
-			await getMyTeam(id);
+			if (id != league.id) {
+				await getLeague(id);
+				await getMyTeam(id);
+			}
 		} catch (error) {
 			console.error(error.message);
 		} finally {
