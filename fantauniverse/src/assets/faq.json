@@ -1,0 +1,40 @@
+{
+	"faqs": [
+		{
+			"question": "Chi può partecipare a FantaUNIVERSE?",
+			"answer": "Chiunque può iscriversi e giocare! Basta registrarsi e unirsi a una lega o crearne una nuova."
+		},
+		{
+			"question": "È gratuito?",
+			"answer": "Sì, la piattaforma è gratuita! Alcune funzionalità extra potrebbero essere disponibili tramite abbonamenti o pacchetti premium."
+		},
+		{
+			"question": "Posso creare una lega su qualsiasi argomento?",
+			"answer": "Sì, puoi personalizzare la tua lega su qualsiasi argomento, purché rispetti le regole della piattaforma e non violi leggi o diritti di terzi."
+		},
+		{
+			"question": "Come funzionano i punteggi?",
+			"answer": "Il sistema di punteggio varia a seconda della lega. Ogni lega ha le sue regole personalizzate e gli organizzatori definiranno il regolamento relativo ai punteggi, che potrà includere modalità diverse di assegnazione in base agli eventi o alle azioni previste."
+		},
+		{
+			"question": "Posso modificare le regole di una lega dopo averla creata?",
+			"answer": "Solo fino all’inizio della competizione. Dopo l'inizio, le regole non possono essere cambiate per garantire la correttezza del gioco."
+		},
+		{
+			"question": "Cosa succede se ci sono dispute sui punteggi?",
+			"answer": "Ogni lega ha il proprio amministratore che prende decisioni sulle controversie."
+		},
+		{
+			"question": "C'è un limite al numero di leghe a cui posso partecipare?",
+			"answer": "No, puoi partecipare a quante leghe vuoi contemporaneamente!"
+		},
+		{
+			"question": "Posso giocare con amici o solo con sconosciuti?",
+			"answer": "Puoi fare entrambe le cose! Puoi entrare in leghe pubbliche o crearne di private per giocare solo con amici."
+		},
+		{
+			"question": "Ci sono premi per i vincitori?",
+			"answer": "Dipende dalla lega! Alcune possono prevedere premi simbolici o anche premi reali se stabiliti dagli organizzatori."
+		}
+	]
+}
