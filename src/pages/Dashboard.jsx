@@ -1,4 +1,10 @@
-import { FunnelIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+	ChevronDownIcon,
+	ChevronUpIcon,
+	FunnelIcon,
+	PlusIcon,
+	XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
@@ -35,25 +41,32 @@ function Dashboard() {
 
 	const [enabledSwitch, setEnabledSwitch] = useState(false);
 	const [showFilters, setShowFilters] = useState(false);
-	const [filterLeagueState, setFilterState] = useState("ALL");
+	const [filterLeagueState, setFilterState] = useState([]);
 	const [filteredLeague, setFilteredLeague] = useState(myLeagues);
+	const [filterStateOpen, setFilterStateOpen] = useState(false);
+
 	const filterRef = useRef(null);
 
 	useEffect(() => {
 		function handleClickOutside(event) {
 			if (
 				filterRef.current &&
-				!filterRef.current.contains(event.target)
+				!filterRef.current.contains(event.target) &&
+				!event.target.closest("button")
 			) {
 				setShowFilters(false);
 			}
+
+			setFilterStateOpen(false);
 		}
-		// Aggiunge l'event listener quando showFilters è true
+
 		if (showFilters) {
 			document.addEventListener("mousedown", handleClickOutside);
+		} else {
+			document.removeEventListener("mousedown", handleClickOutside);
 		}
+
 		return () => {
-			// Rimuove l'event listener quando il componente si smonta o showFilters cambia
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [showFilters]);
@@ -96,8 +109,8 @@ function Dashboard() {
 		setFilteredLeague(
 			myLeagues.filter(
 				(el) =>
-					(filterLeagueState === "ALL" ||
-						el.status === filterLeagueState) &&
+					(filterLeagueState.length === 0 ||
+						filterLeagueState.includes(el.status)) &&
 					(!enabledSwitch || el.isAdmin === true)
 			)
 		);
@@ -138,6 +151,62 @@ function Dashboard() {
 		);
 	};
 
+	const handleSelect = (event) => {
+		const value = event.target.getAttribute("data-value");
+
+		if (value === "ALL") {
+			setFilterState([]);
+		} else {
+			setFilterState((prevState) => {
+				if (prevState.includes(value)) {
+					return prevState.filter((item) => item !== value);
+				} else {
+					return [...prevState, value];
+				}
+			});
+		}
+	};
+
+	const handleChangeSwitch = () => {
+		setEnabledSwitch(!enabledSwitch);
+	};
+
+	const handleRemoveSelect = (state) => {
+		setFilterState((prevState) => {
+			return prevState.filter((item) => item !== state);
+		});
+	};
+
+	const renderSelectedText = () => {
+		if (filterLeagueState.length === 0) {
+			return "Tutte";
+		}
+
+		switch (filterLeagueState[0]) {
+			case "NOT_STARTED":
+				return `Pubblicate ${
+					filterLeagueState.length - 1 === 0
+						? ""
+						: "+" + (filterLeagueState.length - 1)
+				}`;
+			case "STARTED":
+				return `Avviate ${
+					filterLeagueState.length - 1 === 0
+						? ""
+						: "+" + (filterLeagueState.length - 1)
+				}`;
+			case "FINISHED":
+				return `Terminate ${
+					filterLeagueState.length - 1 === 0
+						? ""
+						: "+" + (filterLeagueState.length - 1)
+				}`;
+
+			default:
+				return `Tutte`;
+		}
+	};
+
 	return (
 		<>
 			{isLoading && <Loader />}
@@ -176,13 +245,72 @@ function Dashboard() {
 					{myLeagues.length !== 0 ? (
 						<>
 							<div className="relative flex flex-col gap-[10px]">
-								<button
-									className="flex items-center self-end gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit"
-									onClick={() => setShowFilters(!showFilters)}
-								>
-									<p>Filtri</p>
-									<FunnelIcon className="h-[20px] w-[20px]" />
-								</button>
+								<div className="flex justify-end gap-[12px]">
+									{(filterLeagueState.length > 0 ||
+										enabledSwitch) && (
+										<ul className="flex items-center gap-[8px] overflow-x-auto hide-scrollbar">
+											{filterLeagueState.map(
+												(state, index) => (
+													<li
+														key={index}
+														className="border border-solid border-[#716868] px-[8px] py-[4px] rounded-[5px] flex items-center gap-[4px]"
+													>
+														<p className="body-normal text-[#716868]">
+															{state ==
+															"NOT_STARTED"
+																? "Pubblicate"
+																: state ==
+																  "STARTED"
+																? "Avviate"
+																: "Terminate"}
+														</p>
+														<button
+															className="flex"
+															onClick={() =>
+																handleRemoveSelect(
+																	state
+																)
+															}
+														>
+															<XMarkIcon className="w-[20px] h-[20px] stroke-[#F87171]" />
+														</button>
+													</li>
+												)
+											)}
+											{enabledSwitch && (
+												<li
+													key="Admin"
+													className="border border-solid border-[#716868] px-[8px] py-[4px] rounded-[5px] flex items-center gap-[4px]"
+												>
+													<p className="body-normal text-[#716868]">
+														Admin
+													</p>
+													<button
+														className="flex"
+														onClick={() =>
+															handleRemoveSelect(
+																state
+															)
+														}
+													>
+														<XMarkIcon className="w-[20px] h-[20px] stroke-[#F87171]" />
+													</button>
+												</li>
+											)}
+										</ul>
+									)}
+
+									<button
+										className="flex items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit"
+										onClick={(e) => {
+											e.stopPropagation();
+											setShowFilters((prev) => !prev);
+										}}
+									>
+										<FunnelIcon className="h-[20px] w-[20px]" />
+									</button>
+								</div>
+
 								{showFilters && (
 									<div
 										ref={filterRef}
@@ -195,36 +323,66 @@ function Dashboard() {
 											<button
 												className="text-[#F87171] font-semibold"
 												onClick={() => {
-													setFilterState("ALL");
+													setFilterState([]);
 													setEnabledSwitch(false);
 												}}
 											>
 												Reimposta
 											</button>
 										</div>
-										<select
-											className="px-[12px] py-[4px] border border-solid border-(--black-light-hover) rounded-[5px] w-full"
-											onChange={(e) => {
-												setFilterState(e.target.value);
-											}}
-											value={filterLeagueState}
-										>
-											<option value="ALL">Tutte</option>
-											<option value="NOT_STARTED">
-												Non avviate
-											</option>
-											<option value="STARTED">
-												Avviate
-											</option>
-											<option value="FINISHED">
-												Terminate
-											</option>
-										</select>
+										<div className="relative flex flex-col gap-[8px] border border-solid border-(--black-light-active) rounded-[6px] z-50 px-[12px] py-[8px]">
+											<div
+												className={`flex items-center justify-between gap-[8px] ${
+													filterStateOpen &&
+													"pb-[8px] border-b border-b-solid border-b-(--black-light-active)"
+												}`}
+												onClick={() =>
+													setFilterStateOpen(
+														!filterStateOpen
+													)
+												}
+											>
+												<p>{renderSelectedText()}</p>
+												{filterStateOpen ? (
+													<ChevronUpIcon className="w-[16px] h-[16px]" />
+												) : (
+													<ChevronDownIcon className="w-[16px] h-[16px]" />
+												)}
+											</div>
+											{filterStateOpen && (
+												<div className="bg-white w-full flex flex-col gap-[8px]">
+													<ul className="flex flex-col gap-[8px]">
+														<li
+															data-value="NOT_STARTED"
+															onClick={
+																handleSelect
+															}
+														>
+															Pubblicate
+														</li>
+														<li
+															data-value="STARTED"
+															onClick={
+																handleSelect
+															}
+														>
+															Avviate
+														</li>
+														<li
+															data-value="FINISHED"
+															onClick={
+																handleSelect
+															}
+														>
+															Terminate
+														</li>
+													</ul>
+												</div>
+											)}
+										</div>
 										<Switch
 											enabled={enabledSwitch}
-											onChange={() =>
-												setEnabledSwitch(!enabledSwitch)
-											}
+											onChange={handleChangeSwitch}
 											text="Create da me"
 										/>
 									</div>
@@ -242,17 +400,6 @@ function Dashboard() {
 									selezionato
 								</p>
 							)}
-							{/* <ul className="flex flex-col gap-[10px]">
-								{myLeagues
-									.filter(
-										(el) =>
-											filterLeagueState === "ALL" ||
-											el.status === filterLeagueState
-									)
-									.map((el) => (
-										<Lega key={el.id} league={el} />
-									))}
-							</ul> */}
 						</>
 					) : (
 						<p className="body-normal font-semibold text-(--black-darker) text-center">
