@@ -133,16 +133,19 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 	};
 
 	return (
-		<div
-			id="modalLeague"
-			tabIndex="-1"
-			aria-hidden={!isOpen}
-			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 ${
-				isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-			}`}
-		>
+		<>
 			<div
-				className={`bg-white shadow-lg rounded-t-[12px] p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] ${
+				id="modalLeague"
+				tabIndex="-1"
+				aria-hidden={!isOpen}
+				className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 ${
+					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+				}`}
+				onClick={onClose}
+			></div>
+
+			<div
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				} md:max-w-[600px] md:items-center md:justify-center`}
 			>
@@ -223,7 +226,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 					</form>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 

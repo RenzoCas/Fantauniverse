@@ -36,8 +36,8 @@ export default function Navbar() {
 				className={`fixed top-0 right-0 h-full w-full bg-(--black-normal)/50 ${
 					isMenuOpen ? "flex" : "hidden"
 				}`}
+				onClick={toggleMenu}
 			></div>
-
 			<div
 				className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-500 p-[16px] flex flex-col gap-[16px] ${
 					isMenuOpen ? "translate-x-0" : "translate-x-full"

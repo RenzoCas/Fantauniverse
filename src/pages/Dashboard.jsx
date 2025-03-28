@@ -208,9 +208,9 @@ function Dashboard() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<div className="flex flex-col gap-[30px]">
+			<div className="flex flex-col gap-[16px]">
 				<h1 className="title-h4 text-(--primary)">
-					Bentornato, <br /> {user.username}
+					Bentornato {user.username}
 				</h1>
 				<section className="flex flex-col gap-[16px]">
 					<div className="flex justify-between items-center gap-[8px]">

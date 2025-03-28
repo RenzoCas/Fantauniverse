@@ -41,7 +41,7 @@ export default function League({ league, onAddParticipant }) {
 	return (
 		<li
 			className="relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer"
-			onClick={isRegistered && handleClick}
+			onClick={isRegistered ? handleClick : undefined}
 		>
 			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden">
 				{isAdmin && (
@@ -78,8 +78,8 @@ export default function League({ league, onAddParticipant }) {
 						<p className="body-small font-semibold">
 							{`${numParticipants} ${
 								numParticipants == 1
-									? "Partecipante iscritto"
-									: "Partecipanti iscritti"
+									? "Partecipante"
+									: "Partecipanti"
 							}`}
 						</p>
 					)}

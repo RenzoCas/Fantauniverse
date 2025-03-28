@@ -22,13 +22,15 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 	const isFormValid = () => formData.days[0].name.trim() !== "";
 
 	return (
-		<div
-			className={`fixed bottom-0 left-0 w-screen h-screen bg-black/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-100 ${
-				isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-			}`}
-		>
+		<>
 			<div
-				className={`bg-white shadow-lg rounded-t-xl p-4 md:py-6 w-full transition-transform duration-500 ease flex flex-col gap-2 md:max-w-lg ${
+				className={`fixed bottom-0 left-0 w-screen h-screen bg-black/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 ${
+					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+				}`}
+				onClick={onClose}
+			></div>
+			<div
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-xl p-4 md:py-6 w-full h-fit transition-transform duration-500 ease flex flex-col gap-2 md:max-w-lg z-1001 ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>
@@ -73,7 +75,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 					/>
 				</form>
 			</div>
-		</div>
+		</>
 	);
 }
 

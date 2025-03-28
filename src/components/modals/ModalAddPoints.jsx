@@ -26,25 +26,22 @@ function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 	}, [dataDay, playerObj.id]);
 
 	return (
-		<div
-			id="modalAddPoints"
-			tabIndex="-1"
-			aria-hidden={!isOpen}
-			className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
-				isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-			}`}
-		>
+		<>
 			<div
-				className={`bg-white shadow-lg rounded-t-[12px] p-4 w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-100 max-h-[calc(100dvh-100px)] overflow-y-auto ${
+				id="modalAddPoints"
+				tabIndex="-1"
+				aria-hidden={!isOpen}
+				className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
+					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+				}`}
+				onClick={onClose}
+			></div>
+			<div
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-4 w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 max-h-[calc(100dvh-100px)] overflow-y-auto ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>
-				<button
-					onClick={() => {
-						onClose();
-					}}
-					className="flex self-end"
-				>
+				<button onClick={onClose} className="flex self-end">
 					<XMarkIcon className="h-[24px] w-[24px]" />
 				</button>
 				<div className="flex flex-col gap-[16px] relative">
@@ -93,7 +90,7 @@ function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 					/>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 

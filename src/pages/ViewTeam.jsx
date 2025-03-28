@@ -277,12 +277,12 @@ function ViewTeam() {
 							/>
 						)}
 						<picture
-							className="relative w-full rounded-[8px]"
+							className="relative w-full aspect-video rounded-[8px]"
 							onClick={handleUpdateImage}
 						>
 							{tempTeam?.icon == null ? (
 								<div
-									className={`w-full rounded-[8px] h-auto object-cover`}
+									className={`w-full h-full rounded-[8px]`}
 									style={{
 										backgroundColor: randomColor,
 									}}
