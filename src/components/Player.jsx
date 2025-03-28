@@ -4,6 +4,7 @@ import {
 	PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
+import { useEffect, useState } from "react";
 
 function Player({
 	playerObj,
@@ -24,6 +25,7 @@ function Player({
 	const { coinName, status, rules } = league;
 	const isActive =
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
+	const [randomColor, setRandomColor] = useState("#ffffff");
 
 	const totalPoints = dataDay?.players
 		.filter((p) => p.player.id === id)
@@ -48,6 +50,10 @@ function Player({
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
 
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+	}, []);
+
 	return (
 		<li
 			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
@@ -58,7 +64,7 @@ function Player({
 				{icon == null ? (
 					<div
 						className={`rounded-full h-[40px] w-[40px] object-cover`}
-						style={{ backgroundColor: randomLightColor() }}
+						style={{ backgroundColor: randomColor }}
 					></div>
 				) : (
 					<img

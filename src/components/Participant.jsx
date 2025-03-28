@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericPopup from "./popups/GenericPopup";
 import { useUser } from "../contexts/UserContext";
@@ -17,6 +17,7 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 		type: "",
 		message: "",
 	});
+	const [randomColor, setRandomColor] = useState("#ffffff");
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -50,6 +51,10 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
 
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+	}, []);
+
 	return (
 		<>
 			<li
@@ -60,7 +65,7 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 					{icon == null ? (
 						<div
 							className={`rounded-full h-[40px] w-[40px] object-cover`}
-							style={{ backgroundColor: randomLightColor() }}
+							style={{ backgroundColor: randomColor }}
 						></div>
 					) : (
 						<img

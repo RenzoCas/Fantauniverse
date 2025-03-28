@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Cog6ToothIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
@@ -8,12 +9,10 @@ export default function League({ league, onAddParticipant }) {
 		? league.participants?.length
 		: league.numberParticipants;
 
-	const handleClick = () => {
-		navigate(`league/${id}`, {
-			state: { league, deleteLeague: null },
-			replace: true,
-		});
-	};
+	const [randomColor, setRandomColor] = useState("#ffffff");
+	const [randomColorPrimo, setRandomColorPrimo] = useState("#ffffff");
+	const [randomColorSecondo, setRandomColorSecondo] = useState("#ffffff");
+	const [randomColorTerzo, setRandomColorTerzo] = useState("#ffffff");
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -23,6 +22,20 @@ export default function League({ league, onAddParticipant }) {
 		return `#${r.toString(16).padStart(2, "0")}${g
 			.toString(16)
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+	};
+
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+		setRandomColorPrimo(randomLightColor());
+		setRandomColorSecondo(randomLightColor());
+		setRandomColorTerzo(randomLightColor());
+	}, []);
+
+	const handleClick = () => {
+		navigate(`league/${id}`, {
+			state: { league, deleteLeague: null },
+			replace: true,
+		});
 	};
 
 	return (
@@ -39,7 +52,7 @@ export default function League({ league, onAddParticipant }) {
 				{icon == null ? (
 					<div
 						className={`h-full object-cover`}
-						style={{ backgroundColor: randomLightColor() }}
+						style={{ backgroundColor: randomColor }}
 					></div>
 				) : (
 					<img
@@ -77,15 +90,15 @@ export default function League({ league, onAddParticipant }) {
 						<ul className="flex items-center">
 							<li
 								className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15"
-								style={{ backgroundColor: randomLightColor() }}
+								style={{ backgroundColor: randomColorPrimo }}
 							></li>
 							<li
 								className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white -rotate-10"
-								style={{ backgroundColor: randomLightColor() }}
+								style={{ backgroundColor: randomColorSecondo }}
 							></li>
 							<li
-								className="w-[37px] h-[37px] bg-[#F87171] rounded-[2px] border border-solid border-white rotate-10 flex items-center justify-center"
-								style={{ backgroundColor: randomLightColor() }}
+								className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-10 flex items-center justify-center"
+								style={{ backgroundColor: randomColorTerzo }}
 							>
 								<p className="body-normal font-semibold">
 									+{numParticipants - 1}

@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
+
 function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
+	const [randomColor, setRandomColor] = useState("#ffffff");
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
 		const r = getRandomValue();
@@ -8,6 +11,9 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 			.toString(16)
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+	}, []);
 	return (
 		<>
 			<div className="flex flex-col gap-[8px] py-[16px] px-[12px] border border-(--black-normal)/50 rounded-[8px] shadow-lg">
@@ -23,8 +29,7 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 										<div
 											className={`h-full object-cover`}
 											style={{
-												backgroundColor:
-													randomLightColor(),
+												backgroundColor: randomColor,
 											}}
 										></div>
 									) : (

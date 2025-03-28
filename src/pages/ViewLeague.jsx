@@ -38,8 +38,8 @@ function ViewLega() {
 		message: "",
 	});
 	const { id, isAdmin, isRegistered } = state.league;
-
 	const fileInputRef = useRef(null);
+	const [randomColor, setRandomColor] = useState("#ffffff");
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -200,6 +200,10 @@ function ViewLega() {
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
 
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+	}, []);
+
 	return (
 		<>
 			{isLoading ? (
@@ -236,7 +240,7 @@ function ViewLega() {
 									<div
 										className={`w-full rounded-[8px] h-auto object-cover`}
 										style={{
-											backgroundColor: randomLightColor(),
+											backgroundColor: randomColor,
 										}}
 									></div>
 								) : (

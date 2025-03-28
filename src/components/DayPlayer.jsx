@@ -1,9 +1,11 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function DayPlayer({ playerObj, rules, dayPoints }) {
 	const { name, icon } = playerObj;
 	const [expanded, setExpanded] = useState(false);
+
+	const [randomColor, setRandomColor] = useState("#ffffff");
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -15,6 +17,10 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
 
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+	}, []);
+
 	return (
 		<li
 			className="flex flex-col gap-[8px] py-[8px] border-b border-b-(--black-light)"
@@ -25,7 +31,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 					{icon == null ? (
 						<div
 							className={`rounded-[3px] h-[40px] w-[40px] object-cover`}
-							style={{ backgroundColor: randomLightColor() }}
+							style={{ backgroundColor: randomColor }}
 						></div>
 					) : (
 						<img

@@ -2,13 +2,14 @@ import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import { useLeague } from "../contexts/LeagueContext";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function CardSquadra({ team, handleClick }) {
 	const { league } = useLeague();
 	const { status } = league;
 
 	const [isExpanded, setIsExpanded] = useState(false);
+	const [randomColor, setRandomColor] = useState("#ffffff");
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -19,6 +20,10 @@ function CardSquadra({ team, handleClick }) {
 			.toString(16)
 			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
+
+	useEffect(() => {
+		setRandomColor(randomLightColor());
+	}, []);
 
 	if (!team) {
 		return (
@@ -59,7 +64,7 @@ function CardSquadra({ team, handleClick }) {
 						<div
 							className={`h-full object-cover`}
 							style={{
-								backgroundColor: randomLightColor(),
+								backgroundColor: randomColor,
 							}}
 						></div>
 					) : (
