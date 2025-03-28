@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericInput from "../atoms/Inputs/GenericInput";
-import Lega from "../components/League";
+import League from "../components/League";
 import Loader from "../components/Loader";
 import ModalLeague from "../components/modals/ModalLeague";
 import GenericPopup from "../components/popups/GenericPopup";
 import { useLocation } from "react-router";
 import ModalSearchLeague from "../components/modals/ModalSearchLeague";
 import Switch from "../atoms/Inputs/Switch";
+import { useParticipant } from "../contexts/ParticipantContext";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +25,7 @@ function Dashboard() {
 	const [requestDone, setRequestDone] = useState(false);
 	const { user } = useUser();
 	const { myLeagues, getMyLeagues, findLeague, allLeagues } = useLeague();
+	const { addParticipant } = useParticipant();
 	const [formData, setFormData] = useState({
 		leagueName: "",
 	});
@@ -141,6 +143,28 @@ function Dashboard() {
 		}
 	};
 
+	const handleAddParticipant = async (id) => {
+		setIsModalSearchOpen(false);
+		setIsLoading(true);
+		const res = await addParticipant(id);
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nell'iscrizione alla lega!",
+				"L'iscrizione a questa lega non é andata a buon fine. Riprova."
+			);
+			return;
+		}
+		await getMyLeagues();
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Iscrizione effettuata!",
+			"L'iscrizione a questa lega é andata a buon fine."
+		);
+	};
+
 	const handleChangeSwitch = () => {
 		setEnabledSwitch(!enabledSwitch);
 	};
@@ -218,7 +242,7 @@ function Dashboard() {
 
 					{myLeagues.length !== 0 ? (
 						<>
-							<div className="relative flex flex-col gap-[10px]">
+							<div className="relative z-3 flex flex-col gap-[10px]">
 								<div className="flex justify-end gap-[12px]">
 									{(filterLeagueState.length > 0 ||
 										enabledSwitch) && (
@@ -288,14 +312,18 @@ function Dashboard() {
 
 								{showFilters && (
 									<div
-										className={`absolute top-[40px] w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white`}
+										className={`absolute top-[40px] z-3 w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white`}
 									>
 										<div className="flex items-center justify-between">
 											<p className="font-semibold">
 												Stato
 											</p>
 											<button
-												className="text-[#F87171] font-semibold"
+												disabled={
+													filterLeagueState.length ===
+														0 && !enabledSwitch
+												}
+												className={`text-[#F87171] font-semibold disabled:text-(--black-light)`}
 												onClick={() => {
 													setFilterState([]);
 													setEnabledSwitch(false);
@@ -365,7 +393,7 @@ function Dashboard() {
 							{filteredLeague.length > 0 ? (
 								<ul className="flex flex-col gap-[10px]">
 									{filteredLeague.map((el) => (
-										<Lega key={el.id} league={el} />
+										<League key={el.id} league={el} />
 									))}
 								</ul>
 							) : (
@@ -396,6 +424,7 @@ function Dashboard() {
 					isOpen={isModalSearchOpen}
 					onClose={() => setIsModalSearchOpen(false)}
 					leaguesFound={allLeagues}
+					onAddParticipant={handleAddParticipant}
 				/>
 
 				<ModalLeague

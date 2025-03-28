@@ -1,7 +1,12 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Lega from "../League";
 
-function ModalSearchLeague({ isOpen, onClose, leaguesFound }) {
+function ModalSearchLeague({
+	isOpen,
+	onClose,
+	leaguesFound,
+	onAddParticipant,
+}) {
 	return (
 		<div
 			id="modalSearchLeague"
@@ -27,7 +32,11 @@ function ModalSearchLeague({ isOpen, onClose, leaguesFound }) {
 
 				<ul className="flex flex-col gap-[10px]">
 					{leaguesFound.map((el) => (
-						<Lega key={el.id} league={el} />
+						<Lega
+							key={el.id}
+							league={el}
+							onAddParticipant={onAddParticipant}
+						/>
 					))}
 				</ul>
 			</div>

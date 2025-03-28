@@ -40,6 +40,16 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 		}
 	};
 
+	const randomLightColor = () => {
+		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
+		const r = getRandomValue();
+		const g = getRandomValue();
+		const b = getRandomValue();
+		return `#${r.toString(16).padStart(2, "0")}${g
+			.toString(16)
+			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+	};
+
 	return (
 		<>
 			<li
@@ -47,16 +57,18 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 				onClick={handleViewPartecipant}
 			>
 				<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
-					<img
-						src={
-							icon != null
-								? `data:image/png;base64,${icon}`
-								: "https://placehold.co/40x40"
-						}
-						alt="immagine giocatore"
-						className="rounded-full h-[40px] w-[40px] object-cover"
-						style={{ cursor: "pointer" }}
-					/>
+					{icon == null ? (
+						<div
+							className={`rounded-full h-[40px] w-[40px] object-cover`}
+							style={{ backgroundColor: randomLightColor() }}
+						></div>
+					) : (
+						<img
+							src={`data:image/png;base64,${icon}`}
+							alt={`immagine giocatore`}
+							className="rounded-full h-[40px] w-[40px] object-cover cursor-pointer"
+						/>
+					)}
 				</picture>
 				<div className={`flex flex-col gap-[4px] w-full`}>
 					<p className="body-normal font-semibold">{username}</p>

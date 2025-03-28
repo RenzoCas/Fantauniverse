@@ -38,6 +38,16 @@ function Player({
 			}, 0);
 		})[0];
 
+	const randomLightColor = () => {
+		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
+		const r = getRandomValue();
+		const g = getRandomValue();
+		const b = getRandomValue();
+		return `#${r.toString(16).padStart(2, "0")}${g
+			.toString(16)
+			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+	};
+
 	return (
 		<li
 			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
@@ -45,16 +55,18 @@ function Player({
 			}`}
 		>
 			<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
-				<img
-					src={
-						icon != null
-							? `data:image/png;base64,${icon}`
-							: "https://placehold.co/40x40"
-					}
-					alt="immagine giocatore"
-					className="rounded-full h-[40px] w-[40px] object-cover"
-					style={{ cursor: "pointer" }}
-				/>
+				{icon == null ? (
+					<div
+						className={`rounded-full h-[40px] w-[40px] object-cover`}
+						style={{ backgroundColor: randomLightColor() }}
+					></div>
+				) : (
+					<img
+						src={`data:image/png;base64,${icon}`}
+						alt={`immagine giocatore`}
+						className="rounded-full h-[40px] w-[40px] object-cover cursor-pointer"
+					/>
+				)}
 			</picture>
 			<div className={`flex flex-col gap-[4px] w-full`}>
 				<p className="body-normal font-semibold">{name}</p>

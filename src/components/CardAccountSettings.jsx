@@ -1,4 +1,13 @@
 function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
+	const randomLightColor = () => {
+		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
+		const r = getRandomValue();
+		const g = getRandomValue();
+		const b = getRandomValue();
+		return `#${r.toString(16).padStart(2, "0")}${g
+			.toString(16)
+			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+	};
 	return (
 		<>
 			<div className="flex flex-col gap-[8px] py-[16px] px-[12px] border border-(--black-normal)/50 rounded-[8px] shadow-lg">
@@ -9,17 +18,22 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 								<h5 className="title-h6 font-semibold">
 									{setting}
 								</h5>
-
 								<picture className="rounded-lg min-w-[40px] max-w-[40px] h-[40px] overflow-hidden">
-									<img
-										src={
-											value
-												? `data:image/png;base64,${value}`
-												: "https://placehold.co/40x40"
-										}
-										alt={`Icona utente`}
-										className="h-full object-cover"
-									/>
+									{value == null ? (
+										<div
+											className={`h-full object-cover`}
+											style={{
+												backgroundColor:
+													randomLightColor(),
+											}}
+										></div>
+									) : (
+										<img
+											src={`data:image/png;base64,${value}`}
+											alt={`Icona utente`}
+											className="h-full object-cover"
+										/>
+									)}
 								</picture>
 							</div>
 							<div className="flex flex-col gap-[8px]">

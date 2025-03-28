@@ -51,8 +51,7 @@ export default function Navbar() {
 								: "https://placehold.co/40x40"
 						}
 						alt="immagine giocatore"
-						className="rounded-full h-[40px] w-[40px] object-cover"
-						style={{ cursor: "pointer" }}
+						className="rounded-full h-[40px] w-[40px] object-cover cursor-pointer"
 					/>
 					<button onClick={toggleMenu}>
 						<XMarkIcon className="h-[24px] w-[24px]" />

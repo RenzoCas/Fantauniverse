@@ -4,7 +4,7 @@ import {
 	ArrowLeftEndOnRectangleIcon,
 	ChevronLeftIcon,
 	PencilSquareIcon,
-	XMarkIcon,
+	// XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Rules from "../pages/Rules";
@@ -37,7 +37,7 @@ function ViewLega() {
 		type: "",
 		message: "",
 	});
-	const { id, isAdmin } = state.league;
+	const { id, isAdmin, isRegistered } = state.league;
 
 	const fileInputRef = useRef(null);
 
@@ -58,7 +58,7 @@ function ViewLega() {
 		fetchData();
 	}, [id]);
 
-	const { description, name, status, isRegistered, icon } = league;
+	const { description, name, status, icon } = league;
 	const [tabActive, setTabActive] = useState();
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
@@ -139,7 +139,7 @@ function ViewLega() {
 			"Non sei piú iscritto a questa lega."
 		);
 		setTimeout(() => {
-			navigate("/");
+			navigate("/app");
 		}, 1000);
 	};
 
@@ -190,6 +190,16 @@ function ViewLega() {
 		}
 	};
 
+	const randomLightColor = () => {
+		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
+		const r = getRandomValue();
+		const g = getRandomValue();
+		const b = getRandomValue();
+		return `#${r.toString(16).padStart(2, "0")}${g
+			.toString(16)
+			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+	};
+
 	return (
 		<>
 			{isLoading ? (
@@ -222,16 +232,20 @@ function ViewLega() {
 								className="relative w-full rounded-[8px]"
 								onClick={handleUpdateImage}
 							>
-								<img
-									src={
-										icon != null
-											? `data:image/png;base64,${icon}`
-											: "https://placehold.co/360x202"
-									}
-									alt="Logo lega"
-									className="w-full rounded-[8px] h-auto object-cover"
-									style={{ cursor: "pointer" }}
-								/>
+								{icon == null ? (
+									<div
+										className={`w-full rounded-[8px] h-auto object-cover`}
+										style={{
+											backgroundColor: randomLightColor(),
+										}}
+									></div>
+								) : (
+									<img
+										src={`data:image/png;base64,${icon}`}
+										alt={`Logo lega`}
+										className="w-full rounded-[8px] h-auto object-cover cursor-pointer"
+									/>
+								)}
 								{status === "PENDING" && (
 									<div className="absolute bottom-[8px] right-[8px] p-[10px] rounded-full bg-(--black-light)">
 										<PencilSquareIcon className="h-[20px] w-[20px]" />
@@ -300,11 +314,12 @@ function ViewLega() {
 								)}
 							</>
 						) : status === "STARTED" && !isRegistered ? (
-							<FixedPopup background="(--error-light)">
-								<XMarkIcon className="w-[24px] h-[24px] flex-shrink-0" />
-								<p className="font-bold text-(--black-normal)">
-									Non puoi iscriverti, la lega è già avviata
-								</p>
+							<FixedPopup
+								title="Lega giá avviata!"
+								message={`Questa lega é stata giá avviata, non puoi piú iscriverti.`}
+								customIcon={true}
+							>
+								<ExclamationTriangleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-orange-500" />
 							</FixedPopup>
 						) : (
 							status === "FINISHED" && (

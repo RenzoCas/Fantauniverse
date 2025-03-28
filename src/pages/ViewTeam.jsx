@@ -214,6 +214,16 @@ function ViewTeam() {
 		}
 	};
 
+	const randomLightColor = () => {
+		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
+		const r = getRandomValue();
+		const g = getRandomValue();
+		const b = getRandomValue();
+		return `#${r.toString(16).padStart(2, "0")}${g
+			.toString(16)
+			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+	};
+
 	return (
 		<>
 			{isLoading ? (
@@ -265,16 +275,20 @@ function ViewTeam() {
 							className="relative w-full rounded-[8px]"
 							onClick={handleUpdateImage}
 						>
-							<img
-								src={
-									tempTeam?.icon != null
-										? `data:image/png;base64,${tempTeam?.icon}`
-										: "https://placehold.co/360x202"
-								}
-								alt="Logo lega"
-								className="w-full rounded-[8px] h-auto object-cover"
-								style={{ cursor: "pointer" }}
-							/>
+							{tempTeam?.icon == null ? (
+								<div
+									className={`w-full rounded-[8px] h-auto object-cover`}
+									style={{
+										backgroundColor: randomLightColor(),
+									}}
+								></div>
+							) : (
+								<img
+									src={`data:image/png;base64,${tempTeam?.icon}`}
+									alt={`Logo lega`}
+									className="w-full rounded-[8px] h-auto object-cover cursor-pointer"
+								/>
+							)}
 							{status === "NOT_STARTED" && (
 								<div className="absolute bottom-[8px] right-[8px] p-[10px] rounded-full bg-(--black-light)">
 									<PencilSquareIcon className="h-[20px] w-[20px]" />
