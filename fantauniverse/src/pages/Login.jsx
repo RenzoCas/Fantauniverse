@@ -50,8 +50,7 @@ export default function Login() {
 		setServerError("");
 
 		try {
-			const user = await login(formData.username, formData.password);
-			localStorage.setItem("authToken", user.token);
+			await login(formData.username, formData.password);
 			navigate("/app", { replace: true });
 		} catch (error) {
 			setServerError("Username o password errati");
@@ -87,7 +86,7 @@ export default function Login() {
 							required
 							name="username"
 							id="username"
-							placeholder="Username"
+							placeholder="Username o email"
 							messageError={errors.username}
 							value={formData.username}
 							handleChange={handleChange}

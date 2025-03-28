@@ -7,6 +7,7 @@ function ModalConfirmAction({
 	text,
 	disclaimer,
 	onConfirmAction,
+	isDisabled = false,
 }) {
 	return (
 		<div
@@ -18,16 +19,31 @@ function ModalConfirmAction({
 			}`}
 		>
 			<div
-				className={`bg-white shadow-lg rounded-[12px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] max-w-[600px] p-[16px] ${
+				className={`bg-white shadow-lg rounded-[12px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] items-center text-center max-w-[600px] p-[16px] ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				}`}
 			>
 				<h5 className="body-normal font-semibold">{text}</h5>
 				{disclaimer && <p className="body-small">{disclaimer}</p>}
-				<div className="flex gap-[16px] items-center">
-					<GhostButton action={onClose} text="Annulla" icon={false} />
-					<NormalButton action={onConfirmAction} text="Conferma" />
-				</div>
+				{isDisabled ? (
+					<NormalButton
+						action={onClose}
+						text="Conferma"
+						icon={false}
+					/>
+				) : (
+					<div className="flex gap-[16px] items-center">
+						<GhostButton
+							action={onClose}
+							text="Annulla"
+							icon={false}
+						/>
+						<NormalButton
+							action={onConfirmAction}
+							text="Conferma"
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	);

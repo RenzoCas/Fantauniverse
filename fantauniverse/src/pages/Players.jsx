@@ -137,7 +137,7 @@ function Players() {
 					</ul>
 				</>
 			) : (
-				<div className="flex flex-col gap-[24px] items-center">
+				<div className="flex flex-col gap-[24px] items-center flex-1">
 					<p className="body-normal font-semibold text-(--black-darker) text-center">
 						Non hai ancora aggiunto nessun &rdquo;Giocatore&rdquo;
 						acquistabile per la tua lega.

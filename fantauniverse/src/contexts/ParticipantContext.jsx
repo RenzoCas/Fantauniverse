@@ -50,10 +50,6 @@ function ParticipantProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
-			dispatch({
-				type: "addParicipant",
-			});
-
 			await getLeague(leagueId);
 			return true;
 		} catch (error) {
@@ -62,12 +58,12 @@ function ParticipantProvider({ children }) {
 		}
 	};
 
-	const deleteParticipant = async (participantId) => {
+	const deleteParticipant = async (leagueId) => {
 		try {
 			if (!league.id) throw new Error("Nessuna lega selezionata.");
 
 			const response = await fetch(
-				`${urlServer}/participant/${participantId}`,
+				`${urlServer}/participant/${leagueId}`,
 				{
 					method: "DELETE",
 					headers: {
@@ -80,7 +76,7 @@ function ParticipantProvider({ children }) {
 				throw new Error("Errore nella cancellazione del player.");
 			}
 
-			dispatch({ type: "deleteParticipant", payload: participantId });
+			dispatch({ type: "deleteParticipant", payload: leagueId });
 			await getLeague(league.id);
 			return true;
 		} catch (error) {

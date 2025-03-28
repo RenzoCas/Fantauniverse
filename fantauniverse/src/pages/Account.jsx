@@ -4,9 +4,10 @@ import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 import NormalButton from "../atoms/Buttons/NormalButton";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import GenericPopup from "../components/popups/GenericPopup";
+import GhostButton from "../atoms/Buttons/GhostButton";
 
 function Account() {
 	const { user, updateUser } = useUser();
@@ -30,11 +31,11 @@ function Account() {
 
 	useEffect(() => {
 		setFormData({
-			id: user.id,
-			username: user.username,
-			email: user.email,
-			password: user.password,
-			icon: user.icon,
+			id: user?.id,
+			username: user?.username,
+			email: user?.email,
+			password: user?.password,
+			icon: user?.icon,
 		});
 	}, [user]);
 
@@ -110,6 +111,29 @@ function Account() {
 		}
 	};
 
+	const handleDeleteImage = async () => {
+		const updatedUserData = { ...user, icon: null };
+		setIsModalImgOpen(false);
+		setIsLoading(true);
+		const res = await updateUser(updatedUserData);
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nella rimozione dell'immagine!",
+				"Immagine non rimossa. Riprova"
+			);
+			return;
+		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Aggiornamento completato!",
+			"Immagine rimossa correttamente."
+		);
+		setIsLoading(false);
+	};
+
 	const handleUpdateData = (field) => {
 		setTextToUpdate(field);
 		setFormData((prev) => ({
@@ -162,6 +186,7 @@ function Account() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setIsModalDataOpen(false);
 		setIsLoading(true);
 		const res = await updateUser(formData);
 		if (!res) {
@@ -183,145 +208,139 @@ function Account() {
 
 	return (
 		<>
-			{isLoading ? (
-				<Loader />
-			) : (
-				<>
-					<Navbar />
-					<main className="flex flex-col gap-[24px] max-w-xl mx-auto py-[24px] px-[16px] lg:py-16 lg:px-6 min-h-[calc(100dvh-64px)]">
-						<h1 className="title-h4 font-semibold">
-							Accesso e sicurezza
-						</h1>
-						<CardAccountSettings
-							setting="Username"
-							value={username}
-							onUpdate={() => {
-								handleUpdateData("username");
-							}}
-						/>
-						<CardAccountSettings
-							setting="Email"
-							value={email}
-							onUpdate={() => {
-								handleUpdateData("email");
-							}}
-						/>
-						<CardAccountSettings
-							setting="Password"
-							value={password}
-							onUpdate={() => {
-								handleUpdateData("password");
-							}}
-						/>
-						<input
-							type="file"
-							name="logo"
-							id="logoLega"
-							accept="image/jpeg, image/png"
-							onChange={handleFileChange}
-							ref={fileInputRef}
-							className="hidden"
-						/>
-						<CardAccountSettings
-							setting="Icona"
-							value={icon}
-							onUpdate={handleUpdateImage}
-							viewImage={() => setIsModalImgOpen(true)}
-						/>
-						<GenericPopup
-							isOpen={popupData.isOpen}
-							type={popupData.type}
-							title={popupData.title}
-							message={popupData.message}
-						/>
-					</main>
+			{isLoading && <Loader />}
 
-					{isModalImgOpen && (
-						<div className="fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 opacity-100 visible">
-							<div className="bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] translate-y-0 md:max-w-[600px] md:rounded-lg md:items-center md:justify-center">
-								{!icon ? (
-									<>
-										<div className="flex justify-between gap-[8px] items-center">
-											<p className="font-semibold">
-												Icona non presente
-											</p>
-											<button
-												onClick={() =>
-													setIsModalImgOpen(false)
-												}
-											>
-												<XMarkIcon className="h-[24px] w-[24px]" />
-											</button>
-										</div>
-										<NormalButton
-											text="Aggiungi icona"
-											action={handleUpdateImage}
-											customIcon={true}
-										>
-											<PlusIcon className="h-[20px] w-[20px] bg-(--black-light) stroke-(--black-normal) rounded-full" />
-										</NormalButton>
-									</>
-								) : (
-									<>
-										<button
-											onClick={() =>
-												setIsModalImgOpen(false)
-											}
-											className="flex self-end"
-										>
-											<XMarkIcon className="h-[24px] w-[24px]" />
-										</button>
-										<img
-											src={`data:image/png;base64,${icon}`}
-											alt="Icona utente"
-											className="max-w-full max-h-[400px] rounded-lg"
-										/>
-									</>
-								)}
-							</div>
-						</div>
-					)}
+			<Navbar />
+			<main className="flex flex-col gap-[24px] max-w-xl mx-auto py-[24px] px-[16px] lg:py-16 lg:px-6 min-h-[calc(100dvh-64px)]">
+				<h1 className="title-h4 font-semibold">Accesso e sicurezza</h1>
+				<CardAccountSettings
+					setting="Username"
+					value={username}
+					onUpdate={() => {
+						handleUpdateData("username");
+					}}
+				/>
+				<CardAccountSettings
+					setting="Email"
+					value={email}
+					onUpdate={() => {
+						handleUpdateData("email");
+					}}
+				/>
+				<CardAccountSettings
+					setting="Password"
+					value={password}
+					onUpdate={() => {
+						handleUpdateData("password");
+					}}
+				/>
+				<input
+					type="file"
+					name="logo"
+					id="logoLega"
+					accept="image/jpeg, image/png"
+					onChange={handleFileChange}
+					ref={fileInputRef}
+					className="hidden"
+				/>
+				<CardAccountSettings
+					setting="Icona"
+					value={icon}
+					onUpdate={handleUpdateImage}
+					viewImage={() => setIsModalImgOpen(true)}
+				/>
+				<GenericPopup
+					isOpen={popupData.isOpen}
+					type={popupData.type}
+					title={popupData.title}
+					message={popupData.message}
+				/>
+			</main>
 
-					{isModalDataOpen && (
-						<div className="fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 opacity-100 visible">
-							<div className="bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] translate-y-0 md:max-w-[600px] md:rounded-lg md:items-center md:justify-center">
+			{isModalImgOpen && (
+				<div className="fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 opacity-100 visible">
+					<div className="bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] translate-y-0 md:max-w-[600px] md:rounded-lg md:items-center md:justify-center">
+						{!icon ? (
+							<>
 								<div className="flex justify-between gap-[8px] items-center">
 									<p className="font-semibold">
-										Modifica {textToUpdate}
+										Icona non presente
 									</p>
 									<button
-										onClick={() =>
-											setIsModalDataOpen(false)
-										}
+										onClick={() => setIsModalImgOpen(false)}
 									>
 										<XMarkIcon className="h-[24px] w-[24px]" />
 									</button>
 								</div>
-								<GenericInput
-									id={textToUpdate}
-									name={textToUpdate}
-									required
-									value={formData[textToUpdate] || ""}
-									placeholder={textToUpdate}
-									type={
-										textToUpdate === "password"
-											? "password"
-											: "text"
-									}
-									handleChange={handleChange}
-									handleBlur={handleBlur}
-									messageError={errors[textToUpdate]}
-								/>
-
 								<NormalButton
-									text={`Aggiorna ${textToUpdate}`}
-									action={handleSubmit}
-									disabled={!isFormValid(textToUpdate)}
+									text="Aggiungi icona"
+									action={handleUpdateImage}
+									customIcon={true}
+								>
+									<PlusIcon className="h-[20px] w-[20px] bg-(--black-light) stroke-(--black-normal) rounded-full" />
+								</NormalButton>
+							</>
+						) : (
+							<>
+								<button
+									onClick={() => setIsModalImgOpen(false)}
+									className="flex self-end"
+								>
+									<XMarkIcon className="h-[24px] w-[24px]" />
+								</button>
+								<img
+									src={`data:image/png;base64,${icon}`}
+									alt="Icona utente"
+									className="max-w-full max-h-[400px] rounded-lg"
 								/>
-							</div>
+								<GhostButton
+									text="Rimuovi immagine"
+									customIcon={true}
+									classOpt="text-(--error-normal)"
+									action={handleDeleteImage}
+								>
+									<TrashIcon className="h-[24px] w-[24px] stroke-(--error-normal)" />
+								</GhostButton>
+							</>
+						)}
+					</div>
+				</div>
+			)}
+
+			{isModalDataOpen && (
+				<div className="fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 opacity-100 visible">
+					<div className="bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] translate-y-0 md:max-w-[600px] md:rounded-lg md:items-center md:justify-center">
+						<div className="flex justify-between gap-[8px] items-center">
+							<p className="font-semibold">
+								Modifica {textToUpdate}
+							</p>
+							<button onClick={() => setIsModalDataOpen(false)}>
+								<XMarkIcon className="h-[24px] w-[24px]" />
+							</button>
 						</div>
-					)}
-				</>
+						<GenericInput
+							id={textToUpdate}
+							name={textToUpdate}
+							required
+							value={formData[textToUpdate] || ""}
+							placeholder={textToUpdate}
+							type={
+								textToUpdate === "password"
+									? "password"
+									: "text"
+							}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+							messageError={errors[textToUpdate]}
+						/>
+
+						<NormalButton
+							text={`Aggiorna ${textToUpdate}`}
+							action={handleSubmit}
+							disabled={!isFormValid(textToUpdate)}
+						/>
+					</div>
+				</div>
 			)}
 		</>
 	);

@@ -77,14 +77,12 @@ export default function Registrazione() {
 		setServerError("");
 
 		try {
-			const user = await register({
+			await register({
 				username: formData.username,
 				email: formData.email,
 				password: formData.password,
 				// privacy: formData.privacy,
 			});
-
-			localStorage.setItem("authToken", user.token);
 			navigate("/app");
 		} catch (error) {
 			if (error.status == 409) {

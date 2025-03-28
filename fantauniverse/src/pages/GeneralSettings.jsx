@@ -12,7 +12,7 @@ import GhostButton from "../atoms/Buttons/GhostButton";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router";
 import GenericInput from "../atoms/Inputs/GenericInput";
-import MdalConfirmAction from "../components/modals/ModalConfirmAction";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import GenericPopup from "../components/popups/GenericPopup";
 
 function GeneralSettings() {
@@ -59,6 +59,7 @@ function GeneralSettings() {
 	});
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
+	const [isDisabled, setIsDisabled] = useState(false);
 	const navigate = useNavigate();
 
 	const showPopup = (type, title, message) => {
@@ -74,17 +75,17 @@ function GeneralSettings() {
 		{
 			value: "NOT_STARTED",
 			text: "Pubblicata",
-			isDisabled: players.length == 0 || rules.length == 0,
+			// isDisabled: players.length == 0 || rules.length == 0,
 		},
 		{
 			value: "STARTED",
 			text: "Avviata",
-			isDisabled: participants.length == 0,
+			// isDisabled: participants.length == 0,
 		},
 		{
 			value: "FINISHED",
 			text: "Terminata",
-			isDisabled: days.length == 0,
+			// isDisabled: days.length == 0,
 		},
 	];
 
@@ -104,22 +105,54 @@ function GeneralSettings() {
 		setTempValue(value);
 
 		switch (value) {
-			case "NOT_STARTED":
-				setTextModal("Sei sicuro di voler pubblicare la lega?");
-				setDisclaimerModal(
-					"Confermando non sará piú possibile modificare i dati della lega, i player e il regolamento."
-				);
+			case "NOT_STARTED": {
+				const isDisabled = players.length === 0 || rules.length === 0;
+				setIsDisabled(isDisabled);
+				if (isDisabled) {
+					setTextModal("Attenzione!");
+					setDisclaimerModal(
+						"Per poter pubblicare la lega deve esserci almeno 1 giocatore ed almeno 1 regola."
+					);
+				} else {
+					setTextModal("Sei sicuro di voler pubblicare la lega?");
+					setDisclaimerModal(
+						"Confermando non sará piú possibile modificare i dati della lega, i player e il regolamento."
+					);
+				}
+
 				break;
-			case "STARTED":
-				setTextModal("Sei sicuro di voler avviare la lega?");
-				setDisclaimerModal(
-					"Confermando non sará piú possibile iscriversi alla lega."
-				);
+			}
+			case "STARTED": {
+				const isDisabled = participants.length <= 1;
+				setIsDisabled(isDisabled);
+				if (isDisabled) {
+					setTextModal("Attenzione!");
+					setDisclaimerModal(
+						"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
+					);
+				} else {
+					setTextModal("Sei sicuro di voler avviare la lega?");
+					setDisclaimerModal(
+						"Confermando non sará piú possibile iscriversi alla lega."
+					);
+				}
 				break;
-			case "FINISHED":
-				setTextModal("Sei sicuro di voler terminare la lega?");
-				setDisclaimerModal(null);
+			}
+			case "FINISHED": {
+				const isDisabled = days.length === 0;
+				setIsDisabled(isDisabled);
+				if (isDisabled) {
+					setTextModal("Attenzione!");
+					setDisclaimerModal(
+						"Per poter terminare la lega deve essere avviata ed esserci almeno 1 giornata."
+					);
+				} else {
+					setTextModal("Sei sicuro di voler terminare la lega?");
+					setDisclaimerModal(null);
+				}
 				break;
+			}
+
 			default:
 				break;
 		}
@@ -259,7 +292,7 @@ function GeneralSettings() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<div className="flex flex-col items-between gap-[40px]">
+			<div className="flex flex-col items-between gap-[40px] flex-1">
 				<div className="flex flex-col gap-[16px]">
 					<Select
 						options={filteredOptions}
@@ -303,6 +336,7 @@ function GeneralSettings() {
 											handleChange={handleChangeData}
 											handleBlur={handleBlur}
 											messageError={errors[field]}
+											autoFocus={true}
 										/>
 									) : (
 										<p className="body-normal">
@@ -333,7 +367,7 @@ function GeneralSettings() {
 					)}
 				</div>
 				{status === "PENDING" && (
-					<div className="flex flex-col gap-[8px] w-full">
+					<div className="flex flex-col gap-[8px] w-full mt-auto">
 						<NormalButton
 							text="Salva"
 							action={() => handleUpdateLeague(null)}
@@ -349,7 +383,7 @@ function GeneralSettings() {
 						</GhostButton>
 					</div>
 				)}
-				<MdalConfirmAction
+				<ModalConfirmAction
 					isOpen={isModalConfirmOpen.value}
 					text={textModal}
 					disclaimer={disclaimerModal}
@@ -361,7 +395,8 @@ function GeneralSettings() {
 							? handleChangeSelect
 							: handleDeleteLeague
 					}
-				></MdalConfirmAction>
+					isDisabled={isDisabled}
+				></ModalConfirmAction>
 				<GenericPopup
 					isOpen={popupData.isOpen}
 					type={popupData.type}

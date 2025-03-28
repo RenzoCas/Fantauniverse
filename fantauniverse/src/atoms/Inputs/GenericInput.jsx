@@ -1,10 +1,10 @@
+import { useState, useEffect, useRef } from "react";
 import {
 	HandRaisedIcon,
 	EyeIcon,
 	EyeSlashIcon,
 	MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
 
 export default function GenericInput({
 	type,
@@ -18,22 +18,30 @@ export default function GenericInput({
 	handleBlur,
 	autocomplete,
 	disabled = false,
+	autoFocus = false,
 }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPasswordType = type === "password";
 	const isSearchType = id?.includes("search");
 	const isTextarea = type === "textarea";
+	const inputRef = useRef(null);
 
 	const togglePasswordVisibility = () => {
 		setShowPassword((prev) => !prev);
 	};
 
+	useEffect(() => {
+		if (autoFocus && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [autoFocus]);
+
 	return (
 		<div className="group flex flex-col gap-[8px] w-full">
 			<div className="relative">
-				{/* Controlla se è una textarea o un input */}
 				{isTextarea ? (
 					<textarea
+						ref={inputRef}
 						name={name}
 						id={id}
 						required={required}
@@ -51,6 +59,7 @@ export default function GenericInput({
 					/>
 				) : (
 					<input
+						ref={inputRef}
 						type={isPasswordType && showPassword ? "text" : type}
 						name={name}
 						id={id}
@@ -65,8 +74,7 @@ export default function GenericInput({
 							messageError
 								? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"
 								: "bg-(--black-light-hover) border-transparent focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
-						}
-                        ${
+						} ${
 							isPasswordType || isSearchType
 								? "pr-[40px]"
 								: "pr-[24px]"
@@ -74,7 +82,6 @@ export default function GenericInput({
 					/>
 				)}
 
-				{/* Se il tipo è password, aggiungi il pulsante per mostrare/nascondere */}
 				{isPasswordType && (
 					<button
 						type="button"
@@ -89,7 +96,6 @@ export default function GenericInput({
 					</button>
 				)}
 
-				{/* Se il tipo è search, aggiungi l'icona di ricerca */}
 				{isSearchType && (
 					<button className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal)">
 						<MagnifyingGlassIcon className="h-[20px] w-[20px]" />
@@ -97,7 +103,6 @@ export default function GenericInput({
 				)}
 			</div>
 
-			{/* Mostra il messaggio di errore se c'è */}
 			{messageError && (
 				<p className="body-small text-(--error-normal) flex items-center gap-2">
 					<HandRaisedIcon className="h-[16px] w-[16px] text-(--error-normal) flex-shrink-0" />

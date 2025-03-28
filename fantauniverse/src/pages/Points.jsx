@@ -26,7 +26,7 @@ function Points({ isAdmin }) {
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league, getLeague, createDay } = useLeague();
 	const { getDay, deleteDay } = useDay();
-	const { id, days } = league;
+	const { id, days, status } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -136,7 +136,7 @@ function Points({ isAdmin }) {
 		<>
 			{isloading && <Loader />}
 			{days.length === 0 ? (
-				isAdmin ? (
+				isAdmin && status != "FINISHED" ? (
 					<>
 						<p className="body-normal font-semibold text-black text-center">
 							Sembra che tu non abbia ancora aggiunto nessuna
@@ -178,7 +178,7 @@ function Points({ isAdmin }) {
 									/>
 								</SwiperSlide>
 							))}
-							{isAdmin && (
+							{isAdmin && status != "FINISHED" && (
 								<SwiperSlide
 									key="btnNewGiornata"
 									className="flex self-center"
@@ -197,17 +197,21 @@ function Points({ isAdmin }) {
 					</div>
 					{infoDay?.players.length > 0 ? (
 						<>
-							<button
-								onClick={() =>
-									navigate("setDay", {
-										state: activeDay,
-									})
-								}
-								className="flex items-center gap-[8px] justify-center"
-							>
-								<p className="body-normal">Modifica punteggi</p>
-								<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
-							</button>
+							{isAdmin && status != "FINISHED" && (
+								<button
+									onClick={() =>
+										navigate("setDay", {
+											state: activeDay,
+										})
+									}
+									className="flex items-center gap-[8px] justify-center"
+								>
+									<p className="body-normal">
+										Modifica punteggi
+									</p>
+									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+								</button>
+							)}
 							<ul className="flex flex-col">
 								{infoDay?.players?.map((el) => (
 									<DayPlayer
@@ -224,24 +228,9 @@ function Points({ isAdmin }) {
 							<p className="body-normal text-(black-normal) font-semibold text-center">
 								Punteggi di giornata non ancora inseriti
 							</p>
-							{/* {isAdmin && (
-								<NormalButton
-									text="Inserisci punteggi"
-									customIcon={true}
-									icon={false}
-									action={() =>
-										navigate("setDay", {
-											state: activeDay,
-										})
-									}
-									classOpt="w-3/4 mt-auto flex self-center"
-								>
-									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
-								</NormalButton>
-							)} */}
 						</>
 					)}
-					{isAdmin && (
+					{isAdmin && status != "FINISHED" && (
 						<div className="flex gap-[8px] mt-auto justify-center">
 							<GhostButton
 								text="Elimina"

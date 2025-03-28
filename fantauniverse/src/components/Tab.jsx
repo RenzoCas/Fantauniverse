@@ -52,8 +52,35 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 							<p className="body-normal">Regole</p>
 						</TabButton>
 					</>
+				) : status == "STARTED" ? (
+					<>
+						<TabButton
+							handleClick={() => handleTabChange("General")}
+							active={tabActive === "General"}
+						>
+							<p className="body-normal">Info</p>
+						</TabButton>
+						<TabButton
+							handleClick={() => handleTabChange("Ranking")}
+							active={tabActive === "Ranking"}
+						>
+							<p className="body-normal">Classifica</p>
+						</TabButton>
+						<TabButton
+							handleClick={() => handleTabChange("Days")}
+							active={tabActive === "Days"}
+						>
+							<p className="body-normal">Giornate</p>
+						</TabButton>
+						<TabButton
+							handleClick={() => handleTabChange("Rules")}
+							active={tabActive === "Rules"}
+						>
+							<p className="body-normal">Regole</p>
+						</TabButton>
+					</>
 				) : (
-					status == "STARTED" && (
+					status == "FINISHED" && (
 						<>
 							<TabButton
 								handleClick={() => handleTabChange("General")}
@@ -72,12 +99,6 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 								active={tabActive === "Days"}
 							>
 								<p className="body-normal">Giornate</p>
-							</TabButton>
-							<TabButton
-								handleClick={() => handleTabChange("Rules")}
-								active={tabActive === "Rules"}
-							>
-								<p className="body-normal">Regole</p>
 							</TabButton>
 						</>
 					)
@@ -101,6 +122,21 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 						active={tabActive === "Rules"}
 					>
 						<p className="body-normal">Regole</p>
+					</TabButton>
+				</>
+			) : status == "FINISHED" ? (
+				<>
+					<TabButton
+						handleClick={() => handleTabChange("Ranking")}
+						active={tabActive === "Ranking"}
+					>
+						<p className="body-normal">Classifica</p>
+					</TabButton>
+					<TabButton
+						handleClick={() => handleTabChange("Days")}
+						active={tabActive === "Days"}
+					>
+						<p className="body-normal">Giornate</p>
 					</TabButton>
 				</>
 			) : (

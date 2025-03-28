@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
+	ArrowLeftEndOnRectangleIcon,
 	ChevronLeftIcon,
 	PencilSquareIcon,
 	XMarkIcon,
@@ -20,12 +21,14 @@ import Participants from "./Participants";
 import CardSquadra from "../components/CardSquadra";
 import { useTeam } from "../contexts/TeamContext";
 import Points from "./Points";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 function ViewLega() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const { league, getLeague, updateLeague } = useLeague();
-	const { addParticipant } = useParticipant();
+	const { addParticipant, deleteParticipant } = useParticipant();
 	const { team, getMyTeam } = useTeam();
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -38,26 +41,37 @@ function ViewLega() {
 
 	const fileInputRef = useRef(null);
 
-	const fetchData = useCallback(async () => {
-		try {
-			setIsLoading(true);
-			if (id != league.id) {
-				await getLeague(id);
-				await getMyTeam(id);
-			}
-		} catch (error) {
-			console.error(error.message);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [id]);
-
 	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				if (id != league.id) {
+					setIsLoading(true);
+					await getLeague(id);
+					await getMyTeam(id);
+					setIsLoading(false);
+				}
+			} catch (error) {
+				console.error(error.message);
+			}
+		};
+
 		fetchData();
-	}, [fetchData]);
+	}, [id]);
 
 	const { description, name, status, isRegistered, icon } = league;
 	const [tabActive, setTabActive] = useState();
+	const [textModal, setTextModal] = useState();
+	const [disclaimerModal, setDisclaimerModal] = useState();
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
+
+	const showModalConfirmDelete = () => {
+		setTextModal("Sei sicuro di volerti disiscrivere da questa lega?");
+		setDisclaimerModal("Confermando non parteciperai piú a questa lega.");
+		setIsModalConfirmOpen({ action: "delete", value: true });
+	};
 
 	useEffect(() => {
 		setTabActive(
@@ -70,8 +84,6 @@ function ViewLega() {
 			}`
 		);
 	}, [status, isAdmin]);
-
-	useEffect(() => {});
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -104,6 +116,31 @@ function ViewLega() {
 			"Iscrizione effettuata!",
 			"L'iscrizione a questa lega é andata a buon fine."
 		);
+	};
+
+	const handleRemovePartecipant = async () => {
+		setIsModalConfirmOpen({ action: null, value: false });
+		setIsLoading(true);
+		const res = await deleteParticipant(id);
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore!",
+				"La cancellazione da questa lega non é andata a buon fine. Riprova."
+			);
+			return;
+		}
+		await getLeague(id);
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Cancellazione effettuata!",
+			"Non sei piú iscritto a questa lega."
+		);
+		setTimeout(() => {
+			navigate("/");
+		}, 1000);
 	};
 
 	const handleUpdateImage = () => {
@@ -160,17 +197,15 @@ function ViewLega() {
 			) : (
 				<>
 					<div className="flex flex-col gap-[16px] flex-1">
-						<div className="flex items-center justify-between gap-[16px]">
-							<button
-								onClick={() => {
-									navigate("/app");
-								}}
-								className="flex items-center gap-[4px] text-(--accent-normal)"
-							>
-								<ChevronLeftIcon className="h-[20px] w-[20px]" />
-								<p className="body-normal">Indietro</p>
-							</button>
-						</div>
+						<button
+							onClick={() => {
+								navigate("/app");
+							}}
+							className="flex items-center gap-[4px] text-(--accent-normal)"
+						>
+							<ChevronLeftIcon className="h-[20px] w-[20px]" />
+							<p className="body-normal">Indietro</p>
+						</button>
 						<div className="top flex flex-col gap-[16px] flex-1">
 							{status === "PENDING" && (
 								<input
@@ -205,7 +240,20 @@ function ViewLega() {
 							</picture>
 							{status != "PENDING" && (
 								<>
-									<h2 className="title-h4">{name}</h2>
+									<div className="flex items-center justify-between">
+										<h2 className="title-h4">{name}</h2>
+										{status == "NOT_STARTED" &&
+											isRegistered && (
+												<button
+													className="flex items-center gap-[4px]"
+													onClick={
+														showModalConfirmDelete
+													}
+												>
+													<ArrowLeftEndOnRectangleIcon className="h-[24px] w-[24px]" />
+												</button>
+											)}
+									</div>
 									{description != null && (
 										<p className="body-normal text-(--black-normal)">
 											{description}
@@ -251,15 +299,21 @@ function ViewLega() {
 									/>
 								)}
 							</>
+						) : status === "STARTED" && !isRegistered ? (
+							<FixedPopup background="(--error-light)">
+								<XMarkIcon className="w-[24px] h-[24px] flex-shrink-0" />
+								<p className="font-bold text-(--black-normal)">
+									Non puoi iscriverti, la lega è già avviata
+								</p>
+							</FixedPopup>
 						) : (
-							status === "STARTED" &&
-							!isRegistered && (
-								<FixedPopup background="(--error-light)">
-									<XMarkIcon className="w-[24px] h-[24px] flex-shrink-0" />
-									<p className="font-bold text-(--black-normal)">
-										Non puoi iscriverti, la lega è già
-										avviata
-									</p>
+							status === "FINISHED" && (
+								<FixedPopup
+									title="Lega terminata"
+									message={`Questa lega é terminata. Controlla la classifica per verificare il vincitore.`}
+									customIcon={true}
+								>
+									<ExclamationTriangleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-orange-500" />
 								</FixedPopup>
 							)
 						)}
@@ -270,6 +324,18 @@ function ViewLega() {
 						title={popupData.title}
 						message={popupData.message}
 					/>
+					<ModalConfirmAction
+						isOpen={isModalConfirmOpen.value}
+						text={textModal}
+						disclaimer={disclaimerModal}
+						onClose={() =>
+							setIsModalConfirmOpen({
+								action: null,
+								value: false,
+							})
+						}
+						onConfirmAction={handleRemovePartecipant}
+					></ModalConfirmAction>
 				</>
 			)}
 		</>

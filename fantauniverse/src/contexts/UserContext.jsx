@@ -51,6 +51,7 @@ function UserProvider({ children }) {
 			}
 
 			const user = await response.json();
+			localStorage.setItem("authToken", user.token);
 			dispatch({ type: "register", payload: user });
 
 			return user;
@@ -75,6 +76,7 @@ function UserProvider({ children }) {
 			}
 
 			const user = await response.json();
+			localStorage.setItem("authToken", user.token);
 			dispatch({ type: "login", payload: user });
 
 			return user;
@@ -127,6 +129,7 @@ function UserProvider({ children }) {
 			}
 
 			const newUser = await response.json();
+			localStorage.setItem("authToken", newUser.token);
 			dispatch({ type: "updateUser", payload: newUser });
 			return true;
 		} catch (error) {

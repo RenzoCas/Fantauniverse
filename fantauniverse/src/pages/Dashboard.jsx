@@ -9,6 +9,7 @@ import ModalLeague from "../components/modals/ModalLeague";
 import GenericPopup from "../components/popups/GenericPopup";
 import { useLocation } from "react-router";
 import ModalSearchLeague from "../components/modals/ModalSearchLeague";
+import TabDashboard from "../components/TabDashboard";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +32,8 @@ function Dashboard() {
 	const [deleteLeague, setDeleteLeague] = useState(
 		state?.deleteLeague ?? null
 	);
+	const firstStatus = myLeagues[0]?.status;
+	const [tabActive, setTabActive] = useState(firstStatus);
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -136,11 +139,34 @@ function Dashboard() {
 					</form>
 
 					{myLeagues.length !== 0 ? (
-						<ul className="flex flex-col gap-[10px]">
-							{myLeagues.map((el) => (
-								<Lega key={el.id} league={el} />
-							))}
-						</ul>
+						(() => {
+							const uniqueStatuses = [
+								...new Set(myLeagues.map((el) => el.status)),
+							];
+							const showTabs = uniqueStatuses.length > 1;
+
+							return (
+								<>
+									{showTabs && (
+										<TabDashboard
+											tabActive={tabActive}
+											handleTabChange={setTabActive}
+										/>
+									)}
+									<ul className="flex flex-col gap-[10px]">
+										{myLeagues
+											.filter(
+												(el) =>
+													!showTabs ||
+													el.status === tabActive
+											)
+											.map((el) => (
+												<Lega key={el.id} league={el} />
+											))}
+									</ul>
+								</>
+							);
+						})()
 					) : (
 						<p className="body-normal font-semibold text-(--black-darker) text-center">
 							Sembra che tu non abbia ancora una lega. Cerca una
