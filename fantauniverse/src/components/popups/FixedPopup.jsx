@@ -1,10 +1,16 @@
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { XCircleIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 function FixedPopup({ type, title, message, customIcon = false, children }) {
+	const [isClose, setIsClose] = useState(false);
 	return (
 		<>
 			<div
-				className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] sticky bottom-[32px] mt-auto z-50 border border-(--black-normal)/70 w-[calc(100vw-32px)] md:max-w-[528px]`}
+				className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] fixed mt-auto z-50 border border-(--black-normal)/70 w-[calc(100vw-32px)] md:max-w-[528px] ransition-transform duration-500 ease ${
+					isClose ? "translate-y-full" : "translate-y-0"
+				}`}
+				style={{ bottom: isClose ? `0px` : "32px" }}
 			>
 				<div className="flex items-center gap-[4px]">
 					{!customIcon && (
@@ -22,6 +28,12 @@ function FixedPopup({ type, title, message, customIcon = false, children }) {
 							{title}
 						</h6>
 					</div>
+					<button
+						className="absolute top-[8px] right-[8px]"
+						onClick={() => setIsClose(true)}
+					>
+						<XCircleIcon className="h-[24px] w-[24px]" />
+					</button>
 				</div>
 				<p className="body-small font-bold text-(--black-normal)/70 ml-[20px]">
 					{message}
