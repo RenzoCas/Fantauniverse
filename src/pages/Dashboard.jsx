@@ -5,7 +5,7 @@ import {
 	PlusIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericInput from "../atoms/Inputs/GenericInput";
@@ -44,32 +44,6 @@ function Dashboard() {
 	const [filterLeagueState, setFilterState] = useState([]);
 	const [filteredLeague, setFilteredLeague] = useState(myLeagues);
 	const [filterStateOpen, setFilterStateOpen] = useState(false);
-
-	const filterRef = useRef(null);
-
-	useEffect(() => {
-		function handleClickOutside(event) {
-			if (
-				filterRef.current &&
-				!filterRef.current.contains(event.target) &&
-				!event.target.closest("button")
-			) {
-				setShowFilters(false);
-			}
-
-			setFilterStateOpen(false);
-		}
-
-		if (showFilters) {
-			document.addEventListener("mousedown", handleClickOutside);
-		} else {
-			document.removeEventListener("mousedown", handleClickOutside);
-		}
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [showFilters]);
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -305,6 +279,7 @@ function Dashboard() {
 										onClick={(e) => {
 											e.stopPropagation();
 											setShowFilters((prev) => !prev);
+											setFilterStateOpen(false);
 										}}
 									>
 										<FunnelIcon className="h-[20px] w-[20px]" />
@@ -313,7 +288,6 @@ function Dashboard() {
 
 								{showFilters && (
 									<div
-										ref={filterRef}
 										className={`absolute top-[40px] w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white`}
 									>
 										<div className="flex items-center justify-between">
