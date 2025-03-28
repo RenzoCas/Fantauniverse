@@ -1,5 +1,5 @@
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { FunnelIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useEffect, useRef, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericInput from "../atoms/Inputs/GenericInput";
@@ -9,6 +9,7 @@ import ModalLeague from "../components/modals/ModalLeague";
 import GenericPopup from "../components/popups/GenericPopup";
 import { useLocation } from "react-router";
 import ModalSearchLeague from "../components/modals/ModalSearchLeague";
+import Switch from "../atoms/Inputs/Switch";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +32,31 @@ function Dashboard() {
 	const [deleteLeague, setDeleteLeague] = useState(
 		state?.deleteLeague ?? null
 	);
+
+	const [enabledSwitch, setEnabledSwitch] = useState(false);
+	const [showFilters, setShowFilters] = useState(false);
+	const [filterLeagueState, setFilterState] = useState("ALL");
+	const [filteredLeague, setFilteredLeague] = useState(myLeagues);
+	const filterRef = useRef(null);
+
+	useEffect(() => {
+		function handleClickOutside(event) {
+			if (
+				filterRef.current &&
+				!filterRef.current.contains(event.target)
+			) {
+				setShowFilters(false);
+			}
+		}
+		// Aggiunge l'event listener quando showFilters è true
+		if (showFilters) {
+			document.addEventListener("mousedown", handleClickOutside);
+		}
+		return () => {
+			// Rimuove l'event listener quando il componente si smonta o showFilters cambia
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [showFilters]);
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -56,7 +82,8 @@ function Dashboard() {
 		const fetchData = async () => {
 			if (!requestDone) {
 				setIsLoading(true);
-				await getMyLeagues();
+				const res = await getMyLeagues();
+				setFilteredLeague(res);
 				setRequestDone(true);
 				setIsLoading(false);
 			}
@@ -64,6 +91,17 @@ function Dashboard() {
 
 		fetchData();
 	}, [getMyLeagues, myLeagues, requestDone]);
+
+	useEffect(() => {
+		setFilteredLeague(
+			myLeagues.filter(
+				(el) =>
+					(filterLeagueState === "ALL" ||
+						el.status === filterLeagueState) &&
+					(!enabledSwitch || el.isAdmin === true)
+			)
+		);
+	}, [filterLeagueState, enabledSwitch, myLeagues]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -107,7 +145,7 @@ function Dashboard() {
 				<h1 className="title-h4 text-(--primary)">
 					Bentornato, <br /> {user.username}
 				</h1>
-				<section className="flex flex-col gap-[12px]">
+				<section className="flex flex-col gap-[16px]">
 					<div className="flex justify-between items-center gap-[8px]">
 						<p className="body-regular font-semibold">
 							Le tue leghe
@@ -136,11 +174,86 @@ function Dashboard() {
 					</form>
 
 					{myLeagues.length !== 0 ? (
-						<ul className="flex flex-col gap-[10px]">
-							{myLeagues.map((el) => (
-								<Lega key={el.id} league={el} />
-							))}
-						</ul>
+						<>
+							<div className="relative flex flex-col gap-[10px]">
+								<button
+									className="flex items-center self-end gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit"
+									onClick={() => setShowFilters(!showFilters)}
+								>
+									<p>Filtri</p>
+									<FunnelIcon className="h-[20px] w-[20px]" />
+								</button>
+								{showFilters && (
+									<div
+										ref={filterRef}
+										className={`absolute top-[40px] w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white`}
+									>
+										<div className="flex items-center justify-between">
+											<p className="font-semibold">
+												Stato
+											</p>
+											<button
+												className="text-[#F87171] font-semibold"
+												onClick={() => {
+													setFilterState("ALL");
+													setEnabledSwitch(false);
+												}}
+											>
+												Reimposta
+											</button>
+										</div>
+										<select
+											className="px-[12px] py-[4px] border border-solid border-(--black-light-hover) rounded-[5px] w-full"
+											onChange={(e) => {
+												setFilterState(e.target.value);
+											}}
+											value={filterLeagueState}
+										>
+											<option value="ALL">Tutte</option>
+											<option value="NOT_STARTED">
+												Non avviate
+											</option>
+											<option value="STARTED">
+												Avviate
+											</option>
+											<option value="FINISHED">
+												Terminate
+											</option>
+										</select>
+										<Switch
+											enabled={enabledSwitch}
+											onChange={() =>
+												setEnabledSwitch(!enabledSwitch)
+											}
+											text="Create da me"
+										/>
+									</div>
+								)}
+							</div>
+							{filteredLeague.length > 0 ? (
+								<ul className="flex flex-col gap-[10px]">
+									{filteredLeague.map((el) => (
+										<Lega key={el.id} league={el} />
+									))}
+								</ul>
+							) : (
+								<p className="text-center text-gray-500">
+									Nessuna lega disponibile per il filtro
+									selezionato
+								</p>
+							)}
+							{/* <ul className="flex flex-col gap-[10px]">
+								{myLeagues
+									.filter(
+										(el) =>
+											filterLeagueState === "ALL" ||
+											el.status === filterLeagueState
+									)
+									.map((el) => (
+										<Lega key={el.id} league={el} />
+									))}
+							</ul> */}
+						</>
 					) : (
 						<p className="body-normal font-semibold text-(--black-darker) text-center">
 							Sembra che tu non abbia ancora una lega. Cerca una
