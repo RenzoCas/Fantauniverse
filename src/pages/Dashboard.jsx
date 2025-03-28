@@ -262,8 +262,8 @@ function Dashboard() {
 													<button
 														className="flex"
 														onClick={() =>
-															handleRemoveSelect(
-																state
+															setEnabledSwitch(
+																false
 															)
 														}
 													>
