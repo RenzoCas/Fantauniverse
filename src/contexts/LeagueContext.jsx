@@ -143,15 +143,17 @@ function LeagueProvider({ children }) {
 			try {
 				if (!user || !user.token) return;
 
-				const response = await fetch(
-					`${urlServer}/league/filter?nameOrCode=${name}`,
-					{
-						method: "GET",
-						headers: {
-							Authorization: `Bearer ${user.token}`,
-						},
-					}
-				);
+				const response = await fetch(`${urlServer}/league/filter`, {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						nameOrCode: name,
+						status: ["NOT_STARTED", "STARTED", "FINISHED"],
+					}),
+				});
 
 				if (!response.ok) {
 					throw new Error("Errore nel caricamento della lega.");

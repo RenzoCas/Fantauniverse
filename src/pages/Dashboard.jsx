@@ -128,7 +128,7 @@ function Dashboard() {
 		e.preventDefault();
 		if (formData.leagueName.trim() != "") {
 			const res = await findLeague(formData.leagueName);
-			if (!res) {
+			if (res.length == 0) {
 				showPopup(
 					"error",
 					"Lega non esistente!",
