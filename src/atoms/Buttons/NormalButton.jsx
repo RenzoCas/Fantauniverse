@@ -14,13 +14,13 @@ export default function NormalButton({
 			onClick={action}
 			disabled={disabled}
 			type="button"
-			className={`group flex items-center justify-center gap-[8px] rounded-full px-[24px] py-[12px] text-white ${
+			className={`group flex items-center justify-center gap-[8px] rounded-full px-[24px] py-[12px] ${
 				classOpt ? classOpt : ""
 			}
         ${
 			disabled
 				? "bg-(--black-light) text-(--black-normal)/25 cursor-not-allowed"
-				: "bg-(--black-normal) text-(--white) hover:bg-(--black-dark)"
+				: "bg-(--black-normal) text-white hover:bg-(--black-dark)"
 		}
       `}
 		>

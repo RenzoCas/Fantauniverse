@@ -9,8 +9,8 @@ export default function Switch({ enabled, onChange, text }) {
 					onChange={onChange}
 				/>
 				<div
-					className={`w-[44px] h-[24px] bg-[#E2E8F0] rounded-full transition ${
-						enabled ? "bg-blue-500" : ""
+					className={`w-[44px] h-[24px] rounded-full transition ${
+						enabled ? "bg-(--black-normal)" : "bg-[#E2E8F0]"
 					}`}
 				></div>
 				<div

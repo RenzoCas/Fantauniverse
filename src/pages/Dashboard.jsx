@@ -5,7 +5,7 @@ import {
 	PlusIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericInput from "../atoms/Inputs/GenericInput";
@@ -46,6 +46,8 @@ function Dashboard() {
 	const [filterLeagueState, setFilterState] = useState([]);
 	const [filteredLeague, setFilteredLeague] = useState(myLeagues);
 	const [filterStateOpen, setFilterStateOpen] = useState(false);
+	const filterRef = useRef(null);
+	const buttonRef = useRef(null);
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -91,6 +93,29 @@ function Dashboard() {
 			)
 		);
 	}, [filterLeagueState, enabledSwitch, myLeagues]);
+
+	useEffect(() => {
+		function handleClickOutside(event) {
+			// Se clicco sul pulsante dei filtri, inverto lo stato
+			if (buttonRef.current && buttonRef.current.contains(event.target)) {
+				setShowFilters((prev) => !prev);
+				return;
+			}
+
+			// Se clicco fuori dal div dei filtri, chiudo
+			if (
+				filterRef.current &&
+				!filterRef.current.contains(event.target)
+			) {
+				setShowFilters(false);
+			}
+		}
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -299,19 +324,16 @@ function Dashboard() {
 									)}
 
 									<button
-										className="flex items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit"
-										onClick={(e) => {
-											e.stopPropagation();
-											setShowFilters((prev) => !prev);
-											setFilterStateOpen(false);
-										}}
+										ref={buttonRef}
+										className="flex items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit filterBtn"
 									>
-										<FunnelIcon className="h-[20px] w-[20px]" />
+										<FunnelIcon className="h-[20px] w-[20px] filterBtn" />
 									</button>
 								</div>
 
 								{showFilters && (
 									<div
+										ref={filterRef}
 										className={`absolute top-[40px] z-3 w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white`}
 									>
 										<div className="flex items-center justify-between">
