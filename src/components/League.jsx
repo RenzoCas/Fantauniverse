@@ -122,7 +122,7 @@ export default function League({ league, onAddParticipant }) {
 							className="border-2 border-solid border-(--black-normal) rounded-[4px] px-[18px] py-[4px] body-small font-semibold bg-white"
 							onClick={handleClick}
 						>
-							Scopri
+							{isAdmin ? "Aggiorna" : "Scopri"}
 						</button>
 						<button
 							className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal)"

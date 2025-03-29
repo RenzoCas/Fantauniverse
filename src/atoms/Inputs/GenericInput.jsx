@@ -50,7 +50,7 @@ export default function GenericInput({
 						onChange={handleChange}
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) ${
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) break-words ${
 							messageError
 								? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"
 								: "bg-(--black-light-hover) border-transparent focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
@@ -70,7 +70,7 @@ export default function GenericInput({
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
 						disabled={disabled}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) ${
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) break-words ${
 							messageError
 								? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"
 								: "bg-(--black-light-hover) border-transparent focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
@@ -86,7 +86,7 @@ export default function GenericInput({
 					<button
 						type="button"
 						onClick={togglePasswordVisibility}
-						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal)"
+						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal) break-words"
 					>
 						{showPassword ? (
 							<EyeSlashIcon className="h-[24px] w-[24px]" />

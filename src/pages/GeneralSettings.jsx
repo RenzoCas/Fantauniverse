@@ -340,7 +340,7 @@ function GeneralSettings() {
 											autoFocus={true}
 										/>
 									) : (
-										<p className="body-normal">
+										<p className="body-normal break-words">
 											{formData[field]}
 										</p>
 									)}
@@ -360,7 +360,7 @@ function GeneralSettings() {
 								>
 									<ClipboardIcon className="h-5 w-5 text-gray-600" />
 								</button>
-								<p className="font-mono bg-gray-100 p-2 rounded">
+								<p className="font-mono bg-gray-100 p-2 rounded break-words">
 									{code}
 								</p>
 							</div>
