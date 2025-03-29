@@ -131,7 +131,9 @@ export default function Navbar() {
 						</picture>
 						<h3 className="body-regular">
 							Bentornato, <br />
-							<span className="font-semibold">{username}</span>
+							<span className="font-semibold break-words">
+								{username}
+							</span>
 						</h3>
 					</div>
 					<button
@@ -179,7 +181,7 @@ export default function Navbar() {
 														/>
 													)}
 												</picture>
-												<h4 className="body-normal font-medium">
+												<h4 className="body-normal font-medium break-words">
 													{league.name}
 												</h4>
 												<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />

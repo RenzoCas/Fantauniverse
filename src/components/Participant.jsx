@@ -76,8 +76,10 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 					)}
 				</picture>
 				<div className={`flex flex-col gap-[4px] w-full`}>
-					<p className="body-normal font-semibold">{username}</p>
-					<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+					<p className="body-normal font-semibold break-words">
+						{username}
+					</p>
+					<p className="body-small font-semibold text-(--black-normal)/70 break-words">
 						{name || "Squadra non presente."}
 					</p>
 				</div>

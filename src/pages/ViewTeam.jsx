@@ -57,11 +57,12 @@ function ViewTeam() {
 	});
 
 	useEffect(() => {
-		if (!teamParticipant && team) {
+		if (team) {
 			const initialPlayers = team.players || [];
 			const initialMaxCoins =
 				maxCoins - initialPlayers.reduce((sum, p) => sum + p.price, 0);
-
+			console.log(initialPlayers);
+			console.log(initialMaxCoins);
 			setTempTeam((prevTeam) => ({
 				...prevTeam,
 				players: initialPlayers,

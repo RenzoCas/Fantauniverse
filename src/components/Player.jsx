@@ -75,7 +75,7 @@ function Player({
 				)}
 			</picture>
 			<div className={`flex flex-col gap-[4px] w-full`}>
-				<p className="body-normal font-semibold">{name}</p>
+				<p className="body-normal font-semibold break-words">{name}</p>
 				{canEdit && status == "PENDING" ? (
 					<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
 						{price} {coinName}

@@ -311,7 +311,7 @@ function Account() {
 				<div className="fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 opacity-100 visible">
 					<div className="bg-white shadow-lg rounded-lg p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[16px] translate-y-0 md:max-w-[600px] md:rounded-lg md:items-center md:justify-center">
 						<div className="flex justify-between gap-[8px] items-center">
-							<p className="font-semibold">
+							<p className="font-semibold break-words">
 								Modifica {textToUpdate}
 							</p>
 							<button onClick={() => setIsModalDataOpen(false)}>

@@ -65,7 +65,9 @@ function ViewLega() {
 	useEffect(() => {
 		setTabActive(
 			`${
-				isAdmin
+				status == "FINISHED"
+					? "Ranking"
+					: isAdmin
 					? "General"
 					: status == "NOT_STARTED"
 					? "Participants"
@@ -248,11 +250,13 @@ function ViewLega() {
 							{status != "PENDING" && (
 								<>
 									<div className="flex items-center justify-between">
-										<h2 className="title-h4">{name}</h2>
+										<h2 className="title-h4 break-words">
+											{name}
+										</h2>
 										{status == "NOT_STARTED" &&
 											isRegistered && (
 												<button
-													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171]"
+													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
 													onClick={
 														showModalConfirmDelete
 													}
@@ -262,7 +266,7 @@ function ViewLega() {
 											)}
 									</div>
 									{description != null && (
-										<p className="body-normal text-(--black-normal)">
+										<p className="body-normal text-(--black-normal) break-words">
 											{description}
 										</p>
 									)}
