@@ -19,7 +19,9 @@ function GenericPopup({ isOpen, type, title, message, classOpt }) {
 	return (
 		<div
 			className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] border border-(--black-normal)/70 fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px]
-                ${isOpen ? "translate-y-0" : "translate-y-full"} ${classOpt}`}
+                ${isOpen ? "translate-y-0" : "translate-y-full"} ${
+				classOpt ? classOpt : ""
+			}`}
 			style={{ bottom: isOpen ? `${fixedPopupHeight}px` : "0px" }}
 		>
 			<div className="flex items-center gap-[4px]">

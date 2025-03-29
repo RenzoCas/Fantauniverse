@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function League({ league, onAddParticipant }) {
 	const navigate = useNavigate();
-	const { id, name, icon, isAdmin, isRegistered, position } = league;
+	const { id, name, icon, isAdmin, isRegistered, position, status } = league;
 	const numParticipants = league.participants
 		? league.participants?.length
 		: league.numberParticipants;
@@ -124,12 +124,14 @@ export default function League({ league, onAddParticipant }) {
 						>
 							{isAdmin ? "Aggiorna" : "Scopri"}
 						</button>
-						<button
-							className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal)"
-							onClick={() => onAddParticipant(id)}
-						>
-							Iscriviti
-						</button>
+						{status == "NOT_STARTED" && (
+							<button
+								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal)"
+								onClick={() => onAddParticipant(id)}
+							>
+								Iscriviti
+							</button>
+						)}
 					</div>
 				)}
 			</div>

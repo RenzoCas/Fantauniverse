@@ -410,10 +410,16 @@ function Dashboard() {
 									</div>
 								)}
 							</div>
-							{filteredLeague.length > 0 ? (
+							{filteredLeague?.length > 0 ? (
 								<ul className="flex flex-col gap-[10px]">
 									{filteredLeague.map((el) => (
-										<League key={el.id} league={el} />
+										<League
+											key={el.id}
+											league={el}
+											onAddParticipant={
+												handleAddParticipant
+											}
+										/>
 									))}
 								</ul>
 							) : (

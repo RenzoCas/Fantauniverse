@@ -1,6 +1,10 @@
-export default function Switch({ enabled, onChange, text }) {
+export default function Switch({ enabled, onChange, text, classOpt }) {
 	return (
-		<label className="flex items-center gap-[8px] cursor-pointer">
+		<label
+			className={`flex items-center gap-[8px] cursor-pointer ${
+				classOpt ? classOpt : ""
+			}`}
+		>
 			<div className="relative">
 				<input
 					type="checkbox"

@@ -214,7 +214,6 @@ function LeagueProvider({ children }) {
 				}
 
 				const data = await response.json();
-				// data.status = "NOT_STARTED";
 				dispatchLeague({ type: "updateLeague", payload: data });
 
 				return data;
@@ -270,7 +269,37 @@ function LeagueProvider({ children }) {
 
 			const updatedLeagueData = await response.json();
 
-			dispatchMyLeagues({
+			dispatchLeague({
+				type: "updateLeague",
+				payload: updatedLeagueData,
+			});
+
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
+	const changeStatus = async (newStatus) => {
+		try {
+			const response = await fetch(
+				`${urlServer}/league/changeStatus/${league.id}?newStatus=${newStatus}`,
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Errore nell'aggiornamento della lega.");
+			}
+
+			const updatedLeagueData = await response.json();
+
+			dispatchLeague({
 				type: "updateLeague",
 				payload: updatedLeagueData,
 			});
@@ -299,7 +328,7 @@ function LeagueProvider({ children }) {
 
 			const updatedLeagueData = await response.json();
 
-			dispatchMyLeagues({
+			dispatchLeague({
 				type: "updateLeague",
 				payload: updatedLeagueData,
 			});
@@ -348,6 +377,7 @@ function LeagueProvider({ children }) {
 				getLeague,
 				createLeague,
 				updateLeague,
+				changeStatus,
 				createDay,
 				deleteLeague,
 				resetMyLeague,

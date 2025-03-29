@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLeague } from "../contexts/LeagueContext";
 import Select from "../atoms/Inputs/Select";
 import {
 	CheckIcon,
 	ClipboardIcon,
+	InformationCircleIcon,
 	PencilSquareIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -14,21 +15,25 @@ import { useNavigate } from "react-router";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import GenericPopup from "../components/popups/GenericPopup";
+import Radio from "../atoms/Inputs/Radio";
+import Switch from "../atoms/Inputs/Switch";
 
 function GeneralSettings() {
-	const { league, getLeague, deleteLeague, updateLeague } = useLeague();
+	const { league, deleteLeague, updateLeague, changeStatus } = useLeague();
 	const {
 		id,
 		name,
 		description,
 		coinName,
 		maxCoins,
+		visibility,
 		status,
 		players,
 		rules,
 		participants,
 		days,
 		code,
+		enableCaptain,
 	} = league;
 	const [selectedValue, setSelectedValue] = useState(status);
 	const [tempValue, setTempValue] = useState();
@@ -46,6 +51,8 @@ function GeneralSettings() {
 		description: description || "",
 		coinName: coinName || "",
 		maxCoins: maxCoins || 0,
+		visibility: visibility || "PUBLIC",
+		enableCaptain: enableCaptain || false,
 	});
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -57,9 +64,22 @@ function GeneralSettings() {
 		action: null,
 		value: false,
 	});
+
+	const visibilityObj = [
+		{
+			value: "PUBLIC",
+			label: "Pubblica",
+		},
+		{
+			value: "PRIVATE",
+			label: "Privata",
+		},
+	];
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
 	const [isDisabled, setIsDisabled] = useState(false);
+	const [isEnableCaptain, setIsEnableCaptain] = useState(enableCaptain);
+	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 	const navigate = useNavigate();
 
 	const showPopup = (type, title, message) => {
@@ -89,69 +109,88 @@ function GeneralSettings() {
 	const currentIndex = options.findIndex(
 		(opt) => opt.value === selectedValue
 	);
-
 	const filteredOptions =
 		currentIndex !== -1 ? options.slice(currentIndex) : options;
-
 	const isEditingAnyField = Object.values(isEditing).some(
 		(isEditing) => isEditing
 	);
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (!event.target.closest(".tooltip-container")) {
+				setIsTooltipVisible(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
 	const showModalConfirmChange = (value) => {
 		if (value === selectedValue) return;
-		setTempValue(value);
+		if (isFormValid()) {
+			setTextModal("Attenzione!");
+			setDisclaimerModal(
+				"Prima di cambiare stato della lega devi salvare le modifiche in corso."
+			);
+			setIsDisabled(true);
+		} else {
+			setTempValue(value);
 
-		switch (value) {
-			case "NOT_STARTED": {
-				const isDisabled = players.length === 0 || rules.length === 0;
-				setIsDisabled(isDisabled);
-				if (isDisabled) {
-					setTextModal("Attenzione!");
-					setDisclaimerModal(
-						"Per poter pubblicare la lega deve esserci almeno 1 giocatore ed almeno 1 regola."
-					);
-				} else {
-					setTextModal("Sei sicuro di voler pubblicare la lega?");
-					setDisclaimerModal(
-						"Confermando non sará piú possibile modificare i dati della lega, i player e il regolamento."
-					);
+			switch (value) {
+				case "NOT_STARTED": {
+					const isDisabled =
+						players.length === 0 || rules.length === 0;
+					setIsDisabled(isDisabled);
+					if (isDisabled) {
+						setTextModal("Attenzione!");
+						setDisclaimerModal(
+							"Per poter pubblicare la lega deve esserci almeno 1 giocatore ed almeno 1 regola."
+						);
+					} else {
+						setTextModal("Sei sicuro di voler pubblicare la lega?");
+						setDisclaimerModal(
+							"Confermando non sará piú possibile modificare i dati della lega, i player e il regolamento."
+						);
+					}
+
+					break;
+				}
+				case "STARTED": {
+					const isDisabled = participants.length <= 1;
+					setIsDisabled(isDisabled);
+					if (isDisabled) {
+						setTextModal("Attenzione!");
+						setDisclaimerModal(
+							"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
+						);
+					} else {
+						setTextModal("Sei sicuro di voler avviare la lega?");
+						setDisclaimerModal(
+							"Confermando non sará piú possibile iscriversi alla lega."
+						);
+					}
+					break;
+				}
+				case "FINISHED": {
+					const isDisabled = days.length === 0;
+					setIsDisabled(isDisabled);
+					if (isDisabled) {
+						setTextModal("Attenzione!");
+						setDisclaimerModal(
+							"Per poter terminare la lega deve essere avviata ed esserci almeno 1 giornata."
+						);
+					} else {
+						setTextModal("Sei sicuro di voler terminare la lega?");
+						setDisclaimerModal(null);
+					}
+					break;
 				}
 
-				break;
+				default:
+					break;
 			}
-			case "STARTED": {
-				const isDisabled = participants.length <= 1;
-				setIsDisabled(isDisabled);
-				if (isDisabled) {
-					setTextModal("Attenzione!");
-					setDisclaimerModal(
-						"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
-					);
-				} else {
-					setTextModal("Sei sicuro di voler avviare la lega?");
-					setDisclaimerModal(
-						"Confermando non sará piú possibile iscriversi alla lega."
-					);
-				}
-				break;
-			}
-			case "FINISHED": {
-				const isDisabled = days.length === 0;
-				setIsDisabled(isDisabled);
-				if (isDisabled) {
-					setTextModal("Attenzione!");
-					setDisclaimerModal(
-						"Per poter terminare la lega deve essere avviata ed esserci almeno 1 giornata."
-					);
-				} else {
-					setTextModal("Sei sicuro di voler terminare la lega?");
-					setDisclaimerModal(null);
-				}
-				break;
-			}
-
-			default:
-				break;
 		}
 		setIsModalConfirmOpen({ action: "select", value: true });
 	};
@@ -168,7 +207,7 @@ function GeneralSettings() {
 		setSelectedValue(tempValue);
 		setIsModalConfirmOpen({ action: "select", value: false });
 		setIsLoading(true);
-		await handleUpdateLeague(tempValue);
+		await changeStatus(tempValue);
 		setIsLoading(false);
 	};
 
@@ -198,6 +237,14 @@ function GeneralSettings() {
 		}
 	};
 
+	const handleChangeSwitch = () => {
+		setIsEnableCaptain((prevState) => {
+			const newState = !prevState;
+			setFormData({ ...formData, enableCaptain: newState });
+			return newState;
+		});
+	};
+
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
 		setErrors((prevErrors) => ({
@@ -215,16 +262,11 @@ function GeneralSettings() {
 		}));
 	};
 
-	const handleUpdateLeague = async (newStatus = status) => {
-		if (!isFormValid(newStatus)) return;
+	const handleUpdateLeague = async () => {
+		if (!isFormValid()) return;
 		setIsLoading(true);
 
-		const result = await updateLeague({
-			...formData,
-			status: newStatus ? newStatus : status,
-		});
-		await getLeague(id);
-
+		const result = await updateLeague(formData);
 		setIsLoading(false);
 
 		if (!result) {
@@ -260,14 +302,15 @@ function GeneralSettings() {
 		setIsLoading(false);
 	};
 
-	const isFormValid = (newStatus = selectedValue) => {
+	const isFormValid = () => {
 		return (
 			!Object.values(errors).some((error) => error !== "") &&
 			(formData.name.trim() !== name ||
 				formData.description.trim() !== description ||
 				formData.coinName.trim() !== coinName ||
 				formData.maxCoins !== maxCoins ||
-				newStatus !== status)
+				formData.visibility != visibility ||
+				formData.enableCaptain != enableCaptain)
 		);
 	};
 
@@ -346,6 +389,50 @@ function GeneralSettings() {
 									)}
 								</div>
 							))}
+							<div className="grid grid-cols-2 px-[10px]">
+								{visibilityObj?.map((opt, idx) => (
+									<Radio
+										key={idx}
+										id={`radio-${idx}`}
+										name="visibility"
+										value={opt.value}
+										checked={
+											opt.value === formData.visibility
+										}
+										handleChange={handleChangeData}
+										label={opt.label}
+									/>
+								))}
+							</div>
+
+							<div className="px-[10px] flex gap-[4px] relative w-fit">
+								<Switch
+									text="Scelta capitano"
+									enabled={isEnableCaptain}
+									onChange={handleChangeSwitch}
+								/>
+								<div className="tooltip-container">
+									<button
+										onClick={() =>
+											setIsTooltipVisible(
+												!isTooltipVisible
+											)
+										}
+									>
+										<InformationCircleIcon className="w-[20px] h-[20px]" />
+									</button>
+									{isTooltipVisible && (
+										<div className="absolute top-full mt-2 left-[10px] w-64 p-3 bg-white text-(--black-normal) border border-(--black-light) rounded-lg shadow-md animate-fade-in">
+											<p className="text-sm">
+												Se abilitato, sarà possibile
+												scegliere un capitano in squadra
+												che raddoppierà i propri punti
+												di ogni giornata.
+											</p>
+										</div>
+									)}
+								</div>
+							</div>
 						</>
 					)}
 					{status == "NOT_STARTED" && (
@@ -371,7 +458,7 @@ function GeneralSettings() {
 					<div className="flex flex-col gap-[8px] w-full mt-auto">
 						<NormalButton
 							text="Salva"
-							action={() => handleUpdateLeague(null)}
+							action={() => handleUpdateLeague()}
 							disabled={!isFormValid() || isEditingAnyField}
 						/>
 						<GhostButton
