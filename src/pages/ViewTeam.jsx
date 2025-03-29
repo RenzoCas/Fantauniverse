@@ -351,9 +351,21 @@ function ViewTeam() {
 					</form>
 					<div className="flex items-center justify-between">
 						{status == "NOT_STARTED" ? (
-							<h2 className="body-regular font-semibold text-(--black-normal)">
-								{team ? "Modifica" : "Crea"} team
-							</h2>
+							<>
+								<h2 className="body-regular font-semibold text-(--black-normal)">
+									{team ? "Modifica" : "Crea"} team
+								</h2>
+								<button
+									className="flex items-center gap-[4px] body-small font-semibold text-[#F87171]"
+									onClick={() =>
+										team
+											? showModalConfirmDelete()
+											: navigate(-1)
+									}
+								>
+									{team ? "Cancella team" : "Annulla"}
+								</button>
+							</>
 						) : (
 							<>
 								<h2 className="body-regular font-semibold text-(--black-normal)">
@@ -361,14 +373,6 @@ function ViewTeam() {
 								</h2>
 							</>
 						)}
-						<button
-							className="flex items-center gap-[4px] body-small font-semibold text-[#F87171]"
-							onClick={() =>
-								team ? showModalConfirmDelete() : navigate(-1)
-							}
-						>
-							{team ? "Cancella team" : "Annulla"}
-						</button>
 					</div>
 					{status == "NOT_STARTED" && (
 						<>

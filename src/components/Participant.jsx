@@ -28,7 +28,7 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 	};
 
 	const handleViewPartecipant = async () => {
-		if (status === "STARTED") {
+		if (status != "NOT_STARTED") {
 			await handleClick(id);
 		} else if (participantUser.id === currentUser.id) {
 			navigate("viewTeam");

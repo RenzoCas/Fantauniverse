@@ -1,7 +1,7 @@
 {
 	"faqs": [
 		{
-			"question": "Chi può partecipare a FantaUNIVERSE?",
+			"question": "Chi può partecipare a FantaUniverse?",
 			"answer": "Chiunque può iscriversi e giocare! Basta registrarsi e unirsi a una lega o crearne una nuova."
 		},
 		{
@@ -18,7 +18,7 @@
 		},
 		{
 			"question": "Posso modificare le regole di una lega dopo averla creata?",
-			"answer": "Solo fino all’inizio della competizione. Dopo l'inizio, le regole non possono essere cambiate per garantire la correttezza del gioco."
+			"answer": "Solo fino all’inizio della competizione. Dopo l'avvio, le regole non possono essere cambiate per garantire la correttezza del gioco."
 		},
 		{
 			"question": "Cosa succede se ci sono dispute sui punteggi?",

@@ -150,6 +150,7 @@ function AuthInitializer() {
 			type={popupData.type}
 			title={popupData.title}
 			message={popupData.message}
+			classOpt="left-[16px]"
 		/>
 	);
 }

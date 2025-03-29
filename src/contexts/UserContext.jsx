@@ -31,7 +31,6 @@ function UserProvider({ children }) {
 	);
 
 	const urlServer = "https://fantauniverse.groots.it";
-	// const urlServer = "http://192.168.1.94:8547";
 
 	const register = async (formData) => {
 		try {
@@ -124,7 +123,7 @@ function UserProvider({ children }) {
 			if (!response.ok) {
 				throw {
 					status: response.status,
-					message: "Errore nell'aggiornamento dell'utente:",
+					message: "Errore nell'aggiornamento dell'utente",
 				};
 			}
 
@@ -133,36 +132,31 @@ function UserProvider({ children }) {
 			dispatch({ type: "updateUser", payload: newUser });
 			return true;
 		} catch (error) {
-			console.error(
-				"Errore nell'aggiornamento dell'utente:",
-				error.message
-			);
+			console.error(error.message);
 			return false;
 		}
 	};
 
-	const deleteUser = async () => {
+	const unregister = async () => {
 		try {
-			const response = await fetch(
-				`${urlServer}?username=${user.username}`,
-				{
-					method: "DELETE",
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-					},
-				}
-			);
+			const response = await fetch(`${urlServer}/unregister`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			});
 
 			if (!response.ok) {
 				throw {
 					status: response.status,
-					message: "Sessione scaduta",
+					message: "Errore nell'aggiornamento dell'utente",
 				};
 			}
 
 			dispatch({ type: "deleteUser" });
+			localStorage.removeItem("authToken");
 		} catch (error) {
-			console.error("Sessione scaduta:", error.message);
+			console.error(error.message);
 			throw error;
 		}
 	};
@@ -203,7 +197,7 @@ function UserProvider({ children }) {
 				login,
 				logout,
 				updateUser,
-				deleteUser,
+				unregister,
 				tokenInfo,
 			}}
 		>
