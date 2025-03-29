@@ -75,17 +75,14 @@ function GeneralSettings() {
 		{
 			value: "NOT_STARTED",
 			text: "Pubblicata",
-			// isDisabled: players.length == 0 || rules.length == 0,
 		},
 		{
 			value: "STARTED",
 			text: "Avviata",
-			// isDisabled: participants.length == 0,
 		},
 		{
 			value: "FINISHED",
 			text: "Terminata",
-			// isDisabled: days.length == 0,
 		},
 	];
 
@@ -210,8 +207,12 @@ function GeneralSettings() {
 	};
 
 	const toggleEditing = (field) => {
-		if (status !== "PENDING" || (isEditing[field] && errors[field])) return;
-		setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
+		setIsEditing((prev) => ({
+			...Object.keys(prev).reduce((acc, key) => {
+				acc[key] = key === field ? !prev[key] : false;
+				return acc;
+			}, {}),
+		}));
 	};
 
 	const handleUpdateLeague = async (newStatus = status) => {

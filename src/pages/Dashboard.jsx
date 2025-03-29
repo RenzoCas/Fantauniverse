@@ -96,13 +96,11 @@ function Dashboard() {
 
 	useEffect(() => {
 		function handleClickOutside(event) {
-			// Se clicco sul pulsante dei filtri, inverto lo stato
 			if (buttonRef.current && buttonRef.current.contains(event.target)) {
 				setShowFilters((prev) => !prev);
 				return;
 			}
 
-			// Se clicco fuori dal div dei filtri, chiudo
 			if (
 				filterRef.current &&
 				!filterRef.current.contains(event.target)

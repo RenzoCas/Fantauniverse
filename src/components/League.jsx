@@ -9,10 +9,7 @@ export default function League({ league, onAddParticipant }) {
 		? league.participants?.length
 		: league.numberParticipants;
 
-	const [randomColor, setRandomColor] = useState("#ffffff");
-	const [randomColorPrimo, setRandomColorPrimo] = useState("#ffffff");
-	const [randomColorSecondo, setRandomColorSecondo] = useState("#ffffff");
-	const [randomColorTerzo, setRandomColorTerzo] = useState("#ffffff");
+	const [randomColors, setRandomColors] = useState([]);
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -25,11 +22,13 @@ export default function League({ league, onAddParticipant }) {
 	};
 
 	useEffect(() => {
-		setRandomColor(randomLightColor());
-		setRandomColorPrimo(randomLightColor());
-		setRandomColorSecondo(randomLightColor());
-		setRandomColorTerzo(randomLightColor());
-	}, []);
+		const numColors = Math.min(numParticipants + 1, 4);
+
+		const colors = Array.from({ length: numColors }, () =>
+			randomLightColor()
+		);
+		setRandomColors(colors);
+	}, [numParticipants]);
 
 	const handleClick = () => {
 		navigate(`league/${id}`, {
@@ -52,7 +51,7 @@ export default function League({ league, onAddParticipant }) {
 				{icon == null ? (
 					<div
 						className={`h-full object-cover`}
-						style={{ backgroundColor: randomColor }}
+						style={{ backgroundColor: randomColors[0] }}
 					></div>
 				) : (
 					<img
@@ -88,22 +87,33 @@ export default function League({ league, onAddParticipant }) {
 					<div className="flex items-end justify-between">
 						<h6 className="body-small font-semibold">Gioca con:</h6>
 						<ul className="flex items-center">
-							<li
-								className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15"
-								style={{ backgroundColor: randomColorPrimo }}
-							></li>
-							<li
-								className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white -rotate-10"
-								style={{ backgroundColor: randomColorSecondo }}
-							></li>
-							<li
-								className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-10 flex items-center justify-center"
-								style={{ backgroundColor: randomColorTerzo }}
-							>
-								<p className="body-normal font-semibold">
-									+{numParticipants - 1}
-								</p>
-							</li>
+							{Array.from({
+								length: Math.min(numParticipants, 3),
+							}).map((_, index) => (
+								<li
+									key={index}
+									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15"
+									style={{
+										backgroundColor: randomColors[index],
+									}}
+								></li>
+							))}
+
+							{numParticipants > 3 && (
+								<li
+									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15 flex items-center justify-center"
+									style={{
+										backgroundColor:
+											randomColors[
+												randomColors.length - 1
+											],
+									}}
+								>
+									<p className="body-normal font-semibold">
+										+{numParticipants - 3}
+									</p>
+								</li>
+							)}
 						</ul>
 					</div>
 				) : (
