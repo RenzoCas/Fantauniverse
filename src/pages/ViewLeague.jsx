@@ -1,11 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import {
-	ArrowLeftEndOnRectangleIcon,
-	ChevronLeftIcon,
-	PencilSquareIcon,
-	// XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Rules from "../pages/Rules";
 import Tab from "../components/Tab";
@@ -37,28 +32,11 @@ function ViewLega() {
 		type: "",
 		message: "",
 	});
-	const { id, isAdmin, isRegistered } = state.league;
+	const { id, isAdmin, isRegistered: testRegistered } = state.league;
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				if (id != league.id) {
-					setIsLoading(true);
-					await getLeague(id);
-					await getMyTeam(id);
-					setIsLoading(false);
-				}
-			} catch (error) {
-				console.error(error.message);
-			}
-		};
-
-		fetchData();
-	}, [id]);
-
-	const { description, name, status, icon } = league;
+	const { description, name, status, icon, isRegistered } = league;
 	const [tabActive, setTabActive] = useState();
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
@@ -66,6 +44,17 @@ function ViewLega() {
 		action: null,
 		value: false,
 	});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setIsLoading(true);
+			await getLeague(id);
+			await getMyTeam(id);
+			setIsLoading(false);
+		};
+
+		fetchData();
+	}, [id]);
 
 	const showModalConfirmDelete = () => {
 		setTextModal("Sei sicuro di volerti disiscrivere da questa lega?");
@@ -100,6 +89,7 @@ function ViewLega() {
 	const handleAddParticipant = async () => {
 		setIsLoading(true);
 		const res = await addParticipant(id);
+		await getLeague(id);
 		if (!res) {
 			setIsLoading(false);
 			showPopup(
@@ -109,7 +99,6 @@ function ViewLega() {
 			);
 			return;
 		}
-		await getLeague(id);
 		setIsLoading(false);
 		showPopup(
 			"success",
@@ -140,7 +129,7 @@ function ViewLega() {
 		);
 		setTimeout(() => {
 			navigate("/app");
-		}, 1000);
+		}, 2000);
 	};
 
 	const handleUpdateImage = () => {
@@ -263,12 +252,12 @@ function ViewLega() {
 										{status == "NOT_STARTED" &&
 											isRegistered && (
 												<button
-													className="flex items-center gap-[4px]"
+													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171]"
 													onClick={
 														showModalConfirmDelete
 													}
 												>
-													<ArrowLeftEndOnRectangleIcon className="h-[24px] w-[24px]" />
+													Esci dalla lega
 												</button>
 											)}
 									</div>
@@ -289,9 +278,7 @@ function ViewLega() {
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
-							{tabActive === "Days" && (
-								<Points isAdmin={isAdmin} />
-							)}
+							{tabActive === "Days" && <Points />}
 							{tabActive === "Players" && <Players />}
 							{tabActive === "Participants" && <Participants />}
 						</div>
@@ -317,7 +304,7 @@ function ViewLega() {
 									/>
 								)}
 							</>
-						) : status === "STARTED" && !isRegistered ? (
+						) : status === "STARTED" && !testRegistered ? (
 							<FixedPopup
 								title="Lega giá avviata!"
 								message={`Questa lega é stata giá avviata, non puoi piú iscriverti.`}

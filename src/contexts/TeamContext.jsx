@@ -54,7 +54,7 @@ function reducer(state, action) {
 function TeamProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
-	const { league, getLeague } = useLeague();
+	const { league } = useLeague();
 
 	const getMyTeam = async (leagueId) => {
 		try {
@@ -168,7 +168,7 @@ function TeamProvider({ children }) {
 		try {
 			if (!league.id) throw new Error("Nessuna team selezionata.");
 
-			const response = await fetch(`${urlServer}/team/${league.id}`, {
+			const response = await fetch(`${urlServer}/team/${state.team.id}`, {
 				method: "DELETE",
 				headers: {
 					Authorization: `Bearer ${user.token}`,
@@ -180,7 +180,6 @@ function TeamProvider({ children }) {
 			}
 
 			dispatch({ type: "deleteTeam" });
-			await getLeague(league.id);
 			return true;
 		} catch (error) {
 			console.error(error.message);

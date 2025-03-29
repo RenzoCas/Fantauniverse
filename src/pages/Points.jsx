@@ -19,14 +19,14 @@ import { useNavigate } from "react-router";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import { useDay } from "../contexts/DayContext";
 
-function Points({ isAdmin }) {
+function Points() {
 	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league, getLeague, createDay } = useLeague();
 	const { getDay, deleteDay } = useDay();
-	const { id, days, status } = league;
+	const { id, days, status, isAdmin } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -98,6 +98,17 @@ function Points({ isAdmin }) {
 			"Giornata aggiunta!",
 			"La giornata é stata creata correttamente."
 		);
+		setActiveIndex(() => {
+			const newIndex = result.days.length - 1;
+
+			setTimeout(() => {
+				if (swiperInstance) {
+					swiperInstance.slideTo(newIndex);
+				}
+			}, 100);
+
+			return newIndex;
+		});
 	};
 
 	const handleDeleteDay = async () => {
@@ -242,7 +253,7 @@ function Points({ isAdmin }) {
 							</GhostButton>
 							{infoDay?.players.length == 0 && (
 								<NormalButton
-									text="Inserisci punteggi"
+									text="Modifica"
 									customIcon={true}
 									icon={false}
 									action={() =>

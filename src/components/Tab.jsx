@@ -83,12 +83,6 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 					status == "FINISHED" && (
 						<>
 							<TabButton
-								handleClick={() => handleTabChange("General")}
-								active={tabActive === "General"}
-							>
-								<p className="body-normal">Info</p>
-							</TabButton>
-							<TabButton
 								handleClick={() => handleTabChange("Ranking")}
 								active={tabActive === "Ranking"}
 							>

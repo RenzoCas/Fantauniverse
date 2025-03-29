@@ -302,7 +302,7 @@ function LeagueProvider({ children }) {
 				payload: updatedLeagueData,
 			});
 
-			return true;
+			return updatedLeagueData;
 		} catch (error) {
 			console.error(error.message);
 			return false;

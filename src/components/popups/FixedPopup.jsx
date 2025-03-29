@@ -7,7 +7,7 @@ function FixedPopup({ type, title, message, customIcon = false, children }) {
 	return (
 		<>
 			<div
-				className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] fixed mt-auto z-50 border border-(--black-normal)/70 w-[calc(100vw-32px)] md:max-w-[528px] ransition-transform duration-500 ease ${
+				className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] sticky mt-auto z-50 border border-(--black-normal)/70 w-[calc(100vw-32px)] md:max-w-[528px] ransition-transform duration-500 ease ${
 					isClose ? "translate-y-full" : "translate-y-0"
 				} ${isClose ? "bottom-0" : "bottom-[32px]"}`}
 			>

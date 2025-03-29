@@ -79,15 +79,15 @@ function CreateDay() {
 		if (!result) {
 			showPopup(
 				"error",
-				"Errore nella creazione della giornata!",
-				"La giornata non é stata aggiunta correttamente. Riprova."
+				"Errore nell'inserimento dei punteggi!",
+				"I punteggi assegnati non sono stati aggiunti correttamente. Riprova."
 			);
 			return;
 		}
 		showPopup(
 			"success",
-			"Giornata aggiunta!",
-			"La giornata é stata creata correttamente."
+			"Punteggi inseriti!",
+			"I punteggi assegnati sono stati aggiunti correttamente."
 		);
 	};
 

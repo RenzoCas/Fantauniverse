@@ -13,18 +13,21 @@ import { useTeam } from "../contexts/TeamContext";
 import { useNavigate } from "react-router";
 import GenericPopup from "../components/popups/GenericPopup";
 import { useUser } from "../contexts/UserContext";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 
 function ViewTeam() {
-	const { league } = useLeague();
+	const { league, getLeague } = useLeague();
 	const { user } = useUser();
 	const {
 		team,
 		teamParticipant,
+		getMyTeam,
 		createTeam,
 		updateTeam,
+		deleteTeam,
 		resetTeamPartecipant,
 	} = useTeam();
-	const { maxCoins, coinName, players, status, participants } = league;
+	const { id, maxCoins, coinName, players, status, participants } = league;
 	const participant = participants.find((p) => p.user.id === user.id);
 
 	const [tempTeam, setTempTeam] = useState({
@@ -46,6 +49,12 @@ function ViewTeam() {
 	const navigate = useNavigate();
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
+	const [textModal, setTextModal] = useState();
+	const [disclaimerModal, setDisclaimerModal] = useState();
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
 
 	useEffect(() => {
 		if (!teamParticipant && team) {
@@ -157,7 +166,6 @@ function ViewTeam() {
 					const base64Image = reader.result.split(",")[1];
 					setIsLoading(true);
 
-					// Make sure res is properly checked, log it for debugging
 					setTempTeam((prev) => ({
 						...prev,
 						icon: base64Image,
@@ -186,6 +194,7 @@ function ViewTeam() {
 			res = await createTeam(tempTeam);
 		}
 
+		await getLeague(id);
 		if (!res) {
 			setIsLoading(false);
 			showPopup(
@@ -215,6 +224,32 @@ function ViewTeam() {
 		}
 	};
 
+	const handleDeleteTeam = async () => {
+		setIsModalConfirmOpen({ action: null, value: false });
+		setIsLoading(true);
+		const res = await deleteTeam();
+		await getLeague(id);
+		await getMyTeam(id);
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore!",
+				"L'eliminazione del team non é andata a buon fine. Riprova."
+			);
+			return;
+		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Cancellazione effettuata!",
+			"Il team é stato eliminato correttamente."
+		);
+		setTimeout(() => {
+			navigate(-1);
+		}, 2000);
+	};
+
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
 		const r = getRandomValue();
@@ -228,6 +263,14 @@ function ViewTeam() {
 	useEffect(() => {
 		setRandomColor(randomLightColor());
 	}, []);
+
+	const showModalConfirmDelete = () => {
+		setTextModal("Sei sicuro di voler cancellare questo team?");
+		setDisclaimerModal(
+			"Confermando questo team verrá eliminato definitivamente."
+		);
+		setIsModalConfirmOpen({ action: "delete", value: true });
+	};
 
 	return (
 		<>
@@ -244,23 +287,6 @@ function ViewTeam() {
 						<ChevronLeftIcon className="h-[20px] w-[20px]" />
 						<p className="body-normal">Indietro</p>
 					</button>
-					<div className="flex flex-col gap-[4px]">
-						{status == "NOT_STARTED" ? (
-							<>
-								<h1 className="title-h4 font-semibold text-(--black-normal)">
-									{tempTeam ? "Modifica" : "Crea"} la tua
-									squadra
-								</h1>
-							</>
-						) : (
-							<>
-								<h1 className="title-h4 font-semibold text-(--black-normal)">
-									{tempTeam.name}
-								</h1>
-							</>
-						)}
-					</div>
-
 					<form
 						onSubmit={(e) => e.preventDefault()}
 						className="flex flex-col gap-[8px]"
@@ -323,6 +349,27 @@ function ViewTeam() {
 							</>
 						)}
 					</form>
+					<div className="flex items-center justify-between">
+						{status == "NOT_STARTED" ? (
+							<h2 className="body-regular font-semibold text-(--black-normal)">
+								{team ? "Modifica" : "Crea"} team
+							</h2>
+						) : (
+							<>
+								<h2 className="body-regular font-semibold text-(--black-normal)">
+									{tempTeam.name}
+								</h2>
+							</>
+						)}
+						<button
+							className="flex items-center gap-[4px] body-small font-semibold text-[#F87171]"
+							onClick={() =>
+								team ? showModalConfirmDelete() : navigate(-1)
+							}
+						>
+							{team ? "Cancella team" : "Annulla"}
+						</button>
+					</div>
 					{status == "NOT_STARTED" && (
 						<>
 							<h2 className="body-normal font-semibold">
@@ -378,6 +425,19 @@ function ViewTeam() {
 							<UserGroupIcon className="h-[24px] w-[24px]" />
 						</NormalButton>
 					)}
+
+					<ModalConfirmAction
+						isOpen={isModalConfirmOpen.value}
+						text={textModal}
+						disclaimer={disclaimerModal}
+						onClose={() =>
+							setIsModalConfirmOpen({
+								action: null,
+								value: false,
+							})
+						}
+						onConfirmAction={handleDeleteTeam}
+					></ModalConfirmAction>
 
 					<GenericPopup
 						isOpen={popupData.isOpen}
