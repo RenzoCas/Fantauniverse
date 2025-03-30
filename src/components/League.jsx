@@ -92,7 +92,15 @@ export default function League({ league, onAddParticipant }) {
 							}).map((_, index) => (
 								<li
 									key={index}
-									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15"
+									className={`w-[37px] h-[37px] rounded-[2px] border border-solid border-white ${
+										index === 0
+											? "rotate-15"
+											: index === 1
+											? "-rotate-10"
+											: index === 2
+											? "rotate-20"
+											: ""
+									}`}
 									style={{
 										backgroundColor: randomColors[index],
 									}}
