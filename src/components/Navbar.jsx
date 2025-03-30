@@ -6,8 +6,6 @@ import {
 	Cog6ToothIcon,
 	ExclamationCircleIcon,
 	HomeIcon,
-	// MagnifyingGlassIcon,
-	// PlusIcon,
 	TrashIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
