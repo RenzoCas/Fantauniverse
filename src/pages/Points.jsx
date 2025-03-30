@@ -24,9 +24,9 @@ function Points() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
-	const { league, getLeague, createDay } = useLeague();
+	const { league, createDay } = useLeague();
 	const { getDay, deleteDay } = useDay();
-	const { id, days, status, isAdmin } = league;
+	const { days, status, isAdmin } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -113,7 +113,6 @@ function Points() {
 	const handleDeleteDay = async () => {
 		setIsLoading(true);
 		const result = await deleteDay(activeDay.id);
-		await getLeague(id);
 		setIsLoading(false);
 		if (!result) {
 			showPopup(
