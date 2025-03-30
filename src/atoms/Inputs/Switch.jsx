@@ -23,7 +23,7 @@ export default function Switch({ enabled, onChange, text, classOpt }) {
 					}`}
 				></div>
 			</div>
-			<span className="font-semibold">{text}</span>
+			<span className="body-small font-medium">{text}</span>
 		</label>
 	);
 }

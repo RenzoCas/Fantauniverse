@@ -131,7 +131,7 @@ export default function Navbar() {
 						</picture>
 						<h3 className="body-regular">
 							Bentornato, <br />
-							<span className="font-semibold break-words">
+							<span className="font-medium break-words">
 								{username}
 							</span>
 						</h3>
@@ -184,7 +184,7 @@ export default function Navbar() {
 												<h4 className="body-normal font-medium break-words">
 													{league.name}
 												</h4>
-												<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />
+												<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 											</li>
 										))}
 								</ul>
@@ -209,11 +209,11 @@ export default function Navbar() {
 												handleClickLink("/app")
 											}
 										>
-											<HomeIcon className="h-[20px] min-w-[20px] max-w-[20px] stroke-2" />
-											<span className="body-normal font-semibold text-(--black-normal)">
+											<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+											<span className="body-normal font-medium text-(--black-normal)">
 												Vai alla Dashboard
 											</span>
-											<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />
+											<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 										</button>
 									</li>
 								</ul>
@@ -229,52 +229,52 @@ export default function Navbar() {
 							{leagues?.length > 0 && (
 								<li>
 									<button
-										className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
+										className="flex gap-[20px] text-(--black-normal) w-full text-left"
 										onClick={() => handleClickLink("/app")}
 									>
-										<HomeIcon className="h-[20px] min-w-[20px] max-w-[20px] stroke-2" />
-										<span className="body-normal font-semibold text-(--black-normal)">
+										<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+										<span className="body-normal font-medium text-(--black-normal) self-center">
 											Vai alla Dashboard
 										</span>
-										<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />
+										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 									</button>
 								</li>
 							)}
 							<li>
 								<button
-									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
+									className="flex gap-[20px] text-(--black-normal) w-full text-left"
 									onClick={() => handleClickLink("/rules")}
 								>
-									<ExclamationCircleIcon className="h-[20px] min-w-[20px] max-w-[20px] stroke-2" />
-									<span className="body-normal font-semibold text-(--black-normal)">
+									<ExclamationCircleIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+									<span className="body-normal font-medium text-(--black-normal) self-center">
 										Come funziona?
 									</span>
-									<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />
+									<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 								</button>
 							</li>
 							<li>
 								<button
-									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
+									className="flex gap-[20px] text-(--black-normal) w-full text-left"
 									onClick={() => handleClickLink("/account")}
 								>
-									<Cog6ToothIcon className="h-[20px] min-w-[20px] max-w-[20px] stroke-2" />
-									<span className="body-normal font-semibold text-(--black-normal)">
+									<Cog6ToothIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+									<span className="body-normal font-medium text-(--black-normal) self-center">
 										Modifica il tuo profilo
 									</span>
-									<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />
+									<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 								</button>
 							</li>
 							<li>
 								<button
-									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
+									className="flex gap-[20px] text-(--black-normal) w-full text-left"
 									onClick={() => handleClickLink("/faq")}
 								>
-									<ChatBubbleOvalLeftEllipsisIcon className="h-[20px] min-w-[20px] max-w-[20px] stroke-2" />
-									<span className="body-normal font-semibold text-(--black-normal)">
+									<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+									<span className="body-normal font-medium text-(--black-normal) self-center">
 										Hai bisogno di aiuto? Controlla le
 										nostre FAQ
 									</span>
-									<ChevronRightIcon className="h-[20px] min-w-[20px] max-w-[20px] ml-auto stroke-2" />
+									<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 								</button>
 							</li>
 						</ul>

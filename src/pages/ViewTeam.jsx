@@ -61,8 +61,6 @@ function ViewTeam() {
 			const initialPlayers = team.players || [];
 			const initialMaxCoins =
 				maxCoins - initialPlayers.reduce((sum, p) => sum + p.price, 0);
-			console.log(initialPlayers);
-			console.log(initialMaxCoins);
 			setTempTeam((prevTeam) => ({
 				...prevTeam,
 				players: initialPlayers,
@@ -189,10 +187,14 @@ function ViewTeam() {
 	const handleSubmitTeam = async () => {
 		setIsLoading(true);
 		let res = null;
+		const filteredTeam = {
+			...tempTeam,
+			players: tempTeam.players.map((player) => ({ id: player.id })),
+		};
 		if (team) {
-			res = await updateTeam(tempTeam);
+			res = await updateTeam(filteredTeam);
 		} else {
-			res = await createTeam(tempTeam);
+			res = await createTeam(filteredTeam);
 		}
 
 		await getLeague(id);

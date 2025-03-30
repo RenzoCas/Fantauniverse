@@ -381,6 +381,7 @@ function LeagueProvider({ children }) {
 				createDay,
 				deleteLeague,
 				resetMyLeague,
+				dispatchLeague,
 			}}
 		>
 			{children}

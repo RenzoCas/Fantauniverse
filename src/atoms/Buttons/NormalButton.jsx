@@ -8,15 +8,17 @@ export default function NormalButton({
 	classOpt,
 	customIcon = false,
 	children,
+	roundedFull = true,
 }) {
 	return (
 		<button
 			onClick={action}
 			disabled={disabled}
 			type="button"
-			className={`group flex items-center justify-center gap-[8px] rounded-full px-[24px] py-[12px] ${
-				classOpt ? classOpt : ""
+			className={`group flex items-center justify-center gap-[8px]  px-[24px] py-[12px] ${
+				roundedFull ? "rounded-full" : ""
 			}
+            ${classOpt ? classOpt : ""}
         ${
 			disabled
 				? "bg-(--black-light) text-(--black-normal)/25 cursor-not-allowed"

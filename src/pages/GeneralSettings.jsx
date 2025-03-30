@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLeague } from "../contexts/LeagueContext";
 import Select from "../atoms/Inputs/Select";
 import {
-	CheckIcon,
 	ClipboardIcon,
-	InformationCircleIcon,
 	PencilSquareIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -15,8 +13,9 @@ import { useNavigate } from "react-router";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import GenericPopup from "../components/popups/GenericPopup";
-import Radio from "../atoms/Inputs/Radio";
 import Switch from "../atoms/Inputs/Switch";
+import TabButton from "../atoms/Buttons/TabButton";
+import { Coins, PiggyBank, Save } from "lucide-react";
 
 function GeneralSettings() {
 	const { league, deleteLeague, updateLeague, changeStatus } = useLeague();
@@ -65,21 +64,10 @@ function GeneralSettings() {
 		value: false,
 	});
 
-	const visibilityObj = [
-		{
-			value: "PUBLIC",
-			label: "Pubblica",
-		},
-		{
-			value: "PRIVATE",
-			label: "Privata",
-		},
-	];
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [isEnableCaptain, setIsEnableCaptain] = useState(enableCaptain);
-	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 	const navigate = useNavigate();
 
 	const showPopup = (type, title, message) => {
@@ -114,18 +102,6 @@ function GeneralSettings() {
 	const isEditingAnyField = Object.values(isEditing).some(
 		(isEditing) => isEditing
 	);
-
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (!event.target.closest(".tooltip-container")) {
-				setIsTooltipVisible(false);
-			}
-		};
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, []);
 
 	const showModalConfirmChange = (value) => {
 		if (value === selectedValue) return;
@@ -245,6 +221,10 @@ function GeneralSettings() {
 		});
 	};
 
+	const handleTabChange = (value) => {
+		setFormData({ ...formData, visibility: value });
+	};
+
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
 		setErrors((prevErrors) => ({
@@ -343,98 +323,202 @@ function GeneralSettings() {
 						selectedValue={selectedValue}
 						handleChange={showModalConfirmChange}
 					/>
-					{status == "PENDING" && (
-						<>
-							{[
-								"name",
-								"description",
-								"coinName",
-								"maxCoins",
-							].map((field) => (
-								<div
-									key={field}
-									className="flex gap-[10px] items-center px-[10px]"
-								>
-									<button
-										className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-										onClick={() => toggleEditing(field)}
-										disabled={status !== "PENDING"}
+					<div className="flex flex-col gap-[12px]">
+						{status == "PENDING" && (
+							<>
+								{["name", "description"].map((field) => (
+									<div
+										key={field}
+										className="flex flex-col gap-[8px]"
 									>
-										{isEditing[field] ? (
-											<CheckIcon className="h-[20px] w-[20px]" />
-										) : (
-											<PencilSquareIcon className="h-[20px] w-[20px]" />
+										{field === "description" && (
+											<label
+												htmlFor={field}
+												className="body-small text-(--black-light-active) font-medium"
+											>
+												Descrizione:
+											</label>
 										)}
-									</button>
-									{isEditing[field] ? (
-										<GenericInput
-											type={
-												field === "description"
-													? "textarea"
-													: "text"
-											}
-											required
-											placeholder={`Inserisci ${field}`}
-											name={field}
-											value={formData[field]}
-											handleChange={handleChangeData}
-											handleBlur={handleBlur}
-											messageError={errors[field]}
-											autoFocus={true}
-										/>
-									) : (
-										<p className="body-normal break-words">
-											{formData[field]}
-										</p>
-									)}
-								</div>
-							))}
-							<div className="grid grid-cols-2 px-[10px]">
-								{visibilityObj?.map((opt, idx) => (
-									<Radio
-										key={idx}
-										id={`radio-${idx}`}
-										name="visibility"
-										value={opt.value}
-										checked={
-											opt.value === formData.visibility
-										}
-										handleChange={handleChangeData}
-										label={opt.label}
-									/>
-								))}
-							</div>
-
-							<div className="px-[10px] flex gap-[4px] relative w-fit">
-								<Switch
-									text="Scelta capitano"
-									enabled={isEnableCaptain}
-									onChange={handleChangeSwitch}
-								/>
-								<div className="tooltip-container">
-									<button
-										onClick={() =>
-											setIsTooltipVisible(
-												!isTooltipVisible
-											)
-										}
-									>
-										<InformationCircleIcon className="w-[20px] h-[20px]" />
-									</button>
-									{isTooltipVisible && (
-										<div className="absolute top-full mt-2 left-[10px] w-64 p-3 bg-white text-(--black-normal) border border-(--black-light) rounded-lg shadow-md animate-fade-in">
-											<p className="text-sm">
-												Se abilitato, sarà possibile
-												scegliere un capitano in squadra
-												che raddoppierà i propri punti
-												di ogni giornata.
-											</p>
+										<div className="flex gap-[10px]">
+											<button
+												className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+												onClick={() =>
+													toggleEditing(field)
+												}
+												disabled={status !== "PENDING"}
+											>
+												{isEditing[field] ? (
+													<Save className="h-[20px] w-[20px]" />
+												) : (
+													<PencilSquareIcon className="h-[20px] w-[20px]" />
+												)}
+											</button>
+											{isEditing[field] ? (
+												<GenericInput
+													type={
+														field === "description"
+															? "textarea"
+															: "text"
+													}
+													required
+													placeholder={`Inserisci ${field}`}
+													name={field}
+													value={formData[field]}
+													handleChange={
+														handleChangeData
+													}
+													handleBlur={handleBlur}
+													messageError={errors[field]}
+													autoFocus={true}
+													maxLength={
+														field === "name"
+															? 20
+															: 1000
+													}
+												/>
+											) : (
+												<p
+													className={`break-words self-center ${
+														field === "name"
+															? "body-regular font-medium"
+															: "body-normal"
+													}`}
+												>
+													{formData[field]}
+												</p>
+											)}
 										</div>
-									)}
+									</div>
+								))}
+								<div className="flex flex-col gap-[8px]">
+									<p className="body-small text-(--black-light-active) font-medium">
+										Tipologia della lega:
+									</p>
+									<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
+										<TabButton
+											handleClick={() =>
+												handleTabChange("PUBLIC")
+											}
+											active={
+												formData.visibility === "PUBLIC"
+											}
+										>
+											<p className="body-normal">
+												Pubblica
+											</p>
+										</TabButton>
+										<TabButton
+											handleClick={() =>
+												handleTabChange("PRIVATE")
+											}
+											active={
+												formData.visibility ===
+												"PRIVATE"
+											}
+										>
+											<p className="body-normal">
+												Privata
+											</p>
+										</TabButton>
+									</div>
 								</div>
-							</div>
-						</>
-					)}
+
+								{["coinName", "maxCoins"].map((field) => (
+									<div
+										key={field}
+										className="flex flex-col gap-[8px]"
+									>
+										<label
+											htmlFor={field}
+											className="body-small text-(--black-light-active) font-medium"
+										>
+											{field === "coinName"
+												? "Nome della moneta:"
+												: "Budget:"}
+										</label>
+
+										<div className="flex gap-[10px]">
+											<button
+												className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+												onClick={() =>
+													toggleEditing(field)
+												}
+												disabled={status !== "PENDING"}
+											>
+												{isEditing[field] ? (
+													<Save className="h-[20px] w-[20px]" />
+												) : (
+													<PencilSquareIcon className="h-[20px] w-[20px]" />
+												)}
+											</button>
+											{isEditing[field] ? (
+												<GenericInput
+													type="text"
+													required
+													placeholder={`Inserisci ${field}`}
+													name={field}
+													value={formData[field]}
+													handleChange={
+														handleChangeData
+													}
+													handleBlur={handleBlur}
+													messageError={errors[field]}
+													autoFocus={true}
+													afterElement={true}
+													maxLength={
+														field === "coinName"
+															? 20
+															: 1000
+													}
+												>
+													{field === "coinName" ? (
+														<Coins className="stroke-white w-[24px] h-[24px]" />
+													) : (
+														<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+													)}
+												</GenericInput>
+											) : (
+												<div
+													className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
+												>
+													<p
+														className={`break-words self-center px-[24px] py-[10px] ${
+															field === "name"
+																? "body-regular font-medium"
+																: "body-normal"
+														}
+													`}
+													>
+														{formData[field]}
+													</p>
+													<div className="bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px] h-full flex items-center">
+														{field ===
+														"coinName" ? (
+															<Coins className="stroke-white w-[24px] h-[24px]" />
+														) : (
+															<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+														)}
+													</div>
+												</div>
+											)}
+										</div>
+									</div>
+								))}
+
+								<div className="flex flex-col gap-[8px]">
+									<p className="body-small text-(--black-light-active) font-medium">
+										Capitano:
+									</p>
+									<Switch
+										text="Attiva la scelta del capitano alla
+										creazione della squadra."
+										enabled={isEnableCaptain}
+										onChange={handleChangeSwitch}
+									/>
+								</div>
+							</>
+						)}
+					</div>
 					{status == "NOT_STARTED" && (
 						<div className="flex flex-col gap-[4px]">
 							<p className="body-small font-semibold">
@@ -457,15 +541,19 @@ function GeneralSettings() {
 				{status === "PENDING" && (
 					<div className="flex flex-col gap-[8px] w-full mt-auto">
 						<NormalButton
-							text="Salva"
+							text="Salva modifiche"
 							action={() => handleUpdateLeague()}
 							disabled={!isFormValid() || isEditingAnyField}
-						/>
+							customIcon={true}
+						>
+							<Save className="h-[24px] w-[24px]" />
+						</NormalButton>
 						<GhostButton
 							text="Elimina lega"
 							action={showModalConfirmDelete}
 							classOpt="text-(--error-normal)"
 							disabled={isEditingAnyField}
+							customIcon={true}
 						>
 							<TrashIcon className="w-[24px] h-[24px]" />
 						</GhostButton>

@@ -3,7 +3,14 @@ import { createContext, useContext, useReducer } from "react";
 const UserContext = createContext();
 
 const initialState = {
-	user: null,
+	user: {
+		id: "",
+		username: "",
+		email: "",
+		password: "",
+		icon: null,
+		token: "",
+	},
 	isAuthenticated: false,
 };
 

@@ -83,7 +83,6 @@ function Points() {
 		setIsLoading(true);
 		setIsModalOpen(false);
 		const result = await createDay(formData);
-		await getLeague(id);
 		setIsLoading(false);
 		if (!result) {
 			showPopup(

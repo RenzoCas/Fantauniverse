@@ -19,6 +19,10 @@ export default function GenericInput({
 	autocomplete,
 	disabled = false,
 	autoFocus = false,
+	maxLength = 1000,
+	classOpt,
+	afterElement = false,
+	children,
 }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPasswordType = type === "password";
@@ -50,11 +54,11 @@ export default function GenericInput({
 						onChange={handleChange}
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) break-words ${
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-words ${
 							messageError
-								? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"
-								: "bg-(--black-light-hover) border-transparent focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
-						}`}
+								? "outline-(--error-normal) bg-(--error-light) text-(--error-normal)"
+								: "bg-[#FAF8F8] outline-transparent focus:outline-solid focus:outline-[2px] focus:outline-(--black-normal)"
+						} ${classOpt ? classOpt : ""}`}
 						maxLength={200}
 					/>
 				) : (
@@ -70,15 +74,18 @@ export default function GenericInput({
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
 						disabled={disabled}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl border-2 focus:outline-none placeholder-(--black-normal) break-words ${
+						maxLength={maxLength}
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-words ${
 							messageError
-								? "border-(--error-normal) bg-(--error-light) text-(--error-normal)"
-								: "bg-(--black-light-hover) border-transparent focus:border-solid focus:border-[2px] focus:border-(--black-normal)"
+								? "outline-(--error-normal) bg-(--error-light) text-(--error-normal)"
+								: "bg-[#FAF8F8] outline-transparent focus:outline-solid focus:outline-[2px] focus:outline-(--black-normal)"
 						} ${
 							isPasswordType || isSearchType
 								? "pr-[40px]"
+								: afterElement
+								? "pr-[60px]"
 								: "pr-[24px]"
-						}`}
+						} ${classOpt ? classOpt : ""}`}
 					/>
 				)}
 
@@ -100,6 +107,12 @@ export default function GenericInput({
 					<button className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal)">
 						<MagnifyingGlassIcon className="h-[20px] w-[20px]" />
 					</button>
+				)}
+
+				{afterElement && (
+					<div className="absolute right-0 top-1/2 -translate-y-1/2 bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px]">
+						{children}
+					</div>
 				)}
 			</div>
 

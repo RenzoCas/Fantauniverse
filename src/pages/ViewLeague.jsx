@@ -54,7 +54,7 @@ function ViewLega() {
 		};
 
 		fetchData();
-	}, [id]);
+	}, []);
 
 	const showModalConfirmDelete = () => {
 		setTextModal("Sei sicuro di volerti disiscrivere da questa lega?");
