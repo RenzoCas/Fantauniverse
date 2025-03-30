@@ -278,7 +278,9 @@ function ViewLega() {
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
-							{tabActive === "Days" && <Points />}
+							{tabActive === "Days" && (
+								<Points isAdmin={isAdmin} />
+							)}
 							{tabActive === "Players" && <Players />}
 							{tabActive === "Participants" && <Participants />}
 						</div>

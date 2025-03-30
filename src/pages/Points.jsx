@@ -19,14 +19,14 @@ import { useNavigate } from "react-router";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import { useDay } from "../contexts/DayContext";
 
-function Points() {
+function Points({ isAdmin }) {
 	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league, createDay } = useLeague();
 	const { getDay, deleteDay } = useDay();
-	const { days, status, isAdmin } = league;
+	const { days, status } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
