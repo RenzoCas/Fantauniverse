@@ -27,7 +27,7 @@ function PlayerProvider({ children }) {
 
 			const updatedPlayers = await response.json();
 			dispatchLeague({
-				type: "updatePlayers",
+				type: "addPlayer",
 				payload: updatedPlayers.players,
 			});
 			return true;
@@ -51,10 +51,10 @@ function PlayerProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiornamento del player");
 
-			const updatedPlayers = await response.json();
+			const updatedPlayer = await response.json();
 			dispatchLeague({
-				type: "updatePlayers",
-				payload: updatedPlayers.players,
+				type: "updatePlayer",
+				payload: updatedPlayer,
 			});
 			return true;
 		} catch (error) {
@@ -76,12 +76,9 @@ function PlayerProvider({ children }) {
 				throw new Error("Errore nella cancellazione del player");
 			}
 
-			const updatedPlayers = league.players.filter(
-				(p) => p.id != playerId
-			);
 			dispatchLeague({
-				type: "updatePlayers",
-				payload: updatedPlayers,
+				type: "deletePlayer",
+				payload: playerId,
 			});
 			return true;
 		} catch (error) {

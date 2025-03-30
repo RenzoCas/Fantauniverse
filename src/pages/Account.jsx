@@ -16,11 +16,9 @@ function Account() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [formData, setFormData] = useState({
-		id: "",
-		username: "",
-		email: "",
-		password: "",
-		icon: null,
+		id: user?.id || "",
+		username: user?.username || "",
+		email: user?.email || "",
 	});
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -31,16 +29,6 @@ function Account() {
 	const [randomColor, setRandomColor] = useState("#ffffff");
 	const messageError = "Campo obbligatorio";
 	const fileInputRef = useRef(null);
-
-	useEffect(() => {
-		setFormData({
-			id: user?.id || "",
-			username: user?.username || "",
-			email: user?.email || "",
-			password: user?.password || "",
-			icon: user?.icon || null,
-		});
-	}, [user]);
 
 	useEffect(() => {
 		setRandomColor(randomLightColor());
@@ -57,11 +45,6 @@ function Account() {
 	};
 
 	const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-	const validatePassword = (password) =>
-		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$/.test(
-			password
-		);
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -87,11 +70,6 @@ function Account() {
 			error = messageError;
 		} else if (name === "email" && !validateEmail(value)) {
 			error = "Email non valida";
-		} else if (name === "password" && !validatePassword(value)) {
-			error =
-				"La password deve contenere almeno 8 caratteri, una maiuscola, un numero e un carattere speciale";
-		} else if (name === "confermaPassword" && value !== formData.password) {
-			error = "Le password non coincidono";
 		}
 
 		setErrors({ ...errors, [name]: error });
@@ -100,7 +78,7 @@ function Account() {
 	const isFormValid = () => {
 		return (
 			!Object.values(errors).some((error) => error !== "") &&
-			(formData.username.trim() !== user?.name ||
+			(formData.username.trim() !== user?.username ||
 				formData.email.trim() !== user?.email)
 		);
 	};
@@ -200,6 +178,10 @@ function Account() {
 		email: false,
 	});
 
+	const isEditingAnyField = Object.values(isEditing).some(
+		(isEditing) => isEditing
+	);
+
 	const toggleEditing = (field) => {
 		setIsEditing((prev) => ({
 			...Object.keys(prev).reduce((acc, key) => {
@@ -228,7 +210,7 @@ function Account() {
 							className="hidden"
 						/>
 						<picture className="rounded-[32px] min-w-[90px] max-w-[90px] h-[90px] overflow-hidden outline outline-solid">
-							{formData.icon == null ? (
+							{user?.icon == null ? (
 								<div
 									className={`h-full object-cover`}
 									style={{
@@ -237,7 +219,7 @@ function Account() {
 								></div>
 							) : (
 								<img
-									src={`data:image/png;base64,${formData.icon}`}
+									src={`data:image/png;base64,${user?.icon}`}
 									alt={`Icona utente`}
 									className="h-full object-cover"
 								/>
@@ -325,7 +307,7 @@ function Account() {
 						text="Salva impostazioni"
 						icon={false}
 						action={handleSubmit}
-						disabled={!isFormValid()}
+						disabled={!isFormValid() || isEditingAnyField}
 					/>
 					<GhostButton
 						text="Elimina Account"

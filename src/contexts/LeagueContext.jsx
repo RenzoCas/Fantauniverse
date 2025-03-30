@@ -91,11 +91,41 @@ function leagueReducer(state, action) {
 		case "updateLeague":
 			return { ...state, ...action.payload };
 
-		case "updatePlayers":
+		case "addPlayer":
 			return { ...state, players: action.payload };
 
-		case "updateRules":
+		case "updatePlayer":
+			return {
+				...state,
+				players: state.players.map((player) =>
+					player.id === action.payload.id ? action.payload : player
+				),
+			};
+
+		case "deletePlayer":
+			return {
+				...state,
+				players: state.players.filter(
+					(player) => player.id !== action.payload
+				),
+			};
+
+		case "addRule":
 			return { ...state, rules: action.payload };
+
+		case "updateRule":
+			return {
+				...state,
+				rules: state.rules.map((rule) =>
+					rule.id === action.payload.id ? action.payload : rule
+				),
+			};
+
+		case "deleteRule":
+			return {
+				...state,
+				rules: state.rules.filter((rule) => rule.id !== action.payload),
+			};
 
 		default:
 			return state;

@@ -24,7 +24,7 @@ function GenericPopup({ isOpen, type, title, message, classOpt }) {
 			}`}
 			style={{ bottom: isOpen ? `${fixedPopupHeight}px` : "0px" }}
 		>
-			<div className="flex items-center gap-[4px]">
+			<div className="flex gap-[4px]">
 				{type === "success" ? (
 					<CheckCircleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-green-500" />
 				) : (

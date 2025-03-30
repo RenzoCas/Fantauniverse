@@ -52,7 +52,7 @@ function RuleProvider({ children }) {
 
 			const updatedRules = await response.json();
 			dispatchLeague({
-				type: "updateRules",
+				type: "addRule",
 				payload: updatedRules.rules,
 			});
 
@@ -79,10 +79,10 @@ function RuleProvider({ children }) {
 				throw new Error(`Errore nell'aggiornamento della regola`);
 			}
 
-			const updatedRules = await response.json();
+			const updatedRule = await response.json();
 			dispatchLeague({
-				type: "updateRules",
-				payload: updatedRules.rules,
+				type: "updateRule",
+				payload: updatedRule,
 			});
 
 			return true;
@@ -106,12 +106,9 @@ function RuleProvider({ children }) {
 				throw new Error("Errore nella cancellazione della regola.");
 			}
 
-			const updatedRules = league.rules.filter(
-				(rule) => rule.id !== ruleId
-			);
 			dispatchLeague({
-				type: "updateRules",
-				payload: updatedRules,
+				type: "deleteRule",
+				payload: ruleId,
 			});
 			return true;
 		} catch (error) {
