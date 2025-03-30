@@ -6,7 +6,7 @@ const PlayerContext = createContext();
 
 function PlayerProvider({ children }) {
 	const { user, urlServer } = useUser();
-	const { league, getLeague } = useLeague();
+	const { league, dispatchLeague } = useLeague();
 
 	const addPlayer = async (playerData) => {
 		try {
@@ -25,7 +25,11 @@ function PlayerProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del player");
 
-			await getLeague(league.id);
+			const updatedPlayers = await response.json();
+			dispatchLeague({
+				type: "updatePlayers",
+				payload: updatedPlayers.players,
+			});
 			return true;
 		} catch (error) {
 			console.error(error.message);
@@ -47,7 +51,11 @@ function PlayerProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiornamento del player");
 
-			await getLeague(league.id);
+			const updatedPlayers = await response.json();
+			dispatchLeague({
+				type: "updatePlayers",
+				payload: updatedPlayers.players,
+			});
 			return true;
 		} catch (error) {
 			console.error(error.message);
@@ -68,7 +76,13 @@ function PlayerProvider({ children }) {
 				throw new Error("Errore nella cancellazione del player");
 			}
 
-			await getLeague(league.id);
+			const updatedPlayers = league.players.filter(
+				(p) => p.id != playerId
+			);
+			dispatchLeague({
+				type: "updatePlayers",
+				payload: updatedPlayers,
+			});
 			return true;
 		} catch (error) {
 			console.error(error.message);
@@ -79,7 +93,6 @@ function PlayerProvider({ children }) {
 	return (
 		<PlayerContext.Provider
 			value={{
-				players: league.players,
 				addPlayer,
 				updatePlayer,
 				deletePlayer,

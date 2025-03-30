@@ -91,7 +91,6 @@ function ViewLega() {
 	const handleAddParticipant = async () => {
 		setIsLoading(true);
 		const res = await addParticipant(id);
-		await getLeague(id);
 		if (!res) {
 			setIsLoading(false);
 			showPopup(
@@ -122,7 +121,6 @@ function ViewLega() {
 			);
 			return;
 		}
-		await getLeague(id);
 		setIsLoading(false);
 		showPopup(
 			"success",
@@ -164,8 +162,6 @@ function ViewLega() {
 						);
 						return;
 					}
-
-					await getLeague(id);
 					setIsLoading(false);
 				};
 				reader.readAsDataURL(file);

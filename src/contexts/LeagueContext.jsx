@@ -91,6 +91,12 @@ function leagueReducer(state, action) {
 		case "updateLeague":
 			return { ...state, ...action.payload };
 
+		case "updatePlayers":
+			return { ...state, players: action.payload };
+
+		case "updateRules":
+			return { ...state, rules: action.payload };
+
 		default:
 			return state;
 	}

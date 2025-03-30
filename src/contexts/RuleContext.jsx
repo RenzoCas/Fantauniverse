@@ -1,27 +1,12 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext } from "react";
 import { useUser } from "./UserContext";
 import { useLeague } from "./LeagueContext";
 
 const RuleContext = createContext();
 
-const initialState = {
-	rules: [],
-};
-
-function reducer(state, action) {
-	switch (action.type) {
-		case "setRules":
-			return { ...state, rules: action.payload };
-
-		default:
-			return state;
-	}
-}
-
 function RuleProvider({ children }) {
-	const [state, dispatch] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
-	const { league, getLeague } = useLeague();
+	const { league, dispatchLeague } = useLeague();
 
 	// Funzione per recuperare le regole
 	const getRules = async (leagueId) => {
@@ -39,7 +24,6 @@ function RuleProvider({ children }) {
 			}
 
 			const rules = await response.json();
-			dispatch({ type: "setRules", payload: rules });
 
 			return rules;
 		} catch (error) {
@@ -66,11 +50,13 @@ function RuleProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta della regola");
 
-			const updatedLeague = await response.json();
-			dispatch({ type: "setRules", payload: updatedLeague.rules });
-			await getLeague(league.id);
+			const updatedRules = await response.json();
+			dispatchLeague({
+				type: "updateRules",
+				payload: updatedRules.rules,
+			});
 
-			return updatedLeague;
+			return true;
 		} catch (error) {
 			console.error("Errore nell'aggiunta della regola:", error.message);
 			return null;
@@ -78,7 +64,7 @@ function RuleProvider({ children }) {
 	};
 
 	// Funzione per aggiornare una regola
-	const updateRule = async (ruleData, ruleId) => {
+	const updateRule = async (ruleData) => {
 		try {
 			const response = await fetch(`${urlServer}/rule`, {
 				method: "PUT",
@@ -93,15 +79,13 @@ function RuleProvider({ children }) {
 				throw new Error(`Errore nell'aggiornamento della regola`);
 			}
 
-			const updatedRule = await response.json();
-			const updatedRules = state.rules.map((rule) =>
-				rule.id === ruleId ? updatedRule : rule
-			);
+			const updatedRules = await response.json();
+			dispatchLeague({
+				type: "updateRules",
+				payload: updatedRules.rules,
+			});
 
-			dispatch({ type: "setRules", payload: updatedRules });
-			await getLeague(league.id);
-
-			return updatedRule;
+			return true;
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -122,11 +106,13 @@ function RuleProvider({ children }) {
 				throw new Error("Errore nella cancellazione della regola.");
 			}
 
-			const updatedRules = state.rules.filter(
+			const updatedRules = league.rules.filter(
 				(rule) => rule.id !== ruleId
 			);
-			dispatch({ type: "setRules", payload: updatedRules });
-			await getLeague(league.id);
+			dispatchLeague({
+				type: "updateRules",
+				payload: updatedRules,
+			});
 			return true;
 		} catch (error) {
 			console.error(
@@ -140,7 +126,6 @@ function RuleProvider({ children }) {
 	return (
 		<RuleContext.Provider
 			value={{
-				rules: state.rules,
 				getRules,
 				addRule,
 				updateRule,

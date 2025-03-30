@@ -1,38 +1,12 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext } from "react";
 import { useUser } from "./UserContext";
 import { useLeague } from "./LeagueContext";
 
 const ParticipantContext = createContext();
 
-const initialState = {
-	participants: [],
-};
-
-function reducer(state, action) {
-	switch (action.type) {
-		case "addParticipant":
-			return {
-				...state,
-				participants: [...state.participants, action.payload],
-			};
-
-		case "deleteParticipant":
-			return {
-				...state,
-				participants: state.participants.filter(
-					(participant) => participant.id !== action.payload
-				),
-			};
-
-		default:
-			return state;
-	}
-}
-
 function ParticipantProvider({ children }) {
-	const [state, dispatch] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
-	const { league, getLeague } = useLeague();
+	const { league, getLeague, dispatchLeague } = useLeague();
 
 	const addParticipant = async (leagueId) => {
 		try {
@@ -50,7 +24,12 @@ function ParticipantProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
-			await getLeague(leagueId);
+			const updatedLeagueData = await response.json();
+
+			dispatchLeague({
+				type: "updateLeague",
+				payload: updatedLeagueData,
+			});
 			return true;
 		} catch (error) {
 			console.error(error.message);
@@ -75,8 +54,6 @@ function ParticipantProvider({ children }) {
 			if (!response.ok) {
 				throw new Error("Errore nella cancellazione del player.");
 			}
-
-			dispatch({ type: "deleteParticipant", payload: leagueId });
 			await getLeague(league.id);
 			return true;
 		} catch (error) {
@@ -88,7 +65,6 @@ function ParticipantProvider({ children }) {
 	return (
 		<ParticipantContext.Provider
 			value={{
-				participants: state.participants,
 				addParticipant,
 				deleteParticipant,
 			}}
