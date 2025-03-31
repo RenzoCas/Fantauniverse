@@ -31,13 +31,16 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 					<Trophy className="h-[20px] w-[20px]" />
 				</TabBottomNav>
 			)}
-			<TabBottomNav
-				text="Punteggi"
-				active={tabActive == "Days"}
-				handleClick={() => handleTabChange("Days")}
-			>
-				<ChartLine className="h-[20px] w-[20px]" />
-			</TabBottomNav>
+			{status != "NOT_STARTED" && (
+				<TabBottomNav
+					text="Punteggi"
+					active={tabActive == "Days"}
+					handleClick={() => handleTabChange("Days")}
+				>
+					<ChartLine className="h-[20px] w-[20px]" />
+				</TabBottomNav>
+			)}
+
 			{isRegistered && (
 				<TabBottomNav
 					text="Il mio team"

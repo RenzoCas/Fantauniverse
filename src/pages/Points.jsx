@@ -210,7 +210,7 @@ function Points() {
 								<button
 									onClick={() =>
 										navigate("setDay", {
-											state: activeDay,
+											state: infoDay,
 										})
 									}
 									className="flex items-center gap-[8px] justify-center"
@@ -245,7 +245,7 @@ function Points() {
 								text="Elimina"
 								customIcon={true}
 								action={handleDeleteDay}
-								classOpt={`w-3/4 self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white`}
+								classOpt={`self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white`}
 							>
 								<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
 							</GhostButton>
@@ -259,7 +259,6 @@ function Points() {
 											state: activeDay,
 										})
 									}
-									classOpt="w-3/4"
 								>
 									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
 								</NormalButton>

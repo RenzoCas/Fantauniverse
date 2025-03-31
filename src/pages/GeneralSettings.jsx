@@ -602,7 +602,7 @@ function GeneralSettings() {
 									</h2>
 									<div className="flex gap-[10px]">
 										<Coins className="stroke-(--black-light-active) w-[24px] h-[24px]" />
-										<p className="body-normal text-(--black-normal)">
+										<p className="body-normal text-(--black-normal) self-center">
 											{coinName}
 										</p>
 									</div>
@@ -613,7 +613,7 @@ function GeneralSettings() {
 									</h2>
 									<div className="flex gap-[10px]">
 										<PiggyBank className="stroke-(--black-light-active) w-[24px] h-[24px]" />
-										<p className="body-normal text-(--black-normal)">
+										<p className="body-normal text-(--black-normal) self-center">
 											{maxCoins}
 										</p>
 									</div>
@@ -624,7 +624,7 @@ function GeneralSettings() {
 									</h2>
 									<div className="flex gap-[10px]">
 										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />
-										<p className="body-normal text-(--black-normal)">
+										<p className="body-normal text-(--black-normal) self-center">
 											5 players
 										</p>
 									</div>
@@ -635,7 +635,7 @@ function GeneralSettings() {
 									</h2>
 									<div className="flex gap-[10px]">
 										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />
-										<p className="body-normal text-(--black-normal)">
+										<p className="body-normal text-(--black-normal) self-center">
 											{enableCaptain ? "Si" : "No"}, i
 											giocatori{" "}
 											{enableCaptain

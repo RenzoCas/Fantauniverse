@@ -3,11 +3,7 @@ import Player from "../components/Player";
 import { useState, useEffect, useRef } from "react";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import NormalButton from "../atoms/Buttons/NormalButton";
-import {
-	UserGroupIcon,
-	PencilSquareIcon,
-	ChevronLeftIcon,
-} from "@heroicons/react/24/outline";
+import { UserGroupIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import Loader from "../components/Loader";
 import { useTeam } from "../contexts/TeamContext";
 import { useNavigate } from "react-router";
@@ -281,18 +277,9 @@ function ViewTeam() {
 				<Loader />
 			) : (
 				<div className="flex flex-col gap-[16px] flex-1">
-					<button
-						onClick={() => {
-							navigate(-1);
-						}}
-						className="flex items-center gap-[4px] text-(--accent-normal)"
-					>
-						<ChevronLeftIcon className="h-[20px] w-[20px]" />
-						<p className="body-normal">Indietro</p>
-					</button>
 					<form
 						onSubmit={(e) => e.preventDefault()}
-						className="flex flex-col gap-[8px]"
+						className="flex flex-col gap-[16px]"
 					>
 						{status === "NOT_STARTED" && (
 							<input

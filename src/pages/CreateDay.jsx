@@ -20,7 +20,7 @@ function CreateDay() {
 	const { state } = useLocation();
 	const [dataDay, setDataDay] = useState({
 		id: state?.id || null,
-		players: [],
+		players: state?.players || [],
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -28,6 +28,7 @@ function CreateDay() {
 		type: "",
 		message: "",
 	});
+
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
 		setTimeout(

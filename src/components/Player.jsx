@@ -22,23 +22,13 @@ function Player({
 }) {
 	const { name, price, points, icon, id } = playerObj;
 	const { league } = useLeague();
-	const { coinName, status, rules } = league;
+	const { coinName, status } = league;
 	const isActive =
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 
-	const totalPoints = dataDay?.players
-		.filter((p) => p.player.id === id)
-		.map((player) => {
-			return player.rules.reduce((total, ruleObj) => {
-				const rule = rules.find((r) => r.id === ruleObj.id);
-
-				if (rule) {
-					return rule.malus ? total - rule.value : total + rule.value;
-				}
-				return total;
-			}, 0);
-		})[0];
+	const singlePlayer = dataDay?.players.filter((p) => p.player.id === id);
+	const totalPoints = singlePlayer[0]?.points;
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
