@@ -38,6 +38,7 @@ function UserProvider({ children }) {
 	);
 
 	const urlServer = "https://fantauniverse.groots.it";
+	// const urlServer = "http://192.168.1.94:8547";
 
 	const register = async (formData) => {
 		try {

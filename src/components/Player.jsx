@@ -52,7 +52,9 @@ function Player({
 		>
 			<picture
 				className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] ${
-					canAdd || isActive ? "opacity-100" : "opacity-50"
+					createTeam && (canAdd || isActive)
+						? "opacity-50"
+						: "opacity-100"
 				}`}
 			>
 				{icon == null ? (
@@ -70,8 +72,10 @@ function Player({
 			</picture>
 			<div className={`flex flex-col gap-[4px] w-full`}>
 				<p
-					className={`body-small font-semibold break-words ${
-						canAdd || isActive ? "opacity-100" : "opacity-50"
+					className={`font-semibold break-all ${
+						createTeam && (canAdd || isActive)
+							? "opacity-50 body-small"
+							: "opacity-100 body-normal"
 					}`}
 				>
 					{name}
@@ -87,9 +91,9 @@ function Player({
 						<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
 						<p
 							className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
-								canAdd || isActive
-									? "opacity-100"
-									: "opacity-50"
+								createTeam && (canAdd || isActive)
+									? "opacity-50"
+									: "opacity-100"
 							}`}
 						>
 							{price} {coinName}

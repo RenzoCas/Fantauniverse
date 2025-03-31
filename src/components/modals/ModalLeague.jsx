@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useLeague } from "../../contexts/LeagueContext";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 import NormalButton from "../../atoms/Buttons/NormalButton";
-import Radio from "../../atoms/Inputs/Radio";
+// import Radio from "../../atoms/Inputs/Radio";
+import TabButton from "../../atoms/Buttons/TabButton";
 
 function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 	const [formData, setFormData] = useState(
@@ -13,25 +14,26 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 			visibility: "PUBLIC",
 			coinName: "",
 			maxCoins: "",
+			teamMaxPlayers: "",
 		}
 	);
 	const [errors, setErrors] = useState({});
 	const { createLeague, updateLeague } = useLeague();
 
-	const visibilityObj = [
-		{
-			value: "PUBLIC",
-			label: "Pubblica",
-		},
-		{
-			value: "PRIVATE",
-			label: "Privata",
-		},
-	];
+	// const visibilityObj = [
+	// 	{
+	// 		value: "PUBLIC",
+	// 		label: "Pubblica",
+	// 	},
+	// 	{
+	// 		value: "PRIVATE",
+	// 		label: "Privata",
+	// 	},
+	// ];
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		if (name === "maxCoins") {
+		if (name === "maxCoins" || name === "teamMaxPlayers") {
 			if (!/^\d*$/.test(value)) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
@@ -46,6 +48,12 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
 					[name]: "Il valore massimo è 10.000",
+				}));
+				return;
+			} else if (numericValue < 1) {
+				setErrors((prevErrors) => ({
+					...prevErrors,
+					[name]: "Il valore minimo é 1.",
 				}));
 				return;
 			} else {
@@ -65,6 +73,13 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 				[name]: value,
 			});
 		}
+	};
+
+	const handleChangeVisibility = (value) => {
+		setFormData({
+			...formData,
+			visibility: value,
+		});
 	};
 
 	const isFormValid = () => {
@@ -143,9 +158,8 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 				}`}
 				onClick={onClose}
 			></div>
-
 			<div
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 ${
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 max-h-[calc(100dvh-80px)] overflow-y-auto ${
 					isOpen ? "translate-y-0" : "translate-y-full"
 				} md:max-w-[600px] md:items-center md:justify-center`}
 			>
@@ -160,52 +174,99 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						onSubmit={handleSubmit}
 						className="flex flex-col gap-[16px] w-full"
 					>
-						<GenericInput
-							type="text"
-							required
-							name="name"
-							id="name"
-							placeholder="Nome lega"
-							messageError={errors.name}
-							value={formData.name}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-						/>
-						<GenericInput
-							type="textarea"
-							name="description"
-							id="description"
-							placeholder="Descrizione breve della lega"
-							messageError={errors.description}
-							value={formData.description}
-							handleChange={handleChange}
-						/>
-						<div className="flex flex-col gap-[16px] md:flex-row">
+						<div className="flex flex-col gap-[8px]">
+							<label
+								htmlFor="name"
+								className="body-small text-(--black-light-active) font-medium"
+							>
+								Nome lega:
+							</label>
 							<GenericInput
 								type="text"
 								required
-								name="coinName"
-								id="coinName"
-								placeholder="Nome moneta"
-								messageError={errors.coinName}
-								value={formData.coinName}
+								name="name"
+								id="name"
+								messageError={errors.name}
+								value={formData.name}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
+						</div>
+						<div className="flex flex-col gap-[8px]">
+							<label
+								htmlFor="description"
+								className="body-small text-(--black-light-active) font-medium"
+							>
+								Descrizione:
+							</label>
+							<GenericInput
+								type="textarea"
+								name="description"
+								id="description"
+								messageError={errors.description}
+								value={formData.description}
+								handleChange={handleChange}
+							/>
+						</div>
+
+						<div className="flex flex-col gap-[16px] md:flex-row">
+							<div className="flex flex-col gap-[8px]">
+								<label
+									htmlFor="coinName"
+									className="body-small text-(--black-light-active) font-medium"
+								>
+									Nome della moneta:
+								</label>
+								<GenericInput
+									type="text"
+									required
+									name="coinName"
+									id="coinName"
+									messageError={errors.coinName}
+									value={formData.coinName}
+									handleChange={handleChange}
+									handleBlur={handleBlur}
+								/>
+							</div>
+							<div className="flex flex-col gap-[8px]">
+								<label
+									htmlFor="maxCoins"
+									className="body-small text-(--black-light-active) font-medium"
+								>
+									Budget:
+								</label>
+								<GenericInput
+									type="text"
+									required
+									name="maxCoins"
+									id="maxCoins"
+									messageError={errors.maxCoins}
+									value={formData.maxCoins}
+									handleChange={handleChange}
+									handleBlur={handleBlur}
+								/>
+							</div>
+						</div>
+						<div className="flex flex-col gap-[8px]">
+							<label
+								htmlFor="teamMaxPlayers"
+								className="body-normal text-(--black-light-active) font-medium"
+							>
+								Numero massimo di player del team:
+							</label>
 							<GenericInput
 								type="text"
 								required
-								name="maxCoins"
-								id="maxCoins"
-								placeholder="Numero massimo di monete utilizzabili"
-								messageError={errors.maxCoins}
-								value={formData.maxCoins}
+								name="teamMaxPlayers"
+								id="teamMaxPlayers"
+								messageError={errors.teamMaxPlayers}
+								value={formData.teamMaxPlayers}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
 							/>
 						</div>
 
-						<div className="grid grid-cols-2">
+						{/* <div className="grid grid-cols-2">
 							{visibilityObj.map((opt, idx) => (
 								<Radio
 									key={idx}
@@ -217,6 +278,24 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 									label={opt.label}
 								/>
 							))}
+						</div> */}
+						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
+							<TabButton
+								handleClick={() =>
+									handleChangeVisibility("PUBLIC")
+								}
+								active={formData.visibility === "PUBLIC"}
+							>
+								<p className="body-normal">Pubblica</p>
+							</TabButton>
+							<TabButton
+								handleClick={() =>
+									handleChangeVisibility("PRIVATE")
+								}
+								active={formData.visibility === "PRIVATE"}
+							>
+								<p className="body-normal">Privata</p>
+							</TabButton>
 						</div>
 						<NormalButton
 							text={initialState ? "Aggiorna lega" : "Crea lega"}

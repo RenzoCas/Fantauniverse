@@ -91,10 +91,10 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 					)}
 				</picture>
 				<div className={`flex flex-col gap-[4px] w-full`}>
-					<h3 className="body-normal font-semibold break-words">
+					<h3 className="body-normal font-semibold break-all">
 						{username}
 					</h3>
-					<p className="body-small font-semibold text-(--black-normal)/70 break-words">
+					<p className="body-small font-semibold text-(--black-normal)/70 break-all">
 						{name || "Squadra non presente."}
 					</p>
 				</div>

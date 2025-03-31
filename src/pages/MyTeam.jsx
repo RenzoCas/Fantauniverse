@@ -5,39 +5,65 @@ import { PiggyBank, Save } from "lucide-react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Player from "../components/Player";
+import Loader from "../components/Loader";
+import GenericPopup from "../components/popups/GenericPopup";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
+import NormalButton from "../atoms/Buttons/NormalButton";
+import { useUser } from "../contexts/UserContext";
 
 function MyTeam() {
-	const { team } = useTeam();
-	const { id, name, players, position } = team;
-	const { league } = useLeague();
-	const { coinName, maxCoins, status, players: leaguePlayers } = league;
-	const [formData, setFormData] = useState({
-		id: id,
-		name: name || "",
-		players: players || [],
-		position: position || 1,
-	});
+	const { user } = useUser();
+	const { team, createTeam, updateTeam, deleteTeam } = useTeam();
+	const { league, getMyTeam } = useLeague();
+	const {
+		id,
+		coinName,
+		maxCoins,
+		status,
+		players: leaguePlayers,
+		participants,
+		teamMaxPlayers,
+	} = league;
+	const participant = participants.find((p) => p.user.id === user.id);
 
 	const [tempTeam, setTempTeam] = useState({
+		referredTo: { id: participant?.id },
 		id: team?.id || null,
 		name: team?.name || "",
-		icon: team?.icon || null,
 		players: team?.players || [],
 	});
 
 	const [errors, setErrors] = useState({});
 	const [isEditing, setIsEditing] = useState({
 		name: false,
-		players: false,
 	});
 
 	const [tempMaxCoins, setTempMaxCoins] = useState(maxCoins);
 	const [canAddPlayers, setCanAddPlayers] = useState({});
 	const [isMaxPlayersReached, setIsMaxPlayersReached] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		message: "",
+	});
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
+	});
+	const isEditingAnyField = Object.values(isEditing).some(
+		(isEditing) => isEditing
+	);
 
 	useEffect(() => {
-		setIsMaxPlayersReached(tempTeam.players.length >= 5);
-	}, [tempTeam.players]);
+		setIsMaxPlayersReached(tempTeam.players.length >= teamMaxPlayers);
+	}, [tempTeam.players, teamMaxPlayers]);
 
 	useEffect(() => {
 		if (team) {
@@ -110,7 +136,7 @@ function MyTeam() {
 
 	const handleChangeData = (e) => {
 		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value });
+		setTempTeam({ ...tempTeam, [name]: value });
 	};
 
 	const toggleEditing = (field) => {
@@ -122,114 +148,230 @@ function MyTeam() {
 		}));
 	};
 
-	useEffect(() => {
-		console.log(league);
-	}, []);
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type, title, message }),
+			2000
+		);
+	};
+
+	const isFormValid = () => {
+		return (
+			tempTeam.name.trim() !== "" &&
+			isMaxPlayersReached &&
+			!Object.values(errors).some((error) => error !== "")
+		);
+	};
+
+	const handleSubmitTeam = async () => {
+		setIsLoading(true);
+		let res = null;
+		if (team) {
+			res = await updateTeam(tempTeam);
+		} else {
+			res = await createTeam(tempTeam);
+		}
+
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nella creazione della squadra!",
+				"La creazione della squadra non é andata a buon fine. Riprova."
+			);
+		}
+
+		setIsLoading(false);
+		const totalCost = res.players.reduce((acc, p) => acc + p.price, 0);
+		setTempMaxCoins(maxCoins - totalCost);
+		setTempTeam(res);
+
+		if (team) {
+			showPopup(
+				"success",
+				"Squadra aggiornata!",
+				"L'aggiornamento della squadra é andato a buon fine."
+			);
+		} else {
+			showPopup(
+				"success",
+				"Squadra creata!",
+				"La squadra é stata creata con successo."
+			);
+		}
+	};
+
+	const showModalConfirmDelete = () => {
+		setDataModalConfirm({
+			title: "Elimina team",
+			text: "Confermando questo team verrá eliminato definitivamente.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
+		setIsModalConfirmOpen({ action: "delete", value: true });
+	};
+
+	const handleDeleteTeam = async () => {
+		setIsModalConfirmOpen({ action: null, value: false });
+		setIsLoading(true);
+		const res = await deleteTeam();
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore!",
+				"L'eliminazione del team non é andata a buon fine. Riprova."
+			);
+			return;
+		}
+
+		await getMyTeam(id);
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Cancellazione effettuata!",
+			"Il team é stato eliminato correttamente."
+		);
+	};
 
 	return (
-		<div className="flex flex-col gap-[24px]">
-			<div className="flex flex-col gap-[12px]">
-				{status == "NOT_STARTED" && (
-					<div className="flex items-center justify-between gap-[8px]">
-						<h2 className="title-h4 font-medium">
-							Modifica squadra
-						</h2>
-						<p className="body-small font-semibold text-[#F87171] whitespace-nowrap">
-							Cancella team
-						</p>
-					</div>
-				)}
-
-				<div className="flex flex-col gap-[8px]">
-					<label
-						htmlFor="name"
-						className="body-normal text-(--black-light-active) font-medium"
-					>
-						Nome:
-					</label>
-					<div className="flex gap-[10px]">
-						<button
-							className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-							onClick={() => toggleEditing("name")}
-						>
-							{isEditing.name ? (
-								<Save className="h-[20px] w-[20px]" />
-							) : (
-								<PencilSquareIcon className="h-[20px] w-[20px]" />
-							)}
-						</button>
-						{isEditing.name ? (
-							<GenericInput
-								type="text"
-								required
-								placeholder={`Nome team`}
-								name={formData.name}
-								value={formData.name}
-								handleChange={handleChangeData}
-								handleBlur={handleBlur}
-								messageError={errors.name}
-								autoFocus={true}
-								maxLength={50}
-							></GenericInput>
-						) : (
-							<div
-								className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
-							>
-								<p
-									className={`break-words self-center px-[24px] py-[10px] body-normal`}
+		<>
+			{isLoading && <Loader />}
+			<div className="flex flex-col gap-[24px]">
+				<div className="flex flex-col gap-[12px]">
+					{status == "NOT_STARTED" && (
+						<div className="flex items-center justify-between gap-[8px]">
+							<h2 className="title-h4 font-medium">
+								{!tempTeam.id ? "Crea" : "Modifica"} squadra
+							</h2>
+							{tempTeam.id && (
+								<button
+									className="body-small font-semibold text-[#F87171] whitespace-nowrap"
+									onClick={() => showModalConfirmDelete()}
 								>
-									{formData.name}
-								</p>
-							</div>
-						)}
+									Cancella team
+								</button>
+							)}
+						</div>
+					)}
+
+					<div className="flex flex-col gap-[8px]">
+						<label
+							htmlFor="name"
+							className="body-normal text-(--black-light-active) font-medium"
+						>
+							Nome:
+						</label>
+						<div className="flex gap-[10px]">
+							<button
+								className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+								onClick={() => toggleEditing("name")}
+							>
+								{isEditing.name ? (
+									<Save className="h-[20px] w-[20px]" />
+								) : (
+									<PencilSquareIcon className="h-[20px] w-[20px]" />
+								)}
+							</button>
+							{isEditing.name ? (
+								<GenericInput
+									type="text"
+									required
+									placeholder={`Nome team`}
+									name={tempTeam.name}
+									value={tempTeam.name}
+									handleChange={handleChangeData}
+									handleBlur={handleBlur}
+									messageError={errors.name}
+									autoFocus={true}
+									maxLength={50}
+								></GenericInput>
+							) : (
+								<div
+									className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
+								>
+									<p
+										className={`break-all self-center px-[24px] py-[10px] body-normal`}
+									>
+										{tempTeam.name}
+									</p>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
-			</div>
-			<div className="flex flex-col gap-[8px]">
-				<div className="flex items-center justify-between gap-[8px]">
-					<p className="body-normal text-(--black-light-active) font-medium break-word">
-						Seleziona giocatori:
-					</p>
-					<div
-						className={`py-[2px] px-[8px] rounded-[4px] ${
-							isMaxPlayersReached
-								? "bg-(--accent-normal)"
-								: "bg-(--error-light)"
-						}`}
-					>
-						<p
-							className={`body-normal font-semibold ${
+				<div className="flex flex-col gap-[8px]">
+					<div className="flex items-center justify-between gap-[8px]">
+						<p className="body-normal text-(--black-light-active) font-medium break-word">
+							Seleziona giocatori:
+						</p>
+						<div
+							className={`py-[2px] px-[8px] rounded-[4px] ${
 								isMaxPlayersReached
-									? "text-white"
-									: "text-(--error-normal)"
+									? "bg-(--accent-normal)"
+									: "bg-(--error-light)"
 							}`}
 						>
-							{tempTeam.players.length}/5
+							<p
+								className={`body-normal font-semibold ${
+									isMaxPlayersReached
+										? "text-white"
+										: "text-(--error-normal)"
+								}`}
+							>
+								{tempTeam.players.length}/{teamMaxPlayers}
+							</p>
+						</div>
+					</div>
+					<div className="w-full flex gap-[8px] items-center justify-center bg-(--black-light) rounded-[4px] px-[12px] py-[4px]">
+						<PiggyBank className="stroke-(--black-normal) h-[24px] w-[24px]" />
+						<p className="body-small font-medium">
+							{tempMaxCoins}/{maxCoins} {coinName}
 						</p>
 					</div>
+					<ul className="flex flex-col gap-[8px]">
+						{leaguePlayers.map((p) => (
+							<Player
+								key={p.id}
+								playersObj={tempTeam.players}
+								playerObj={p}
+								createTeam={true}
+								canAdd={
+									canAddPlayers[p.id] && !isMaxPlayersReached
+								}
+								canEdit={false}
+								onSelect={handleSelectPlayer}
+								onDeselect={handleDeselectPlayer}
+							/>
+						))}
+					</ul>
+					<NormalButton
+						text="Conferma"
+						action={handleSubmitTeam}
+						disabled={!isFormValid() || isEditingAnyField}
+						icon={false}
+					/>
 				</div>
-				<div className="w-full flex gap-[8px] items-center justify-center bg-(--black-light) rounded-[4px] px-[12px] py-[4px]">
-					<PiggyBank className="stroke-(--black-normal) h-[24px] w-[24px]" />
-					<p className="body-small font-medium">
-						{tempMaxCoins}/{maxCoins} {coinName}
-					</p>
-				</div>
-				<ul className="flex flex-col gap-[8px]">
-					{leaguePlayers.map((p) => (
-						<Player
-							key={p.id}
-							playersObj={tempTeam.players}
-							playerObj={p}
-							createTeam={true}
-							canAdd={canAddPlayers[p.id] && !isMaxPlayersReached}
-							canEdit={false}
-							onSelect={handleSelectPlayer}
-							onDeselect={handleDeselectPlayer}
-						/>
-					))}
-				</ul>
 			</div>
-		</div>
+			<ModalConfirmAction
+				isOpen={isModalConfirmOpen.value}
+				dataModal={dataModalConfirm}
+				onClose={() =>
+					setIsModalConfirmOpen({
+						action: null,
+						value: false,
+					})
+				}
+				onConfirmAction={handleDeleteTeam}
+			></ModalConfirmAction>
+			<GenericPopup
+				isOpen={popupData.isOpen}
+				type={popupData.type}
+				title={popupData.title}
+				message={popupData.message}
+			/>
+		</>
 	);
 }
 

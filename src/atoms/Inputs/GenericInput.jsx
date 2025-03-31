@@ -50,11 +50,17 @@ export default function GenericInput({
 						id={id}
 						required={required}
 						value={value}
-						placeholder={`${placeholder}${required ? "*" : ""}`}
+						placeholder={`${
+							placeholder
+								? required
+									? placeholder + "*"
+									: placeholder
+								: ""
+						}`}
 						onChange={handleChange}
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-words ${
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-all ${
 							messageError
 								? "outline-(--error-normal) bg-(--error-light) text-(--error-normal)"
 								: "bg-[#FAF8F8] outline-transparent focus:outline-solid focus:outline-[2px] focus:outline-(--black-normal)"
@@ -69,13 +75,19 @@ export default function GenericInput({
 						id={id}
 						required={required}
 						value={value}
-						placeholder={`${placeholder}${required ? "*" : ""}`}
+						placeholder={`${
+							placeholder
+								? required
+									? placeholder + "*"
+									: placeholder
+								: ""
+						}`}
 						onChange={handleChange}
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
 						disabled={disabled}
 						maxLength={maxLength}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-words ${
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-all ${
 							messageError
 								? "outline-(--error-normal) bg-(--error-light) text-(--error-normal)"
 								: "bg-[#FAF8F8] outline-transparent focus:outline-solid focus:outline-[2px] focus:outline-(--black-normal)"
@@ -93,7 +105,7 @@ export default function GenericInput({
 					<button
 						type="button"
 						onClick={togglePasswordVisibility}
-						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal) break-words"
+						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal) break-all"
 					>
 						{showPassword ? (
 							<EyeSlashIcon className="h-[24px] w-[24px]" />

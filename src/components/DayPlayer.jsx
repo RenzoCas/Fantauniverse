@@ -41,7 +41,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 						/>
 					)}
 				</picture>
-				<h5 className="body-normal font-semibold flex-1 break-words">
+				<h5 className="body-normal font-semibold flex-1 break-all">
 					{name}
 				</h5>
 				<div className="flex items-center gap-[10px]">
@@ -62,14 +62,14 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 						?.map((el) => (
 							<li key={el.id} className="flex flex-col gap-[4px]">
 								<div className="flex justify-between gap-[8px]">
-									<h6 className="body-normal font-semibold break-words">
+									<h6 className="body-normal font-semibold break-all">
 										{el.name}
 									</h6>
-									<p className="body-normal font-semibold break-words">
+									<p className="body-normal font-semibold break-all">
 										{el.value}
 									</p>
 								</div>
-								<p className="body-normal font-light line-clamp-2 break-words">
+								<p className="body-normal font-light line-clamp-2 break-all">
 									{el.rule}
 								</p>
 							</li>
@@ -79,14 +79,14 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 						?.map((el) => (
 							<li key={el.id} className="flex flex-col gap-[4px]">
 								<div className="flex justify-between gap-[8px]">
-									<h6 className="body-normal font-semibold text-(--error-normal) break-words">
+									<h6 className="body-normal font-semibold text-(--error-normal) break-all">
 										{el.name}
 									</h6>
-									<p className="body-normal font-semibold text-(--error-normal) break-words">
+									<p className="body-normal font-semibold text-(--error-normal) break-all">
 										-{el.value}
 									</p>
 								</div>
-								<p className="body-normal font-light line-clamp-2 break-words">
+								<p className="body-normal font-light line-clamp-2 break-all">
 									{el.rule}
 								</p>
 							</li>

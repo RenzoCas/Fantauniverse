@@ -72,9 +72,13 @@ function GeneralSettings() {
 		value: false,
 	});
 
-	const [textModal, setTextModal] = useState();
-	const [disclaimerModal, setDisclaimerModal] = useState();
-	const [isDisabled, setIsDisabled] = useState(false);
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
+	});
+
 	const [isEnableCaptain, setIsEnableCaptain] = useState(enableCaptain);
 	const navigate = useNavigate();
 
@@ -114,60 +118,79 @@ function GeneralSettings() {
 	const showModalConfirmChange = (value) => {
 		if (value === selectedValue) return;
 		if (isFormValid()) {
-			setTextModal("Attenzione!");
-			setDisclaimerModal(
+			showPopup(
+				"alert",
+				"Attenzione!",
 				"Prima di cambiare stato della lega devi salvare le modifiche in corso."
 			);
-			setIsDisabled(true);
 		} else {
 			setTempValue(value);
-
 			switch (value) {
 				case "NOT_STARTED": {
 					const isDisabled =
 						players.length === 0 || rules.length === 0;
-					setIsDisabled(isDisabled);
 					if (isDisabled) {
-						setTextModal("Attenzione!");
-						setDisclaimerModal(
+						showPopup(
+							"alert",
+							"Attenzione!",
 							"Per poter pubblicare la lega deve esserci almeno 1 giocatore ed almeno 1 regola."
 						);
 					} else {
-						setTextModal("Sei sicuro di voler pubblicare la lega?");
-						setDisclaimerModal(
-							"Confermando non sará piú possibile modificare i dati della lega, i player e il regolamento."
-						);
+						setDataModalConfirm({
+							title: "Pubblica lega",
+							text: "Confermando non sará piú possibile modificare le impostazioni della lega.",
+							conferma: "Conferma",
+							annulla: "Annulla",
+						});
+						setIsModalConfirmOpen({
+							action: "select",
+							value: true,
+						});
 					}
 
 					break;
 				}
 				case "STARTED": {
 					const isDisabled = participants.length <= 1;
-					setIsDisabled(isDisabled);
 					if (isDisabled) {
-						setTextModal("Attenzione!");
-						setDisclaimerModal(
+						showPopup(
+							"alert",
+							"Attenzione!",
 							"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
 						);
 					} else {
-						setTextModal("Sei sicuro di voler avviare la lega?");
-						setDisclaimerModal(
-							"Confermando non sará piú possibile iscriversi alla lega."
-						);
+						setDataModalConfirm({
+							title: "Avvia lega",
+							text: "Confermando non sará piú possibile iscriversi alla lega.",
+							conferma: "Conferma",
+							annulla: "Annulla",
+						});
+						setIsModalConfirmOpen({
+							action: "select",
+							value: true,
+						});
 					}
 					break;
 				}
 				case "FINISHED": {
 					const isDisabled = days.length === 0;
-					setIsDisabled(isDisabled);
 					if (isDisabled) {
-						setTextModal("Attenzione!");
-						setDisclaimerModal(
+						showPopup(
+							"alert",
+							"Attenzione!",
 							"Per poter terminare la lega deve essere avviata ed esserci almeno 1 giornata."
 						);
 					} else {
-						setTextModal("Sei sicuro di voler terminare la lega?");
-						setDisclaimerModal(null);
+						setDataModalConfirm({
+							title: "Termina lega",
+							text: "Confermando la lega terminerá e non sará possibile aggiungere nuove giornate.",
+							conferma: "Conferma",
+							annulla: "Annulla",
+						});
+						setIsModalConfirmOpen({
+							action: "select",
+							value: true,
+						});
 					}
 					break;
 				}
@@ -176,14 +199,15 @@ function GeneralSettings() {
 					break;
 			}
 		}
-		setIsModalConfirmOpen({ action: "select", value: true });
 	};
 
 	const showModalConfirmDelete = () => {
-		setTextModal("Sei sicuro di voler eliminare la lega?");
-		setDisclaimerModal(
-			"Confermando non sará piú possibile accedere ai dati di questa lega."
-		);
+		setDataModalConfirm({
+			title: "Elimina lega",
+			text: "Confermando non sará piú possibile accedere ai dati di questa lega.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
 		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
@@ -354,64 +378,88 @@ function GeneralSettings() {
 							selectedValue={selectedValue}
 							handleChange={showModalConfirmChange}
 						/>
-						{["name", "description"].map((field) => (
-							<div
-								key={field}
-								className="flex flex-col gap-[8px]"
-							>
-								{field === "description" && (
+						<div className="flex flex-col gap-[8px]">
+							<div className="flex gap-[10px]">
+								<button
+									className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+									onClick={() => toggleEditing("name")}
+									disabled={status !== "PENDING"}
+								>
+									{isEditing.name ? (
+										<Save className="h-[20px] w-[20px]" />
+									) : (
+										<PencilSquareIcon className="h-[20px] w-[20px]" />
+									)}
+								</button>
+								{isEditing.name ? (
+									<GenericInput
+										type="text"
+										required
+										placeholder={`Inserisci nome`}
+										name="name"
+										value={formData.name}
+										handleChange={handleChangeData}
+										handleBlur={handleBlur}
+										messageError={errors.name}
+										autoFocus={true}
+										maxLength={30}
+									/>
+								) : (
+									<p
+										className={`break-all self-center body-regular font-medium `}
+									>
+										{formData.name}
+									</p>
+								)}
+							</div>
+
+							{description && (
+								<>
 									<label
-										htmlFor={field}
+										htmlFor="description"
 										className="body-normal text-(--black-light-active) font-medium"
 									>
 										Descrizione:
 									</label>
-								)}
-								<div className="flex gap-[10px]">
-									<button
-										className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-										onClick={() => toggleEditing(field)}
-										disabled={status !== "PENDING"}
-									>
-										{isEditing[field] ? (
-											<Save className="h-[20px] w-[20px]" />
-										) : (
-											<PencilSquareIcon className="h-[20px] w-[20px]" />
-										)}
-									</button>
-									{isEditing[field] ? (
-										<GenericInput
-											type={
-												field === "description"
-													? "textarea"
-													: "text"
+									<div className="flex gap-[10px]">
+										<button
+											className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+											onClick={() =>
+												toggleEditing("description")
 											}
-											required
-											placeholder={`Inserisci ${field}`}
-											name={field}
-											value={formData[field]}
-											handleChange={handleChangeData}
-											handleBlur={handleBlur}
-											messageError={errors[field]}
-											autoFocus={true}
-											maxLength={
-												field === "name" ? 20 : 1000
-											}
-										/>
-									) : (
-										<p
-											className={`break-words self-center ${
-												field === "name"
-													? "body-regular font-medium"
-													: "body-normal"
-											}`}
+											disabled={status !== "PENDING"}
 										>
-											{formData[field]}
-										</p>
-									)}
-								</div>
-							</div>
-						))}
+											{isEditing.description ? (
+												<Save className="h-[20px] w-[20px]" />
+											) : (
+												<PencilSquareIcon className="h-[20px] w-[20px]" />
+											)}
+										</button>
+										{isEditing.description ? (
+											<GenericInput
+												type="text"
+												required
+												placeholder={`Inserisci descrizione`}
+												name="description"
+												value={formData.description}
+												handleChange={handleChangeData}
+												handleBlur={handleBlur}
+												messageError={
+													errors.description
+												}
+												autoFocus={true}
+											/>
+										) : (
+											<p
+												className={`break-all self-center body-regular font-medium `}
+											>
+												{formData.name}
+											</p>
+										)}
+									</div>
+								</>
+							)}
+						</div>
 						<div className="flex flex-col gap-[8px]">
 							<p className="body-normal text-(--black-light-active) font-medium">
 								Tipologia della lega:
@@ -489,7 +537,7 @@ function GeneralSettings() {
 											className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
 										>
 											<p
-												className={`break-words self-center px-[24px] py-[10px] ${
+												className={`break-all self-center px-[24px] py-[10px] ${
 													field === "name"
 														? "body-regular font-medium"
 														: "body-normal"
@@ -659,7 +707,7 @@ function GeneralSettings() {
 											</button>
 											<p
 												onClick={handleCopy}
-												className="font-mono bg-gray-100 p-2 rounded break-words"
+												className="font-mono bg-gray-100 p-2 rounded break-all"
 											>
 												{code}
 											</p>
@@ -682,8 +730,6 @@ function GeneralSettings() {
 				)}
 				<ModalConfirmAction
 					isOpen={isModalConfirmOpen.value}
-					text={textModal}
-					disclaimer={disclaimerModal}
 					onClose={() =>
 						setIsModalConfirmOpen({ action: null, value: false })
 					}
@@ -692,7 +738,7 @@ function GeneralSettings() {
 							? handleChangeSelect
 							: handleDeleteLeague
 					}
-					isDisabled={isDisabled}
+					dataModal={dataModalConfirm}
 				></ModalConfirmAction>
 				<GenericPopup
 					isOpen={popupData.isOpen}

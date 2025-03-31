@@ -129,7 +129,7 @@ export default function Navbar() {
 						</picture>
 						<h3 className="body-regular">
 							Bentornato, <br />
-							<span className="font-medium break-words">
+							<span className="font-medium break-all">
 								{username}
 							</span>
 						</h3>
@@ -179,7 +179,7 @@ export default function Navbar() {
 														/>
 													)}
 												</picture>
-												<h4 className="body-normal font-medium break-words">
+												<h4 className="body-normal font-medium break-all">
 													{league.name}
 												</h4>
 												<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />

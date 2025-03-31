@@ -276,7 +276,7 @@ function Account() {
 									/>
 								) : (
 									<p
-										className={`break-words self-center ${
+										className={`break-all self-center ${
 											field === "name"
 												? "body-regular font-medium"
 												: "body-normal"

@@ -35,11 +35,15 @@ function ViewLega() {
 
 	const { name, status, icon, isRegistered } = league;
 	const [tabActive, setTabActive] = useState();
-	const [textModal, setTextModal] = useState();
-	const [disclaimerModal, setDisclaimerModal] = useState();
 	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
 		action: null,
 		value: false,
+	});
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
 	});
 
 	useEffect(() => {
@@ -54,8 +58,12 @@ function ViewLega() {
 	}, [id]);
 
 	const showModalConfirmDelete = () => {
-		setTextModal("Sei sicuro di volerti disiscrivere da questa lega?");
-		setDisclaimerModal("Confermando non parteciperai piú a questa lega.");
+		setDataModalConfirm({
+			title: "Disiscrizione",
+			text: "Confermando non parteciperai piú a questa lega.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
 		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
@@ -209,7 +217,7 @@ function ViewLega() {
 											status === "NOT_STARTED"
 										) && (
 											<>
-												<h2 className="title-h4 break-words">
+												<h2 className="title-h4 break-all">
 													{name}
 												</h2>
 												{status == "NOT_STARTED" &&
@@ -252,25 +260,24 @@ function ViewLega() {
 								/>
 							)}
 						</div>
+						<GenericPopup
+							isOpen={popupData.isOpen}
+							type={popupData.type}
+							title={popupData.title}
+							message={popupData.message}
+						/>
+						<ModalConfirmAction
+							isOpen={isModalConfirmOpen.value}
+							dataModal={dataModalConfirm}
+							onClose={() =>
+								setIsModalConfirmOpen({
+									action: null,
+									value: false,
+								})
+							}
+							onConfirmAction={handleRemovePartecipant}
+						></ModalConfirmAction>
 					</div>
-					<GenericPopup
-						isOpen={popupData.isOpen}
-						type={popupData.type}
-						title={popupData.title}
-						message={popupData.message}
-					/>
-					<ModalConfirmAction
-						isOpen={isModalConfirmOpen.value}
-						text={textModal}
-						disclaimer={disclaimerModal}
-						onClose={() =>
-							setIsModalConfirmOpen({
-								action: null,
-								value: false,
-							})
-						}
-						onConfirmAction={handleRemovePartecipant}
-					></ModalConfirmAction>
 				</>
 			)}
 		</>

@@ -6,7 +6,7 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 	const { league } = useLeague();
 	const { status, isRegistered } = league;
 	return (
-		<nav className="sticky bottom-[24px] mt-auto py-[5px] px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]">
+		<nav className="sticky bottom-[24px] mt-auto px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]">
 			<TabBottomNav
 				text="Info"
 				active={tabActive == "General"}

@@ -22,6 +22,7 @@ import { TeamProvider } from "./contexts/TeamContext";
 import CreateDay from "./pages/CreateDay";
 import { DayProvider } from "./contexts/DayContext";
 import GenericPopup from "./components/popups/GenericPopup";
+import Loader from "./components/Loader";
 
 function App() {
 	return (
@@ -104,7 +105,7 @@ function AuthInitializer() {
 	const { tokenInfo } = useUser();
 	const navigate = useNavigate();
 	const hasCheckedToken = useRef(false);
-
+	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
@@ -127,9 +128,12 @@ function AuthInitializer() {
 			const token = localStorage.getItem("authToken");
 			if (token) {
 				try {
+					setIsLoading(true);
 					await tokenInfo(token);
+					setIsLoading(false);
 					navigate("/app", { replace: true });
 				} catch (error) {
+					setIsLoading(false);
 					console.error("Sessione scaduta:", error.message);
 					showPopup(
 						"error",
@@ -145,13 +149,16 @@ function AuthInitializer() {
 	}, [tokenInfo]);
 
 	return (
-		<GenericPopup
-			isOpen={popupData.isOpen}
-			type={popupData.type}
-			title={popupData.title}
-			message={popupData.message}
-			classOpt="left-[16px]"
-		/>
+		<>
+			{isLoading && <Loader />}
+			<GenericPopup
+				isOpen={popupData.isOpen}
+				type={popupData.type}
+				title={popupData.title}
+				message={popupData.message}
+				classOpt="left-[16px]"
+			/>
+		</>
 	);
 }
 

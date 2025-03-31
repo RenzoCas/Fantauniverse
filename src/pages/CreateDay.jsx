@@ -106,7 +106,7 @@ function CreateDay() {
 					<p className="body-normal">Indietro</p>
 				</button>
 				<div className="flex flex-col gap-[16px]">
-					<h2 className="body-regular break-words">
+					<h2 className="body-regular break-all">
 						Giornata:{" "}
 						<span className="font-semibold">{state.name}</span>
 					</h2>
