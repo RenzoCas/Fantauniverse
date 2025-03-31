@@ -5,6 +5,7 @@ import {
 	ClipboardIcon,
 	PencilSquareIcon,
 	TrashIcon,
+	UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GhostButton from "../atoms/Buttons/GhostButton";
@@ -16,6 +17,7 @@ import GenericPopup from "../components/popups/GenericPopup";
 import Switch from "../atoms/Inputs/Switch";
 import TabButton from "../atoms/Buttons/TabButton";
 import { Coins, PiggyBank, Save } from "lucide-react";
+import Rules from "./Rules";
 
 function GeneralSettings() {
 	const { league, deleteLeague, updateLeague, changeStatus } = useLeague();
@@ -33,6 +35,7 @@ function GeneralSettings() {
 		days,
 		code,
 		enableCaptain,
+		isAdmin,
 	} = league;
 	const [selectedValue, setSelectedValue] = useState(status);
 	const [tempValue, setTempValue] = useState();
@@ -313,212 +316,301 @@ function GeneralSettings() {
 			);
 	};
 
+	const [tabActive, setTabActive] = useState("Info");
+
 	return (
 		<>
 			{isLoading && <Loader />}
-			<div className="flex flex-col items-between gap-[40px] flex-1">
-				<div className="flex flex-col gap-[16px]">
-					<Select
-						options={filteredOptions}
-						selectedValue={selectedValue}
-						handleChange={showModalConfirmChange}
-					/>
-					<div className="flex flex-col gap-[12px]">
-						{status == "PENDING" && (
-							<>
-								{["name", "description"].map((field) => (
-									<div
-										key={field}
-										className="flex flex-col gap-[8px]"
+			<div className="flex flex-col gap-[12px] flex-1">
+				{status === "PENDING" ? (
+					<>
+						<Select
+							options={filteredOptions}
+							selectedValue={selectedValue}
+							handleChange={showModalConfirmChange}
+						/>
+						{["name", "description"].map((field) => (
+							<div
+								key={field}
+								className="flex flex-col gap-[8px]"
+							>
+								{field === "description" && (
+									<label
+										htmlFor={field}
+										className="body-small text-(--black-light-active) font-medium"
 									>
-										{field === "description" && (
-											<label
-												htmlFor={field}
-												className="body-small text-(--black-light-active) font-medium"
-											>
-												Descrizione:
-											</label>
+										Descrizione:
+									</label>
+								)}
+								<div className="flex gap-[10px]">
+									<button
+										className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+										onClick={() => toggleEditing(field)}
+										disabled={status !== "PENDING"}
+									>
+										{isEditing[field] ? (
+											<Save className="h-[20px] w-[20px]" />
+										) : (
+											<PencilSquareIcon className="h-[20px] w-[20px]" />
 										)}
-										<div className="flex gap-[10px]">
-											<button
-												className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-												onClick={() =>
-													toggleEditing(field)
-												}
-												disabled={status !== "PENDING"}
-											>
-												{isEditing[field] ? (
-													<Save className="h-[20px] w-[20px]" />
-												) : (
-													<PencilSquareIcon className="h-[20px] w-[20px]" />
-												)}
-											</button>
-											{isEditing[field] ? (
-												<GenericInput
-													type={
-														field === "description"
-															? "textarea"
-															: "text"
-													}
-													required
-													placeholder={`Inserisci ${field}`}
-													name={field}
-													value={formData[field]}
-													handleChange={
-														handleChangeData
-													}
-													handleBlur={handleBlur}
-													messageError={errors[field]}
-													autoFocus={true}
-													maxLength={
-														field === "name"
-															? 20
-															: 1000
-													}
-												/>
+									</button>
+									{isEditing[field] ? (
+										<GenericInput
+											type={
+												field === "description"
+													? "textarea"
+													: "text"
+											}
+											required
+											placeholder={`Inserisci ${field}`}
+											name={field}
+											value={formData[field]}
+											handleChange={handleChangeData}
+											handleBlur={handleBlur}
+											messageError={errors[field]}
+											autoFocus={true}
+											maxLength={
+												field === "name" ? 20 : 1000
+											}
+										/>
+									) : (
+										<p
+											className={`break-words self-center ${
+												field === "name"
+													? "body-regular font-medium"
+													: "body-normal"
+											}`}
+										>
+											{formData[field]}
+										</p>
+									)}
+								</div>
+							</div>
+						))}
+						<div className="flex flex-col gap-[8px]">
+							<p className="body-small text-(--black-light-active) font-medium">
+								Tipologia della lega:
+							</p>
+							<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
+								<TabButton
+									handleClick={() =>
+										handleTabChange("PUBLIC")
+									}
+									active={formData.visibility === "PUBLIC"}
+								>
+									<p className="body-normal">Pubblica</p>
+								</TabButton>
+								<TabButton
+									handleClick={() =>
+										handleTabChange("PRIVATE")
+									}
+									active={formData.visibility === "PRIVATE"}
+								>
+									<p className="body-normal">Privata</p>
+								</TabButton>
+							</div>
+						</div>
+
+						{["coinName", "maxCoins"].map((field) => (
+							<div
+								key={field}
+								className="flex flex-col gap-[8px]"
+							>
+								<label
+									htmlFor={field}
+									className="body-small text-(--black-light-active) font-medium"
+								>
+									{field === "coinName"
+										? "Nome della moneta:"
+										: "Budget:"}
+								</label>
+
+								<div className="flex gap-[10px]">
+									<button
+										className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+										onClick={() => toggleEditing(field)}
+										disabled={status !== "PENDING"}
+									>
+										{isEditing[field] ? (
+											<Save className="h-[20px] w-[20px]" />
+										) : (
+											<PencilSquareIcon className="h-[20px] w-[20px]" />
+										)}
+									</button>
+									{isEditing[field] ? (
+										<GenericInput
+											type="text"
+											required
+											placeholder={`Inserisci ${field}`}
+											name={field}
+											value={formData[field]}
+											handleChange={handleChangeData}
+											handleBlur={handleBlur}
+											messageError={errors[field]}
+											autoFocus={true}
+											afterElement={true}
+											maxLength={
+												field === "coinName" ? 20 : 1000
+											}
+										>
+											{field === "coinName" ? (
+												<Coins className="stroke-white w-[24px] h-[24px]" />
 											) : (
-												<p
-													className={`break-words self-center ${
-														field === "name"
-															? "body-regular font-medium"
-															: "body-normal"
-													}`}
-												>
-													{formData[field]}
-												</p>
+												<PiggyBank className="stroke-white w-[24px] h-[24px]" />
 											)}
+										</GenericInput>
+									) : (
+										<div
+											className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
+										>
+											<p
+												className={`break-words self-center px-[24px] py-[10px] ${
+													field === "name"
+														? "body-regular font-medium"
+														: "body-normal"
+												}
+													`}
+											>
+												{formData[field]}
+											</p>
+											<div className="bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px] h-full flex items-center">
+												{field === "coinName" ? (
+													<Coins className="stroke-white w-[24px] h-[24px]" />
+												) : (
+													<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+												)}
+											</div>
 										</div>
+									)}
+								</div>
+							</div>
+						))}
+
+						<div className="flex flex-col gap-[8px]">
+							<p className="body-small text-(--black-light-active) font-medium">
+								Capitano:
+							</p>
+							<Switch
+								text="Attiva la scelta del capitano alla
+										creazione della squadra."
+								enabled={isEnableCaptain}
+								onChange={handleChangeSwitch}
+							/>
+						</div>
+						<div className="flex flex-col gap-[8px] w-full mt-auto">
+							<NormalButton
+								text="Salva modifiche"
+								action={() => handleUpdateLeague()}
+								disabled={!isFormValid() || isEditingAnyField}
+								customIcon={true}
+							>
+								<Save className="h-[24px] w-[24px]" />
+							</NormalButton>
+							<GhostButton
+								text="Elimina lega"
+								action={showModalConfirmDelete}
+								classOpt="text-(--error-normal)"
+								disabled={isEditingAnyField}
+								customIcon={true}
+							>
+								<TrashIcon className="w-[24px] h-[24px]" />
+							</GhostButton>
+						</div>
+					</>
+				) : (
+					<>
+						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover)">
+							<TabButton
+								handleClick={() => setTabActive("Info")}
+								active={tabActive === "Info"}
+							>
+								<p className="body-normal">Informazioni lega</p>
+							</TabButton>
+							<TabButton
+								handleClick={() => setTabActive("Rules")}
+								active={tabActive === "Rules"}
+							>
+								<p className="body-normal">Regole</p>
+							</TabButton>
+						</div>
+						{tabActive === "Info" ? (
+							<>
+								{isAdmin && (
+									<Select
+										options={filteredOptions}
+										selectedValue={selectedValue}
+										handleChange={showModalConfirmChange}
+									/>
+								)}
+								{description && (
+									<div className="flex flex-col gap-[8px]">
+										<h2 className="body-normal font-medium text-(--black-light-active)">
+											Descrizione:
+										</h2>
+										<p className="body-normal text-(--black-normal)">
+											{description}
+										</p>
 									</div>
-								))}
+								)}
 								<div className="flex flex-col gap-[8px]">
-									<p className="body-small text-(--black-light-active) font-medium">
-										Tipologia della lega:
-									</p>
-									<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
-										<TabButton
-											handleClick={() =>
-												handleTabChange("PUBLIC")
-											}
-											active={
-												formData.visibility === "PUBLIC"
-											}
-										>
-											<p className="body-normal">
-												Pubblica
-											</p>
-										</TabButton>
-										<TabButton
-											handleClick={() =>
-												handleTabChange("PRIVATE")
-											}
-											active={
-												formData.visibility ===
-												"PRIVATE"
-											}
-										>
-											<p className="body-normal">
-												Privata
-											</p>
-										</TabButton>
+									<h2 className="body-normal font-medium text-(--black-light-active)">
+										Nome della moneta:
+									</h2>
+									<div className="flex gap-[10px]">
+										<Coins className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<p className="body-normal text-(--black-normal)">
+											{coinName}
+										</p>
 									</div>
 								</div>
-
-								{["coinName", "maxCoins"].map((field) => (
-									<div
-										key={field}
-										className="flex flex-col gap-[8px]"
-									>
-										<label
-											htmlFor={field}
-											className="body-small text-(--black-light-active) font-medium"
-										>
-											{field === "coinName"
-												? "Nome della moneta:"
-												: "Budget:"}
-										</label>
-
-										<div className="flex gap-[10px]">
-											<button
-												className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-												onClick={() =>
-													toggleEditing(field)
-												}
-												disabled={status !== "PENDING"}
-											>
-												{isEditing[field] ? (
-													<Save className="h-[20px] w-[20px]" />
-												) : (
-													<PencilSquareIcon className="h-[20px] w-[20px]" />
-												)}
-											</button>
-											{isEditing[field] ? (
-												<GenericInput
-													type="text"
-													required
-													placeholder={`Inserisci ${field}`}
-													name={field}
-													value={formData[field]}
-													handleChange={
-														handleChangeData
-													}
-													handleBlur={handleBlur}
-													messageError={errors[field]}
-													autoFocus={true}
-													afterElement={true}
-													maxLength={
-														field === "coinName"
-															? 20
-															: 1000
-													}
-												>
-													{field === "coinName" ? (
-														<Coins className="stroke-white w-[24px] h-[24px]" />
-													) : (
-														<PiggyBank className="stroke-white w-[24px] h-[24px]" />
-													)}
-												</GenericInput>
-											) : (
-												<div
-													className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
-												>
-													<p
-														className={`break-words self-center px-[24px] py-[10px] ${
-															field === "name"
-																? "body-regular font-medium"
-																: "body-normal"
-														}
-													`}
-													>
-														{formData[field]}
-													</p>
-													<div className="bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px] h-full flex items-center">
-														{field ===
-														"coinName" ? (
-															<Coins className="stroke-white w-[24px] h-[24px]" />
-														) : (
-															<PiggyBank className="stroke-white w-[24px] h-[24px]" />
-														)}
-													</div>
-												</div>
-											)}
-										</div>
-									</div>
-								))}
-
 								<div className="flex flex-col gap-[8px]">
-									<p className="body-small text-(--black-light-active) font-medium">
-										Capitano:
-									</p>
-									<Switch
-										text="Attiva la scelta del capitano alla
-										creazione della squadra."
-										enabled={isEnableCaptain}
-										onChange={handleChangeSwitch}
-									/>
+									<h2 className="body-normal font-medium text-(--black-light-active)">
+										Budget:
+									</h2>
+									<div className="flex gap-[10px]">
+										<PiggyBank className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<p className="body-normal text-(--black-normal)">
+											{maxCoins}
+										</p>
+									</div>
+								</div>
+								<div className="flex flex-col gap-[8px]">
+									<h2 className="body-normal font-medium text-(--black-light-active)">
+										Numero di player nel team:
+									</h2>
+									<div className="flex gap-[10px]">
+										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<p className="body-normal text-(--black-normal)">
+											5 players
+										</p>
+									</div>
+								</div>
+								<div className="flex flex-col gap-[8px]">
+									<h2 className="body-normal font-medium text-(--black-light-active)">
+										&Egrave; concesso un capitano:
+									</h2>
+									<div className="flex gap-[10px]">
+										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<p className="body-normal text-(--black-normal)">
+											{enableCaptain ? "Si" : "No"}, i
+											giocatori{" "}
+											{enableCaptain
+												? "possono"
+												: "non possono"}{" "}
+											scegliere un capitano.
+										</p>
+									</div>
 								</div>
 							</>
+						) : (
+							<>
+								<Rules />
+							</>
 						)}
-					</div>
+					</>
+				)}
+
+				<div className="flex flex-col gap-[16px]">
 					{status == "NOT_STARTED" && (
 						<div className="flex flex-col gap-[4px]">
 							<p className="body-small font-semibold">
@@ -538,27 +630,6 @@ function GeneralSettings() {
 						</div>
 					)}
 				</div>
-				{status === "PENDING" && (
-					<div className="flex flex-col gap-[8px] w-full mt-auto">
-						<NormalButton
-							text="Salva modifiche"
-							action={() => handleUpdateLeague()}
-							disabled={!isFormValid() || isEditingAnyField}
-							customIcon={true}
-						>
-							<Save className="h-[24px] w-[24px]" />
-						</NormalButton>
-						<GhostButton
-							text="Elimina lega"
-							action={showModalConfirmDelete}
-							classOpt="text-(--error-normal)"
-							disabled={isEditingAnyField}
-							customIcon={true}
-						>
-							<TrashIcon className="w-[24px] h-[24px]" />
-						</GhostButton>
-					</div>
-				)}
 				<ModalConfirmAction
 					isOpen={isModalConfirmOpen.value}
 					text={textModal}

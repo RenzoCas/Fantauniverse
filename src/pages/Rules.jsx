@@ -171,9 +171,12 @@ function Rules() {
 						Sembra che tu non abbia aggiunto nessuna regola.
 					</p>
 					<NormalButton
-						text="Aggiungi Regola"
+						text="Aggiungi regola"
 						action={handleAddRule}
-					/>
+						customIcon={true}
+					>
+						<PlusIcon className="h-[24px] w-[24px]" />
+					</NormalButton>
 				</div>
 			)}
 

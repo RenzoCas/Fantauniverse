@@ -13,18 +13,18 @@ import GeneralSettings from "./GeneralSettings";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import { useParticipant } from "../contexts/ParticipantContext";
 import Participants from "./Participants";
-import CardSquadra from "../components/CardSquadra";
 import { useTeam } from "../contexts/TeamContext";
 import Points from "./Points";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import BottomNavbar from "../components/BottomNavbar";
 
 function ViewLega() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const { league, getLeague, updateLeague } = useLeague();
 	const { addParticipant, deleteParticipant } = useParticipant();
-	const { team, getMyTeam } = useTeam();
+	const { getMyTeam } = useTeam();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -36,7 +36,7 @@ function ViewLega() {
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 
-	const { description, name, status, icon, isRegistered } = league;
+	const { name, status, icon, isRegistered } = league;
 	const [tabActive, setTabActive] = useState();
 	const [textModal, setTextModal] = useState();
 	const [disclaimerModal, setDisclaimerModal] = useState();
@@ -261,49 +261,38 @@ function ViewLega() {
 												</button>
 											)}
 									</div>
-									{description != null && (
-										<p className="body-normal text-(--black-normal) break-words">
-											{description}
-										</p>
-									)}
 								</>
 							)}
-
-							<Tab
-								tabActive={tabActive}
-								handleTabChange={handleTabChange}
-								isAdmin={isAdmin}
-								status={status}
-							/>
+							{status === "PENDING" && (
+								<Tab
+									tabActive={tabActive}
+									handleTabChange={handleTabChange}
+								/>
+							)}
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
 							{tabActive === "Days" && <Points />}
 							{tabActive === "Players" && <Players />}
 							{tabActive === "Participants" && <Participants />}
+
+							{status != "PENDING" && (
+								<BottomNavbar
+									tabActive={tabActive}
+									handleTabChange={handleTabChange}
+									isAdmin={isAdmin}
+									status={status}
+								/>
+							)}
 						</div>
 						{status === "NOT_STARTED" ? (
-							!isRegistered ? (
+							!isRegistered && (
 								<NormalButton
 									text="Unisciti alla lega"
 									action={handleAddParticipant}
 									classOpt="sticky bottom-[32px]"
 								/>
-							) : (
-								<CardSquadra
-									team={team}
-									handleClick={() => navigate("viewTeam")}
-								/>
 							)
-						) : status === "STARTED" && isRegistered ? (
-							<>
-								{tabActive == "Ranking" && (
-									<CardSquadra
-										team={team}
-										handleClick={() => navigate("viewTeam")}
-									/>
-								)}
-							</>
 						) : status === "STARTED" && !testRegistered ? (
 							<FixedPopup
 								title="Lega giá avviata!"
