@@ -6,7 +6,7 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 	const { league } = useLeague();
 	const { status, isRegistered } = league;
 	return (
-		<nav className="sticky bottom-[16px] mt-auto py-[5px] px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]">
+		<nav className="sticky bottom-[24px] mt-auto py-[5px] px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]">
 			<TabBottomNav
 				text="Info"
 				active={tabActive == "General"}
@@ -34,8 +34,8 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 			{status != "NOT_STARTED" && (
 				<TabBottomNav
 					text="Punteggi"
-					active={tabActive == "Days"}
-					handleClick={() => handleTabChange("Days")}
+					active={tabActive == "Points"}
+					handleClick={() => handleTabChange("Points")}
 				>
 					<ChartLine className="h-[20px] w-[20px]" />
 				</TabBottomNav>
@@ -44,8 +44,8 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 			{isRegistered && (
 				<TabBottomNav
 					text="Il mio team"
-					active={tabActive == "Team"}
-					handleClick={() => handleTabChange("Team")}
+					active={tabActive == "MyTeam"}
+					handleClick={() => handleTabChange("MyTeam")}
 				>
 					<ShieldHalf className="h-[20px] w-[20px]" />
 				</TabBottomNav>

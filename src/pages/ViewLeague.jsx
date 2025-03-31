@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { ChevronLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Rules from "../pages/Rules";
 import Tab from "../components/Tab";
@@ -15,6 +15,7 @@ import { useTeam } from "../contexts/TeamContext";
 import Points from "./Points";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import BottomNavbar from "../components/BottomNavbar";
+import MyTeam from "./MyTeam";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -22,7 +23,6 @@ function ViewLega() {
 	const { league, getLeague, updateLeague } = useLeague();
 	const { deleteParticipant } = useParticipant();
 	const { getMyTeam } = useTeam();
-
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -165,15 +165,6 @@ function ViewLega() {
 			) : (
 				<>
 					<div className="flex flex-col gap-[16px] flex-1">
-						<button
-							onClick={() => {
-								navigate("/app");
-							}}
-							className="flex items-center gap-[4px] text-(--accent-normal)"
-						>
-							<ChevronLeftIcon className="h-[20px] w-[20px]" />
-							<p className="body-normal">Indietro</p>
-						</button>
 						<div className="top flex flex-col gap-[16px] flex-1">
 							{status === "PENDING" && (
 								<input
@@ -213,20 +204,27 @@ function ViewLega() {
 							{status != "PENDING" && (
 								<>
 									<div className="flex items-center justify-between">
-										<h2 className="title-h4 break-words">
-											{name}
-										</h2>
-										{status == "NOT_STARTED" &&
-											isRegistered && (
-												<button
-													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
-													onClick={
-														showModalConfirmDelete
-													}
-												>
-													Esci dalla lega
-												</button>
-											)}
+										{!(
+											tabActive === "MyTeam" &&
+											status === "NOT_STARTED"
+										) && (
+											<>
+												<h2 className="title-h4 break-words">
+													{name}
+												</h2>
+												{status == "NOT_STARTED" &&
+													isRegistered && (
+														<button
+															className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
+															onClick={
+																showModalConfirmDelete
+															}
+														>
+															Esci dalla lega
+														</button>
+													)}
+											</>
+										)}
 									</div>
 								</>
 							)}
@@ -240,9 +238,10 @@ function ViewLega() {
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
-							{tabActive === "Days" && <Points />}
+							{tabActive === "Points" && <Points />}
 							{tabActive === "Players" && <Players />}
 							{tabActive === "Participants" && <Participants />}
+							{tabActive === "MyTeam" && <MyTeam />}
 
 							{status != "PENDING" && (
 								<BottomNavbar

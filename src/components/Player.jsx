@@ -1,10 +1,7 @@
-import {
-	MinusCircleIcon,
-	PencilSquareIcon,
-	PlusCircleIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import { useEffect, useState } from "react";
+import { Coins, SquareMinus, SquarePlus } from "lucide-react";
 
 function Player({
 	playerObj,
@@ -26,9 +23,7 @@ function Player({
 	const isActive =
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
 	const [randomColor, setRandomColor] = useState("#ffffff");
-
-	const singlePlayer = dataDay?.players.filter((p) => p.player.id === id);
-	const totalPoints = singlePlayer[0]?.points;
+	const [totalPoints, setTotalPoints] = useState(0);
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -41,54 +36,78 @@ function Player({
 	};
 
 	useEffect(() => {
+		if (dataDay) {
+			const singlePlayer = dataDay?.players.filter(
+				(p) => p.player.id === id
+			);
+			setTotalPoints(() => singlePlayer[0]?.points);
+		}
+
 		setRandomColor(randomLightColor());
 	}, []);
 
 	return (
 		<li
-			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
-				isActive && "shadow-lg border p-[8px] rounded-[8px]"
-			}`}
+			className={`flex border-b border-(--black-light) pb-[8px] gap-[20px] transform transition-all duration-300`}
 		>
-			<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
+			<picture
+				className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] ${
+					canAdd || isActive ? "opacity-100" : "opacity-50"
+				}`}
+			>
 				{icon == null ? (
 					<div
-						className={`rounded-full h-[40px] w-[40px] object-cover`}
+						className={`rounded-[3px] h-[38px] w-[38px] object-cover`}
 						style={{ backgroundColor: randomColor }}
 					></div>
 				) : (
 					<img
 						src={`data:image/png;base64,${icon}`}
-						alt={`immagine giocatore`}
-						className="rounded-full h-[40px] w-[40px] object-cover cursor-pointer"
+						alt={`immagine player`}
+						className="rounded-[3px] h-[38px] w-[38px] object-cover"
 					/>
 				)}
 			</picture>
 			<div className={`flex flex-col gap-[4px] w-full`}>
-				<p className="body-normal font-semibold break-words">{name}</p>
+				<p
+					className={`body-small font-semibold break-words ${
+						canAdd || isActive ? "opacity-100" : "opacity-50"
+					}`}
+				>
+					{name}
+				</p>
 				{canEdit && status == "PENDING" ? (
-					<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+					<p
+						className={`body-small font-semibold text-(--black-normal) whitespace-nowrap`}
+					>
 						{price} {coinName}
 					</p>
 				) : status == "NOT_STARTED" ? (
-					<>
-						<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+					<div className="flex item-center gap-[10px]">
+						<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
+						<p
+							className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
+								canAdd || isActive
+									? "opacity-100"
+									: "opacity-50"
+							}`}
+						>
 							{price} {coinName}
 						</p>
-					</>
+					</div>
 				) : (
 					<>
 						{addPoints ? (
 							<>
-								<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+								<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
 									{points} pnt. totali
 								</p>
-								<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+								<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
 									{totalPoints || 0} pnt. giornata
 								</p>
 							</>
 						) : (
-							<p className="body-small font-semibold text-(--black-normal)/70 whitespace-nowrap">
+							<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
 								{points} pnt.
 							</p>
 						)}
@@ -113,20 +132,20 @@ function Player({
 				<>
 					{isActive ? (
 						<button
-							className="flex"
+							className="flex self-center"
 							onClick={() => onDeselect(playerObj)}
 						>
-							<MinusCircleIcon className="h-[20px] w-[20px]" />
+							<SquareMinus className="h-[24px] w-[24px] stroke-(--error-normal)" />
 						</button>
 					) : (
 						<button
-							className={`flex ${
+							className={`flex self-center ${
 								!canAdd && "opacity-50 cursor-not-allowed"
 							}`}
 							onClick={() => canAdd && onSelect(playerObj)}
 							disabled={!canAdd}
 						>
-							<PlusCircleIcon className="h-[20px] w-[20px]" />
+							<SquarePlus className="h-[24px] w-[24px]" />
 						</button>
 					)}
 				</>

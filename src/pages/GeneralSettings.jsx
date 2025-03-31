@@ -17,7 +17,7 @@ import GenericPopup from "../components/popups/GenericPopup";
 import Switch from "../atoms/Inputs/Switch";
 import TabButton from "../atoms/Buttons/TabButton";
 import FixedPopup from "../components/popups/FixedPopup";
-import { Coins, PiggyBank, Save } from "lucide-react";
+import { Coins, PiggyBank, Save, Sparkles } from "lucide-react";
 import Rules from "./Rules";
 import { useParticipant } from "../contexts/ParticipantContext";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
@@ -362,7 +362,7 @@ function GeneralSettings() {
 								{field === "description" && (
 									<label
 										htmlFor={field}
-										className="body-small text-(--black-light-active) font-medium"
+										className="body-normal text-(--black-light-active) font-medium"
 									>
 										Descrizione:
 									</label>
@@ -413,7 +413,7 @@ function GeneralSettings() {
 							</div>
 						))}
 						<div className="flex flex-col gap-[8px]">
-							<p className="body-small text-(--black-light-active) font-medium">
+							<p className="body-normal text-(--black-light-active) font-medium">
 								Tipologia della lega:
 							</p>
 							<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
@@ -443,7 +443,7 @@ function GeneralSettings() {
 							>
 								<label
 									htmlFor={field}
-									className="body-small text-(--black-light-active) font-medium"
+									className="body-normal text-(--black-light-active) font-medium"
 								>
 									{field === "coinName"
 										? "Nome della moneta:"
@@ -512,7 +512,7 @@ function GeneralSettings() {
 						))}
 
 						<div className="flex flex-col gap-[8px]">
-							<p className="body-small text-(--black-light-active) font-medium">
+							<p className="body-normal text-(--black-light-active) font-medium">
 								Capitano:
 							</p>
 							<Switch
@@ -634,7 +634,7 @@ function GeneralSettings() {
 										&Egrave; concesso un capitano:
 									</h2>
 									<div className="flex gap-[10px]">
-										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<Sparkles className="stroke-(--black-light-active) w-[24px] h-[24px]" />
 										<p className="body-normal text-(--black-normal) self-center">
 											{enableCaptain ? "Si" : "No"}, i
 											giocatori{" "}
