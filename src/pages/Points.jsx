@@ -24,8 +24,8 @@ function Points({ isAdmin }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
-	const { league, createDay } = useLeague();
-	const { getDay, deleteDay } = useDay();
+	const { league } = useLeague();
+	const { addDay, getDay, deleteDay } = useDay();
 	const { days, status } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -82,7 +82,7 @@ function Points({ isAdmin }) {
 	const handleSubmit = async (formData) => {
 		setIsLoading(true);
 		setIsModalOpen(false);
-		const result = await createDay(formData);
+		const result = await addDay(formData);
 		setIsLoading(false);
 		if (!result) {
 			showPopup(
@@ -98,7 +98,7 @@ function Points({ isAdmin }) {
 			"La giornata é stata creata correttamente."
 		);
 		setActiveIndex(() => {
-			const newIndex = result.days.length - 1;
+			const newIndex = result.length - 1;
 
 			setTimeout(() => {
 				if (swiperInstance) {

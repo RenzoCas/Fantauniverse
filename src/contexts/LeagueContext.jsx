@@ -127,6 +127,23 @@ function leagueReducer(state, action) {
 				rules: state.rules.filter((rule) => rule.id !== action.payload),
 			};
 
+		case "addDay":
+			return { ...state, days: action.payload };
+
+		case "updateDay":
+			return {
+				...state,
+				days: state.days.map((day) =>
+					day.id === action.payload.id ? action.payload : day
+				),
+			};
+
+		case "deleteDay":
+			return {
+				...state,
+				days: state.days.filter((day) => day.id !== action.payload),
+			};
+
 		default:
 			return state;
 	}
@@ -347,35 +364,6 @@ function LeagueProvider({ children }) {
 		}
 	};
 
-	const createDay = async (dataDay) => {
-		try {
-			const response = await fetch(`${urlServer}/day`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(dataDay),
-			});
-
-			if (!response.ok) {
-				throw new Error("Errore nella creazione della giornata.");
-			}
-
-			const updatedLeagueData = await response.json();
-
-			dispatchLeague({
-				type: "updateLeague",
-				payload: updatedLeagueData,
-			});
-
-			return updatedLeagueData;
-		} catch (error) {
-			console.error(error.message);
-			return false;
-		}
-	};
-
 	const deleteLeague = async (leagueId) => {
 		try {
 			const response = await fetch(`${urlServer}/league/${leagueId}`, {
@@ -414,7 +402,6 @@ function LeagueProvider({ children }) {
 				createLeague,
 				updateLeague,
 				changeStatus,
-				createDay,
 				deleteLeague,
 				resetMyLeague,
 				dispatchLeague,

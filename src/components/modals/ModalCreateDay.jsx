@@ -7,7 +7,6 @@ import { useLeague } from "../../contexts/LeagueContext";
 function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 	const { league } = useLeague();
 	const [formData, setFormData] = useState({
-		leagueId: league.id,
 		days: [{ name: "", date: new Date().toISOString().split("T")[0] }],
 	});
 
