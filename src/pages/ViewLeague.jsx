@@ -6,24 +6,21 @@ import Rules from "../pages/Rules";
 import Tab from "../components/Tab";
 import Ranking from "../pages/Ranking";
 import Loader from "../components/Loader";
-import FixedPopup from "../components/popups/FixedPopup";
 import Players from "./Players";
 import GenericPopup from "../components/popups/GenericPopup";
 import GeneralSettings from "./GeneralSettings";
-import NormalButton from "../atoms/Buttons/NormalButton";
 import { useParticipant } from "../contexts/ParticipantContext";
 import Participants from "./Participants";
 import { useTeam } from "../contexts/TeamContext";
 import Points from "./Points";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import BottomNavbar from "../components/BottomNavbar";
 
 function ViewLega() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const { league, getLeague, updateLeague } = useLeague();
-	const { addParticipant, deleteParticipant } = useParticipant();
+	const { deleteParticipant } = useParticipant();
 	const { getMyTeam } = useTeam();
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +29,7 @@ function ViewLega() {
 		type: "",
 		message: "",
 	});
-	const { id, isAdmin, isRegistered: testRegistered } = state.league;
+	const { id, isAdmin } = state.league;
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 
@@ -63,17 +60,7 @@ function ViewLega() {
 	};
 
 	useEffect(() => {
-		setTabActive(
-			`${
-				status == "FINISHED"
-					? "Ranking"
-					: isAdmin
-					? "General"
-					: status == "NOT_STARTED"
-					? "Participants"
-					: "Ranking"
-			}`
-		);
+		setTabActive("General");
 	}, [status, isAdmin]);
 
 	const showPopup = (type, title, message) => {
@@ -86,26 +73,6 @@ function ViewLega() {
 
 	const handleTabChange = (tab) => {
 		setTabActive(tab);
-	};
-
-	const handleAddParticipant = async () => {
-		setIsLoading(true);
-		const res = await addParticipant(id);
-		if (!res) {
-			setIsLoading(false);
-			showPopup(
-				"error",
-				"Errore nell'iscrizione alla lega!",
-				"L'iscrizione a questa lega non é andata a buon fine. Riprova."
-			);
-			return;
-		}
-		setIsLoading(false);
-		showPopup(
-			"success",
-			"Iscrizione effettuata!",
-			"L'iscrizione a questa lega é andata a buon fine."
-		);
 	};
 
 	const handleRemovePartecipant = async () => {
@@ -269,6 +236,7 @@ function ViewLega() {
 									handleTabChange={handleTabChange}
 								/>
 							)}
+
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
 							{tabActive === "Ranking" && <Ranking />}
@@ -285,33 +253,6 @@ function ViewLega() {
 								/>
 							)}
 						</div>
-						{status === "NOT_STARTED" ? (
-							!isRegistered && (
-								<NormalButton
-									text="Unisciti alla lega"
-									action={handleAddParticipant}
-									classOpt="sticky bottom-[32px]"
-								/>
-							)
-						) : status === "STARTED" && !testRegistered ? (
-							<FixedPopup
-								title="Lega giá avviata!"
-								message={`Questa lega é stata giá avviata, non puoi piú iscriverti.`}
-								customIcon={true}
-							>
-								<ExclamationTriangleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-orange-500" />
-							</FixedPopup>
-						) : (
-							status === "FINISHED" && (
-								<FixedPopup
-									title="Lega terminata"
-									message={`Questa lega é terminata. Controlla la classifica per verificare il vincitore.`}
-									customIcon={true}
-								>
-									<ExclamationTriangleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-orange-500" />
-								</FixedPopup>
-							)
-						)}
 					</div>
 					<GenericPopup
 						isOpen={popupData.isOpen}

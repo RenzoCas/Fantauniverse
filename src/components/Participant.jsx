@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 
 function Participant({ participantObj, idx, isRanking, handleClick }) {
 	const navigate = useNavigate();
-	const { id, user: participantUser, team } = participantObj;
+	const { id, user: participantUser, team, points } = participantObj;
 	const name = team?.name;
 	const { icon, username } = participantUser;
 	const { user: currentUser } = useUser();
@@ -58,36 +58,49 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 	return (
 		<>
 			<li
-				className="flex border-b border-(--black-light) pb-[8px] gap-[16px]"
+				className="flex items-center border-b border-(--black-light) pb-[8px] gap-[20px]"
 				onClick={handleViewPartecipant}
 			>
-				<picture className="rounded-full h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
+				{isRanking && (
+					<div
+						className={`flex items-center justify-center min-w-[48px] h-[48px] rounded-[4px] border border-solid ${
+							idx === 0
+								? "bg-gradient-to-b from-[#DCC939] to-[#AC9D30] shadow-[inset_0_2px_4px_#C1B030] border-[#C1B030] text-white"
+								: idx === 1
+								? "bg-gradient-to-b from-[#DCDCDC] to-[#BBBBBB] shadow-[inset_0_2px_4px_#DCDCDC] border-[#DCDCDC] text-white"
+								: idx === 2
+								? "bg-gradient-to-b from-[#E08D40] to-[#A06126] shadow-[inset_0_2px_4px_#E08D40] border-[#E08D40] text-white"
+								: "bg-white text-(--black-normal) border-(--black-light-active)"
+						}`}
+					>
+						<p className="body-normal font-black">{idx + 1}&deg;</p>
+					</div>
+				)}
+				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px]">
 					{icon == null ? (
 						<div
-							className={`rounded-full h-[40px] w-[40px] object-cover`}
+							className={`rounded-[3px] h-[48px] w-[48px] object-cover`}
 							style={{ backgroundColor: randomColor }}
 						></div>
 					) : (
 						<img
 							src={`data:image/png;base64,${icon}`}
 							alt={`immagine giocatore`}
-							className="rounded-full h-[40px] w-[40px] object-cover cursor-pointer"
+							className="rounded-[3px] h-[48px] w-[48px] object-cover cursor-pointer"
 						/>
 					)}
 				</picture>
 				<div className={`flex flex-col gap-[4px] w-full`}>
-					<p className="body-normal font-semibold break-words">
+					<h3 className="body-normal font-semibold break-words">
 						{username}
-					</p>
+					</h3>
 					<p className="body-small font-semibold text-(--black-normal)/70 break-words">
 						{name || "Squadra non presente."}
 					</p>
 				</div>
-				{isRanking && (
-					<p className="body-normal font-semibold flex self-center">
-						{idx + 1}
-					</p>
-				)}
+				<p className="body-normal font-semibold whitespace-nowrap">
+					{points} pnt.
+				</p>
 			</li>
 
 			<GenericPopup

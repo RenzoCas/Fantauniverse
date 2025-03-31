@@ -16,8 +16,11 @@ import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import GenericPopup from "../components/popups/GenericPopup";
 import Switch from "../atoms/Inputs/Switch";
 import TabButton from "../atoms/Buttons/TabButton";
+import FixedPopup from "../components/popups/FixedPopup";
 import { Coins, PiggyBank, Save } from "lucide-react";
 import Rules from "./Rules";
+import { useParticipant } from "../contexts/ParticipantContext";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 function GeneralSettings() {
 	const { league, deleteLeague, updateLeague, changeStatus } = useLeague();
@@ -36,11 +39,13 @@ function GeneralSettings() {
 		code,
 		enableCaptain,
 		isAdmin,
+		isRegistered,
 	} = league;
 	const [selectedValue, setSelectedValue] = useState(status);
 	const [tempValue, setTempValue] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
+	const { addParticipant } = useParticipant();
 	const [isEditing, setIsEditing] = useState({
 		name: false,
 		description: false,
@@ -316,6 +321,26 @@ function GeneralSettings() {
 			);
 	};
 
+	const handleAddParticipant = async () => {
+		setIsLoading(true);
+		const res = await addParticipant(id);
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nell'iscrizione alla lega!",
+				"L'iscrizione a questa lega non é andata a buon fine. Riprova."
+			);
+			return;
+		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Iscrizione effettuata!",
+			"L'iscrizione a questa lega é andata a buon fine."
+		);
+	};
+
 	const [tabActive, setTabActive] = useState("Info");
 
 	return (
@@ -535,7 +560,26 @@ function GeneralSettings() {
 						</div>
 						{tabActive === "Info" ? (
 							<>
-								{isAdmin && (
+								{status === "STARTED" && !isRegistered ? (
+									<FixedPopup
+										title="Lega giá avviata!"
+										message={`Questa lega é stata giá avviata, non puoi piú iscriverti.`}
+										customIcon={true}
+									>
+										<ExclamationTriangleIcon className="w-[20px] h-[20px] flex-shrink-0 fill-orange-500" />
+									</FixedPopup>
+								) : (
+									status === "FINISHED" && (
+										<FixedPopup
+											title="Lega terminata"
+											message={`Questa lega é terminata. Controlla la classifica per verificare il vincitore.`}
+											customIcon={true}
+										>
+											<ExclamationTriangleIcon className="w-[20px] h-[20px] flex-shrink-0 fill-orange-500" />
+										</FixedPopup>
+									)
+								)}
+								{isAdmin && status != "FINISHED" && (
 									<Select
 										options={filteredOptions}
 										selectedValue={selectedValue}
@@ -601,6 +645,33 @@ function GeneralSettings() {
 										</p>
 									</div>
 								</div>
+								{isAdmin && status == "NOT_STARTED" && (
+									<div className="flex flex-col gap-[4px]">
+										<p className="body-normal font-medium text-(--black-light-active)">
+											Codice lega:
+										</p>
+										<div className="flex items-center gap-2">
+											<button
+												onClick={handleCopy}
+												className="hover:bg-gray-300"
+											>
+												<ClipboardIcon className="h-5 w-5 text-gray-600" />
+											</button>
+											<p
+												onClick={handleCopy}
+												className="font-mono bg-gray-100 p-2 rounded break-words"
+											>
+												{code}
+											</p>
+										</div>
+									</div>
+								)}
+								{status === "NOT_STARTED" && !isRegistered && (
+									<NormalButton
+										text="Unisciti alla lega"
+										action={handleAddParticipant}
+									/>
+								)}
 							</>
 						) : (
 							<>
@@ -609,27 +680,6 @@ function GeneralSettings() {
 						)}
 					</>
 				)}
-
-				<div className="flex flex-col gap-[16px]">
-					{status == "NOT_STARTED" && (
-						<div className="flex flex-col gap-[4px]">
-							<p className="body-small font-semibold">
-								Condividi il codice della lega con i tuoi amici:
-							</p>
-							<div className="flex items-center gap-2">
-								<button
-									onClick={handleCopy}
-									className="hover:bg-gray-300"
-								>
-									<ClipboardIcon className="h-5 w-5 text-gray-600" />
-								</button>
-								<p className="font-mono bg-gray-100 p-2 rounded break-words">
-									{code}
-								</p>
-							</div>
-						</div>
-					)}
-				</div>
 				<ModalConfirmAction
 					isOpen={isModalConfirmOpen.value}
 					text={textModal}

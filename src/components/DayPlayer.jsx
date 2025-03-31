@@ -46,7 +46,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 				</h5>
 				<div className="flex items-center gap-[10px]">
 					<p className="body-normal font-semibold">
-						{dayPoints} ptn.
+						{dayPoints} pnt.
 					</p>
 					{expanded ? (
 						<ChevronUpIcon className="h-[16px] w-[16px] stroke-2" />

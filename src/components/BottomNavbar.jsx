@@ -1,9 +1,12 @@
-import { ChartLine, Newspaper, ShieldHalf, Trophy } from "lucide-react";
+import { ChartLine, Newspaper, ShieldHalf, Trophy, Users } from "lucide-react";
 import TabBottomNav from "../atoms/Buttons/TabBottomNav";
+import { useLeague } from "../contexts/LeagueContext";
 
 function BottomNavbar({ tabActive, handleTabChange }) {
+	const { league } = useLeague();
+	const { status, isRegistered } = league;
 	return (
-		<nav className="sticky bottom-[16px] py-[5px] px[-20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[20px]">
+		<nav className="sticky bottom-[16px] mt-auto py-[5px] px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]">
 			<TabBottomNav
 				text="Info"
 				active={tabActive == "General"}
@@ -11,13 +14,23 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 			>
 				<Newspaper className="h-[20px] w-[20px]" />
 			</TabBottomNav>
-			<TabBottomNav
-				text="Classifica"
-				active={tabActive == "Ranking"}
-				handleClick={() => handleTabChange("Ranking")}
-			>
-				<Trophy className="h-[20px] w-[20px]" />
-			</TabBottomNav>
+			{status === "NOT_STARTED" ? (
+				<TabBottomNav
+					text="Giocatori"
+					active={tabActive == "Participants"}
+					handleClick={() => handleTabChange("Participants")}
+				>
+					<Users className="h-[20px] w-[20px]" />
+				</TabBottomNav>
+			) : (
+				<TabBottomNav
+					text="Classifica"
+					active={tabActive == "Ranking"}
+					handleClick={() => handleTabChange("Ranking")}
+				>
+					<Trophy className="h-[20px] w-[20px]" />
+				</TabBottomNav>
+			)}
 			<TabBottomNav
 				text="Punteggi"
 				active={tabActive == "Days"}
@@ -25,13 +38,15 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 			>
 				<ChartLine className="h-[20px] w-[20px]" />
 			</TabBottomNav>
-			<TabBottomNav
-				text="Team"
-				active={tabActive == "Team"}
-				handleClick={() => handleTabChange("Team")}
-			>
-				<ShieldHalf className="h-[20px] w-[20px]" />
-			</TabBottomNav>
+			{isRegistered && (
+				<TabBottomNav
+					text="Il mio team"
+					active={tabActive == "Team"}
+					handleClick={() => handleTabChange("Team")}
+				>
+					<ShieldHalf className="h-[20px] w-[20px]" />
+				</TabBottomNav>
+			)}
 		</nav>
 	);
 }

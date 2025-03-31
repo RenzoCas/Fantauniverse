@@ -8,16 +8,11 @@ function Participants() {
 	return (
 		<>
 			{participants.length > 0 ? (
-				<>
-					<h6 className="body-regular font-semibold">
-						Giocatori iscritti alla lega
-					</h6>
-					<ul className="flex flex-col gap-[16px]">
-						{participants.map((el, idx) => (
-							<Participant key={idx} participantObj={el} />
-						))}
-					</ul>
-				</>
+				<ul className="flex flex-col gap-[8px]">
+					{participants.map((el, idx) => (
+						<Participant key={idx} participantObj={el} />
+					))}
+				</ul>
 			) : (
 				<p className="body-normal font-semibold text-(--black-darker) text-center">
 					Nessun giocatore &egrave; ancora iscritto a questa lega.
