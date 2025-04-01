@@ -12,7 +12,7 @@ import GhostButton from "../atoms/Buttons/GhostButton";
 import ModalChangePassword from "../components/modals/ModalChangePassword";
 
 function Account() {
-	const { user, updateUser } = useUser();
+	const { user, updateUser, unregister } = useUser();
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [formData, setFormData] = useState({
@@ -29,6 +29,14 @@ function Account() {
 	const [randomColor, setRandomColor] = useState("#ffffff");
 	const messageError = "Campo obbligatorio";
 	const fileInputRef = useRef(null);
+	const [isEditing, setIsEditing] = useState({
+		username: false,
+		email: false,
+	});
+
+	const isEditingAnyField = Object.values(isEditing).some(
+		(isEditing) => isEditing
+	);
 
 	useEffect(() => {
 		setRandomColor(randomLightColor());
@@ -108,7 +116,6 @@ function Account() {
 			"Aggiornamento completato!",
 			"Immagine rimossa correttamente."
 		);
-		setIsLoading(false);
 	};
 
 	const handleFileChange = async (event) => {
@@ -173,14 +180,26 @@ function Account() {
 		);
 	};
 
-	const [isEditing, setIsEditing] = useState({
-		username: false,
-		email: false,
-	});
-
-	const isEditingAnyField = Object.values(isEditing).some(
-		(isEditing) => isEditing
-	);
+	const handleUnregistered = async (e) => {
+		e.preventDefault();
+		setIsLoading(true);
+		const res = await unregister();
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Account non eliminato!",
+				"C'é stato un problema nella cancellazione dell'account. Riprova."
+			);
+			return;
+		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Account eliminato!",
+			"L'account é stato elimiato correttamente."
+		);
+	};
 
 	const toggleEditing = (field) => {
 		setIsEditing((prev) => ({
@@ -313,6 +332,7 @@ function Account() {
 						text="Elimina Account"
 						customIcon={true}
 						classOpt="text-(--error-normal)"
+						action={handleUnregistered}
 					>
 						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px]" />
 					</GhostButton>

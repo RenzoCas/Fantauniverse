@@ -157,15 +157,16 @@ function UserProvider({ children }) {
 			if (!response.ok) {
 				throw {
 					status: response.status,
-					message: "Errore nell'aggiornamento dell'utente",
+					message: "Errore nell'eliminazione dell'account",
 				};
 			}
 
 			dispatch({ type: "deleteUser" });
 			localStorage.removeItem("authToken");
+			return true;
 		} catch (error) {
 			console.error(error.message);
-			throw error;
+			return false;
 		}
 	};
 

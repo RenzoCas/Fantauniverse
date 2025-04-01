@@ -34,16 +34,22 @@ function Ranking({ handleTabChange }) {
 									</p>
 								</div>
 							</div>
-							<button onClick={resetParticipant}>back</button>
+							<button
+								onClick={resetParticipant}
+								className="body-small font-semibold"
+							>
+								Torna alla classifica
+							</button>
 						</div>
 
 						<ul className="flex flex-col gap-[8px]">
-							{teamParticipant.players.map((p) => (
+							{teamParticipant.players.map((p, idx) => (
 								<Player
 									key={p.id}
 									playersObj={teamParticipant.players}
 									playerObj={p}
 									viewTeam={true}
+									playerDay={teamParticipant.playerDay[idx]}
 								/>
 							))}
 						</ul>

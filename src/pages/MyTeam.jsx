@@ -14,15 +14,15 @@ import { useUser } from "../contexts/UserContext";
 function MyTeam() {
 	const { user } = useUser();
 	const { team, createTeam, updateTeam, deleteTeam } = useTeam();
-	const { league, getMyTeam } = useLeague();
+	const { league } = useLeague();
 	const {
-		id,
 		coinName,
 		maxCoins,
 		status,
 		players: leaguePlayers,
 		participants,
 		teamMaxPlayers,
+		enableCaptain,
 	} = league;
 	const participant = participants.find((p) => p.user.id === user.id);
 
@@ -31,6 +31,7 @@ function MyTeam() {
 		id: team?.id || null,
 		name: team?.name || "",
 		players: team?.players || [],
+		playerDay: team?.playerDay || [],
 	});
 
 	const [errors, setErrors] = useState({});
@@ -127,7 +128,14 @@ function MyTeam() {
 	};
 
 	const handleSelectCaptain = (player) => {
-		console.log("capitano: " + player.name);
+		setTempTeam((prevTeam) => ({
+			...prevTeam,
+			players: prevTeam.players.map((p) =>
+				p.id === player.id
+					? { ...p, isCaptain: true }
+					: { ...p, isCaptain: false }
+			),
+		}));
 	};
 
 	const handleBlur = (e) => {
@@ -164,7 +172,8 @@ function MyTeam() {
 		return (
 			tempTeam.name.trim() !== "" &&
 			isMaxPlayersReached &&
-			!Object.values(errors).some((error) => error !== "")
+			!Object.values(errors).some((error) => error !== "") &&
+			(!enableCaptain || tempTeam.players.some((p) => p.isCaptain))
 		);
 	};
 
@@ -230,7 +239,15 @@ function MyTeam() {
 			return;
 		}
 
-		await getMyTeam(id);
+		setTempTeam({
+			referredTo: { id: participant?.id },
+			id: null,
+			name: "",
+			players: [],
+		});
+
+		setTempMaxCoins(maxCoins);
+
 		setIsLoading(false);
 		showPopup(
 			"success",
@@ -257,10 +274,11 @@ function MyTeam() {
 					</div>
 
 					<ul className="flex flex-col gap-[8px]">
-						{leaguePlayers.map((p) => (
+						{leaguePlayers.map((p, idx) => (
 							<Player
 								key={p.id}
 								playersObj={tempTeam.players}
+								playerDay={tempTeam.playerDay[idx]}
 								playerObj={p}
 								onSelect={handleSelectPlayer}
 								onDeselect={handleDeselectPlayer}
@@ -311,7 +329,7 @@ function MyTeam() {
 										type="text"
 										required
 										placeholder={`Nome team`}
-										name={tempTeam.name}
+										name="name"
 										value={tempTeam.name}
 										handleChange={handleChangeData}
 										handleBlur={handleBlur}
