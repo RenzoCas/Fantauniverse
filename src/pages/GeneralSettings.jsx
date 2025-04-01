@@ -688,7 +688,7 @@ function GeneralSettings() {
 								</div>
 								<div className="flex flex-col gap-[8px]">
 									<h2 className="body-normal font-medium text-(--black-light-active)">
-										Numero di player nel team:
+										Numero di player del team:
 									</h2>
 									<div className="flex gap-[10px]">
 										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />

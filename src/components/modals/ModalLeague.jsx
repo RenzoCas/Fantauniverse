@@ -254,7 +254,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								htmlFor="teamMaxPlayers"
 								className="body-normal text-(--black-light-active) font-medium"
 							>
-								Numero massimo di player del team*:
+								Numero di player del team*:
 							</label>
 							<GenericInput
 								type="text"
