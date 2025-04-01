@@ -135,17 +135,13 @@ function Rules() {
 								<h6 className="body-regular font-semibold">
 									Regole {tabActive}
 								</h6>
-								<div className="flex items-center gap-[8px] justify-end">
-									<p className="body-small">
-										Aggiungi regola
-									</p>
-									<button
-										onClick={handleAddRule}
-										className="p-[4px] bg-(--black-light) rounded-full"
-									>
-										<PlusIcon className="h-[16px] w-[16px]" />
-									</button>
-								</div>
+								<button
+									onClick={handleAddRule}
+									className="flex items-center gap-[8px] justify-end body-small"
+								>
+									Aggiungi regola
+									<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full" />
+								</button>
 							</div>
 						</>
 					)}
