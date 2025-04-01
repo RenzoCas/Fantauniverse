@@ -18,7 +18,6 @@ import Login from "./pages/Login";
 import Account from "./pages/Account";
 import { ParticipantProvider } from "./contexts/ParticipantContext";
 import { TeamProvider } from "./contexts/TeamContext";
-import CreateDay from "./pages/CreateDay";
 import { DayProvider } from "./contexts/DayContext";
 import GenericPopup from "./components/popups/GenericPopup";
 import Loader from "./components/Loader";
@@ -78,10 +77,6 @@ function App() {
 												<Route
 													path="league/:id"
 													element={<ViewLeague />}
-												/>
-												<Route
-													path="league/:id/setDay"
-													element={<CreateDay />}
 												/>
 											</Route>
 										</Routes>

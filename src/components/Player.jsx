@@ -26,7 +26,7 @@ function Player({
 	viewTeam = false,
 	handleTabChange,
 }) {
-	const { name, price, points, icon, id } = playerObj;
+	const { name, price, points, icon } = playerObj;
 	const { league } = useLeague();
 	const { coinName, status, enableCaptain } = league;
 	const { user } = useUser();
@@ -51,14 +51,7 @@ function Player({
 	};
 
 	useEffect(() => {
-		console.log(playerDay);
-		if (dataDay) {
-			const singlePlayer = dataDay?.players.filter(
-				(p) => p.player.id === id
-			);
-			setTotalPoints(() => singlePlayer[0]?.points);
-		}
-
+		setTotalPoints(() => dataDay?.points);
 		setRandomColor(randomLightColor());
 	}, []);
 

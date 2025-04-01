@@ -213,6 +213,7 @@ function ViewLega() {
 								<>
 									{!(
 										tabActive === "MyTeam" ||
+										tabActive === "Points" ||
 										teamParticipant
 									) && (
 										<div className="flex items-center justify-between">

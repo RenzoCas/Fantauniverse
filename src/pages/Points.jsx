@@ -7,7 +7,6 @@ import DayPlayer from "../components/DayPlayer";
 import { useLeague } from "../contexts/LeagueContext";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import {
-	PlusCircleIcon,
 	PlusIcon,
 	TrashIcon,
 	WrenchScrewdriverIcon,
@@ -18,6 +17,8 @@ import GenericPopup from "../components/popups/GenericPopup";
 import { useNavigate } from "react-router";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import { useDay } from "../contexts/DayContext";
+import Player from "../components/Player";
+import ModalAddPoints from "../components/modals/ModalAddPoints";
 
 function Points() {
 	const navigate = useNavigate();
@@ -25,8 +26,8 @@ function Points() {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league, createDay } = useLeague();
-	const { getDay, deleteDay } = useDay();
-	const { days, status, isAdmin } = league;
+	const { getDay, deleteDay, updateDay } = useDay();
+	const { days, status, isAdmin, players } = league;
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -36,6 +37,8 @@ function Points() {
 
 	const [activeDay, setActiveDay] = useState();
 	const [infoDay, setInfoDay] = useState();
+
+	const [isUpdateDay, setIsUpdateDay] = useState(false);
 
 	useEffect(() => {
 		const newActiveDay = days[activeIndex];
@@ -82,7 +85,13 @@ function Points() {
 	const handleSubmit = async (formData) => {
 		setIsLoading(true);
 		setIsModalOpen(false);
-		const result = await createDay(formData);
+		let result = null;
+		if (isUpdateDay) {
+			result = await updateDay(infoDay);
+		} else {
+			result = await createDay(formData);
+		}
+
 		setIsLoading(false);
 		if (!result) {
 			showPopup(
@@ -141,6 +150,43 @@ function Points() {
 		});
 	};
 
+	const [playerObj, setPlayeObj] = useState(players[0]);
+	const handleAddPoints = (player) => {
+		setPlayeObj(player);
+		setIsModalOpen(true);
+	};
+
+	const confirmPlayerRules = async (player, selectedRules) => {
+		await setInfoDay((prev) => {
+			const playerExists = prev.players.some(
+				(p) => p.player.id === player.id
+			);
+
+			const updatedPlayers = playerExists
+				? prev.players.map((p) =>
+						p.player.id === player.id
+							? {
+									...p,
+									rules: selectedRules.map((ruleId) => ({
+										id: ruleId,
+									})),
+							  }
+							: p
+				  )
+				: [
+						...prev.players,
+						{
+							player: { id: player.id },
+							rules: selectedRules.map((ruleId) => ({
+								id: ruleId,
+							})),
+						},
+				  ];
+
+			return { ...prev, players: updatedPlayers };
+		});
+	};
+
 	return (
 		<>
 			{isloading && <Loader />}
@@ -165,113 +211,168 @@ function Points() {
 					</p>
 				)
 			) : (
-				<div className="flex flex-col gap-[16px] flex-1">
-					<div className="flex flex-col gap-[12px]">
-						<Swiper
-							slidesPerView={3}
-							spaceBetween={10}
-							centeredSlides
-							onSlideChange={(swiper) =>
-								setActiveIndex(swiper.realIndex)
-							}
-							onSwiper={setSwiperInstance}
-							speed={500}
-							className="w-full"
-						>
-							{days.map((el, idx) => (
-								<SwiperSlide key={el.id}>
-									<DayTab
-										day={el}
-										isActive={idx === activeIndex}
-										handleClick={() => handleTabClick(idx)}
-									/>
-								</SwiperSlide>
-							))}
-							{isAdmin && status != "FINISHED" && (
-								<SwiperSlide
-									key="btnNewGiornata"
-									className="flex self-center"
-								>
-									<button
-										onClick={() => setIsModalOpen(true)}
-									>
-										<PlusCircleIcon className="h-6 w-6" />
-									</button>
-								</SwiperSlide>
-							)}
-						</Swiper>
-						<p className="body-normal text-black text-center">
-							Giocata il {formatDate(days[activeIndex].date)}
-						</p>
-					</div>
-					{infoDay?.players.length > 0 ? (
-						<>
-							{isAdmin && status != "FINISHED" && (
+				<>
+					{isUpdateDay ? (
+						<div className="flex flex-col gap-[16px]">
+							<div className="flex items-center justify-between">
+								<h2 className="body-regular break-all">
+									<span className="font-semibold">
+										{infoDay.name}
+									</span>
+								</h2>
 								<button
-									onClick={() =>
-										navigate("setDay", {
-											state: infoDay,
-										})
-									}
-									className="flex items-center gap-[8px] justify-center"
+									onClick={() => {
+										setIsUpdateDay(false);
+									}}
+									className="flex items-center gap-[4px] text-(--accent-normal)"
 								>
-									<p className="body-normal">
-										Modifica punteggi
-									</p>
-									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+									<p className="body-normal">Annulla</p>
 								</button>
-							)}
-							<ul className="flex flex-col">
-								{infoDay?.players?.map((el) => (
-									<DayPlayer
-										key={el.id}
-										playerObj={el.player}
-										rules={el.rules}
-										dayPoints={el.points}
-									/>
+							</div>
+
+							<ul className="flex flex-col gap-[12px]">
+								{players.map((p, idx) => (
+									<Player
+										key={p.id}
+										playerObj={p}
+										addPoints={true}
+										dataDay={infoDay.players[idx]}
+										handleAddPoints={handleAddPoints}
+									></Player>
 								))}
 							</ul>
-						</>
+							<div className="flex flex-col gap-[8px] sticky bottom-[32px]">
+								<NormalButton
+									text="Conferma punteggi"
+									icon={false}
+									action={handleSubmit}
+								/>
+							</div>
+							<ModalAddPoints
+								isOpen={isModalOpen}
+								onClose={() => setIsModalOpen(false)}
+								playerObj={playerObj}
+								dataDay={infoDay}
+								onConfirm={confirmPlayerRules}
+								startTabActive="Bonus"
+							/>
+						</div>
 					) : (
 						<>
-							<p className="body-normal text-(black-normal) font-semibold text-center">
-								Punteggi di giornata non ancora inseriti
-							</p>
+							<div className="flex flex-col gap-[16px] flex-1">
+								<div className="flex items-center justify-between">
+									<h2 className="title-h4 font-medium break-all">
+										{league.name}
+									</h2>
+									{isAdmin && status != "FINISHED" && (
+										<button
+											className="flex items-center gap-[4px] body-small font-semibold whitespace-nowrap"
+											onClick={() => setIsModalOpen(true)}
+										>
+											Aggiungi giornata
+										</button>
+									)}
+								</div>
+								<div className="flex flex-col gap-[12px]">
+									<Swiper
+										slidesPerView={3}
+										spaceBetween={10}
+										centeredSlides
+										initialSlide={activeIndex}
+										onSlideChange={(swiper) =>
+											setActiveIndex(swiper.realIndex)
+										}
+										onSwiper={setSwiperInstance}
+										speed={500}
+										className="w-full"
+									>
+										{days.map((el, idx) => (
+											<SwiperSlide key={el.id}>
+												<DayTab
+													day={el}
+													isActive={
+														idx === activeIndex
+													}
+													handleClick={() =>
+														handleTabClick(idx)
+													}
+												/>
+											</SwiperSlide>
+										))}
+									</Swiper>
+									<p className="body-normal text-black text-center">
+										Giocata il{" "}
+										{formatDate(days[activeIndex].date)}
+									</p>
+								</div>
+								{infoDay?.players.length > 0 ? (
+									<>
+										{isAdmin && status != "FINISHED" && (
+											<button
+												onClick={() =>
+													setIsUpdateDay(true)
+												}
+												className="flex items-center gap-[8px] justify-center"
+											>
+												<p className="body-normal">
+													Modifica punteggi
+												</p>
+												<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+											</button>
+										)}
+										<ul className="flex flex-col">
+											{infoDay?.players?.map((el) => (
+												<DayPlayer
+													key={el.id}
+													playerObj={el.player}
+													rules={el.rules}
+													dayPoints={el.points}
+												/>
+											))}
+										</ul>
+									</>
+								) : (
+									<p className="body-normal text-(black-normal) font-semibold text-center">
+										Punteggi di giornata non ancora inseriti
+									</p>
+								)}
+								{isAdmin && status != "FINISHED" && (
+									<div className="flex gap-[8px] mt-auto justify-center">
+										<GhostButton
+											text="Elimina"
+											customIcon={true}
+											action={handleDeleteDay}
+											classOpt={`self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white`}
+										>
+											<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
+										</GhostButton>
+										{infoDay?.players.length == 0 && (
+											<NormalButton
+												text="Modifica"
+												customIcon={true}
+												icon={false}
+												action={() =>
+													navigate("setDay", {
+														state: activeDay,
+													})
+												}
+											>
+												<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
+											</NormalButton>
+										)}
+									</div>
+								)}
+								<ModalCreateDay
+									isOpen={isModalOpen}
+									onClose={() => setIsModalOpen(false)}
+									handleSubmit={handleSubmit}
+								/>
+							</div>
 						</>
 					)}
-					{isAdmin && status != "FINISHED" && (
-						<div className="flex gap-[8px] mt-auto justify-center">
-							<GhostButton
-								text="Elimina"
-								customIcon={true}
-								action={handleDeleteDay}
-								classOpt={`self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white`}
-							>
-								<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
-							</GhostButton>
-							{infoDay?.players.length == 0 && (
-								<NormalButton
-									text="Modifica"
-									customIcon={true}
-									icon={false}
-									action={() =>
-										navigate("setDay", {
-											state: activeDay,
-										})
-									}
-								>
-									<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
-								</NormalButton>
-							)}
-						</div>
-					)}
-				</div>
+				</>
 			)}
-			<ModalCreateDay
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				handleSubmit={handleSubmit}
-			/>
+
 			<GenericPopup
 				isOpen={popupData.isOpen}
 				type={popupData.type}
