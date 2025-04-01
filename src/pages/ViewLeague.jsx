@@ -213,7 +213,6 @@ function ViewLega() {
 								<>
 									{!(
 										tabActive === "MyTeam" ||
-										status === "NOT_STARTED" ||
 										teamParticipant
 									) && (
 										<div className="flex items-center justify-between">
@@ -249,7 +248,11 @@ function ViewLega() {
 							)}
 							{tabActive === "Points" && <Points />}
 							{tabActive === "Players" && <Players />}
-							{tabActive === "Participants" && <Participants />}
+							{tabActive === "Participants" && (
+								<Participants
+									handleTabChange={handleTabChange}
+								/>
+							)}
 							{tabActive === "MyTeam" && <MyTeam />}
 
 							{status != "PENDING" && (

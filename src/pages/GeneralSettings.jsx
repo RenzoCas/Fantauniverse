@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useLeague } from "../contexts/LeagueContext";
 import Select from "../atoms/Inputs/Select";
 import {
-	ClipboardIcon,
 	PencilSquareIcon,
 	TrashIcon,
 	UserGroupIcon,
@@ -17,7 +16,7 @@ import GenericPopup from "../components/popups/GenericPopup";
 import Switch from "../atoms/Inputs/Switch";
 import TabButton from "../atoms/Buttons/TabButton";
 import FixedPopup from "../components/popups/FixedPopup";
-import { Coins, PiggyBank, Save, Sparkles } from "lucide-react";
+import { Clipboard, Coins, PiggyBank, Save, Sparkles } from "lucide-react";
 import Rules from "./Rules";
 import { useParticipant } from "../contexts/ParticipantContext";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
@@ -38,6 +37,7 @@ function GeneralSettings() {
 		participants,
 		days,
 		code,
+		teamMaxPlayers,
 		enableCaptain,
 		isAdmin,
 		isRegistered,
@@ -52,6 +52,7 @@ function GeneralSettings() {
 		description: false,
 		coinName: false,
 		maxCoins: false,
+		teamMaxPlayers: false,
 	});
 	const [formData, setFormData] = useState({
 		id: id,
@@ -60,6 +61,7 @@ function GeneralSettings() {
 		coinName: coinName || "",
 		maxCoins: maxCoins || 0,
 		visibility: visibility || "PUBLIC",
+		teamMaxPlayers: teamMaxPlayers || 0,
 		enableCaptain: enableCaptain || false,
 	});
 	const [popupData, setPopupData] = useState({
@@ -222,7 +224,7 @@ function GeneralSettings() {
 
 	const handleChangeData = (e) => {
 		const { name, value } = e.target;
-		if (name === "maxCoins") {
+		if (name === "maxCoins" || name === "teamMaxPlayers") {
 			if (!/^\d*$/.test(value)) {
 				setErrors((prevErrors) => ({
 					...prevErrors,
@@ -323,6 +325,7 @@ function GeneralSettings() {
 				formData.coinName.trim() !== coinName ||
 				formData.maxCoins !== maxCoins ||
 				formData.visibility != visibility ||
+				formData.teamMaxPlayers != teamMaxPlayers ||
 				formData.enableCaptain != enableCaptain)
 		);
 	};
@@ -452,9 +455,9 @@ function GeneralSettings() {
 											/>
 										) : (
 											<p
-												className={`break-all self-center body-regular font-medium `}
+												className={`break-all self-center body-normal`}
 											>
-												{formData.name}
+												{formData.description}
 											</p>
 										)}
 									</div>
@@ -485,80 +488,90 @@ function GeneralSettings() {
 							</div>
 						</div>
 
-						{["coinName", "maxCoins"].map((field) => (
-							<div
-								key={field}
-								className="flex flex-col gap-[8px]"
-							>
-								<label
-									htmlFor={field}
-									className="body-normal text-(--black-light-active) font-medium"
+						{["coinName", "maxCoins", "teamMaxPlayers"].map(
+							(field) => (
+								<div
+									key={field}
+									className="flex flex-col gap-[8px]"
 								>
-									{field === "coinName"
-										? "Nome della moneta:"
-										: "Budget:"}
-								</label>
-
-								<div className="flex gap-[10px]">
-									<button
-										className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-										onClick={() => toggleEditing(field)}
-										disabled={status !== "PENDING"}
+									<label
+										htmlFor={field}
+										className="body-normal text-(--black-light-active) font-medium"
 									>
-										{isEditing[field] ? (
-											<Save className="h-[20px] w-[20px]" />
-										) : (
-											<PencilSquareIcon className="h-[20px] w-[20px]" />
-										)}
-									</button>
-									{isEditing[field] ? (
-										<GenericInput
-											type="text"
-											required
-											placeholder={`Inserisci ${field}`}
-											name={field}
-											value={formData[field]}
-											handleChange={handleChangeData}
-											handleBlur={handleBlur}
-											messageError={errors[field]}
-											autoFocus={true}
-											afterElement={true}
-											maxLength={
-												field === "coinName" ? 20 : 1000
-											}
+										{field === "coinName"
+											? "Nome della moneta:"
+											: field === "maxCoins"
+											? "Budget:"
+											: "Numero di player del team:"}
+									</label>
+
+									<div className="flex gap-[10px]">
+										<button
+											className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+											onClick={() => toggleEditing(field)}
+											disabled={status !== "PENDING"}
 										>
-											{field === "coinName" ? (
-												<Coins className="stroke-white w-[24px] h-[24px]" />
+											{isEditing[field] ? (
+												<Save className="h-[20px] w-[20px]" />
 											) : (
-												<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+												<PencilSquareIcon className="h-[20px] w-[20px]" />
 											)}
-										</GenericInput>
-									) : (
-										<div
-											className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
-										>
-											<p
-												className={`break-all self-center px-[24px] py-[10px] ${
-													field === "name"
-														? "body-regular font-medium"
-														: "body-normal"
+										</button>
+										{isEditing[field] ? (
+											<GenericInput
+												type="text"
+												required
+												placeholder={`Inserisci ${field}`}
+												name={field}
+												value={formData[field]}
+												handleChange={handleChangeData}
+												handleBlur={handleBlur}
+												messageError={errors[field]}
+												autoFocus={true}
+												afterElement={true}
+												maxLength={
+													field === "coinName"
+														? 30
+														: 1000
 												}
-													`}
 											>
-												{formData[field]}
-											</p>
-											<div className="bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px] h-full flex items-center">
 												{field === "coinName" ? (
 													<Coins className="stroke-white w-[24px] h-[24px]" />
-												) : (
+												) : field === "maxCoins" ? (
 													<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+												) : (
+													<UserGroupIcon className="stroke-white w-[24px] h-[24px]" />
 												)}
+											</GenericInput>
+										) : (
+											<div
+												className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
+											>
+												<p
+													className={`break-all self-center px-[24px] py-[10px] ${
+														field === "name"
+															? "body-regular font-medium"
+															: "body-normal"
+													}
+													`}
+												>
+													{formData[field]}
+												</p>
+												<div className="bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px] h-full flex items-center">
+													{field === "coinName" ? (
+														<Coins className="stroke-white w-[24px] h-[24px]" />
+													) : field === "maxCoins" ? (
+														<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+													) : (
+														<UserGroupIcon className="stroke-white w-[24px] h-[24px]" />
+													)}
+												</div>
 											</div>
-										</div>
-									)}
+										)}
+									</div>
 								</div>
-							</div>
-						))}
+							)
+						)}
 
 						<div className="flex flex-col gap-[8px]">
 							<p className="body-normal text-(--black-light-active) font-medium">
@@ -705,16 +718,13 @@ function GeneralSettings() {
 										<p className="body-normal font-medium text-(--black-light-active)">
 											Codice lega:
 										</p>
-										<div className="flex items-center gap-2">
-											<button
-												onClick={handleCopy}
-												className="hover:bg-gray-300"
-											>
-												<ClipboardIcon className="h-5 w-5 text-gray-600" />
+										<div className="flex gap-[10px]">
+											<button onClick={handleCopy}>
+												<Clipboard className="w-[24px] h-[24px] stroke-(--black-light-active)" />
 											</button>
 											<p
 												onClick={handleCopy}
-												className="font-mono bg-gray-100 p-2 rounded break-all"
+												className="body-normal text-(--black-normal) bg-(--black-light) p-[8px] rounded"
 											>
 												{code}
 											</p>

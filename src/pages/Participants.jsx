@@ -1,7 +1,7 @@
 import { useLeague } from "../contexts/LeagueContext";
 import Participant from "../components/Participant";
 
-function Participants() {
+function Participants({ handleTabChange }) {
 	const { league } = useLeague();
 	const { participants } = league;
 
@@ -10,7 +10,11 @@ function Participants() {
 			{participants.length > 0 ? (
 				<ul className="flex flex-col gap-[8px]">
 					{participants.map((el, idx) => (
-						<Participant key={idx} participantObj={el} />
+						<Participant
+							key={idx}
+							participantObj={el}
+							handleTabChange={handleTabChange}
+						/>
 					))}
 				</ul>
 			) : (

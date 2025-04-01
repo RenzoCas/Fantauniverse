@@ -126,6 +126,10 @@ function MyTeam() {
 		setTimeout(() => updateCanAddPlayers(newPlayers, newMaxCoins), 0);
 	};
 
+	const handleSelectCaptain = (player) => {
+		console.log("capitano: " + player.name);
+	};
+
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
 		setErrors((prevErrors) => ({
@@ -372,6 +376,7 @@ function MyTeam() {
 									canEdit={false}
 									onSelect={handleSelectPlayer}
 									onDeselect={handleDeselectPlayer}
+									onSelectCaptain={handleSelectCaptain}
 								/>
 							))}
 						</ul>

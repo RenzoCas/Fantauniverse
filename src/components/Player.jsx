@@ -5,7 +5,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import { useEffect, useState } from "react";
-import { Coins, SquareMinus, SquarePlus } from "lucide-react";
+import { Coins, SparklesIcon, SquareMinus, SquarePlus } from "lucide-react";
+import { useUser } from "../contexts/UserContext";
 
 function Player({
 	playerObj,
@@ -15,18 +16,23 @@ function Player({
 	canAdd,
 	onSelect,
 	onDeselect,
+	onSelectCaptain,
 	playersObj,
 	playerActive,
 	addPoints,
 	dataDay,
 	handleAddPoints,
 	viewTeam = false,
+	isCapitain = false,
+	handleTabChange,
 }) {
 	const { name, price, points, icon, id } = playerObj;
 	const { league } = useLeague();
 	const { coinName, status } = league;
+	const { user } = useUser();
 	const isActive =
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
+	const isCurrentUser = playerObj.id == user.id;
 	const [randomColor, setRandomColor] = useState("#ffffff");
 	const [totalPoints, setTotalPoints] = useState(0);
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -52,10 +58,18 @@ function Player({
 		setRandomColor(randomLightColor());
 	}, []);
 
+	const handleClickPlayer = () => {
+		isCurrentUser
+			? handleTabChange("MyTeam")
+			: viewTeam
+			? () => setIsExpanded(!isExpanded)
+			: undefined;
+	};
+
 	return (
 		<li
 			className={`flex border-b border-(--black-light) pb-[8px] gap-[20px] transform transition-all duration-300`}
-			onClick={viewTeam ? () => setIsExpanded(!isExpanded) : undefined}
+			onClick={() => handleClickPlayer()}
 		>
 			<picture
 				className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] ${
@@ -169,12 +183,18 @@ function Player({
 			{createTeam && (
 				<>
 					{isActive ? (
-						<button
-							className="flex self-center"
-							onClick={() => onDeselect(playerObj)}
-						>
-							<SquareMinus className="h-[24px] w-[24px] stroke-(--error-normal)" />
-						</button>
+						<div className="flex items-center gap-[20px]">
+							<button onClick={() => onSelectCaptain(playerObj)}>
+								<SparklesIcon
+									className={`h-[24px] w-[24px] stroke-1 ${
+										isCapitain ? "fill-[#DCC939]" : ""
+									}`}
+								/>
+							</button>
+							<button onClick={() => onDeselect(playerObj)}>
+								<SquareMinus className="h-[24px] w-[24px] stroke-(--error-normal)" />
+							</button>
+						</div>
 					) : (
 						<button
 							className={`flex self-center ${

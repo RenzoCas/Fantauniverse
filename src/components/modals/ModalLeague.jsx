@@ -25,17 +25,6 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 		formData.enableCaptain
 	);
 
-	// const visibilityObj = [
-	// 	{
-	// 		value: "PUBLIC",
-	// 		label: "Pubblica",
-	// 	},
-	// 	{
-	// 		value: "PRIVATE",
-	// 		label: "Privata",
-	// 	},
-	// ];
-
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		if (name === "maxCoins" || name === "teamMaxPlayers") {
@@ -289,20 +278,6 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								onChange={handleChangeSwitch}
 							/>
 						</div>
-
-						{/* <div className="grid grid-cols-2">
-							{visibilityObj.map((opt, idx) => (
-								<Radio
-									key={idx}
-									id={`radio-${idx}`}
-									name="visibility"
-									value={opt.value}
-									checked={opt.value === formData.visibility}
-									handleChange={handleChange}
-									label={opt.label}
-								/>
-							))}
-						</div> */}
 						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
 							<TabButton
 								handleClick={() =>
