@@ -132,6 +132,7 @@ function Players() {
 								playerObj={el}
 								onEdit={handleEditPlayer}
 								canEdit={isAdmin && status === "PENDING"}
+								viewTeam={false}
 							/>
 						))}
 					</ul>

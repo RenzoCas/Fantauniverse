@@ -172,22 +172,7 @@ function Player({
 							>
 								{price} {coinName}
 							</p>
-						) : status == "NOT_STARTED" ? (
-							<div className="flex item-center gap-[10px]">
-								<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
-								<p
-									className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
-										!createTeam
-											? "opacity-100"
-											: canAdd || isActive
-											? "opacity-100"
-											: "opacity-50"
-									}`}
-								>
-									{price} {coinName}
-								</p>
-							</div>
-						) : (
+						) : status == "NOT_STARTED" || status === "STARTED" ? (
 							<>
 								{addPoints ? (
 									<>
@@ -199,11 +184,26 @@ function Player({
 										</p>
 									</>
 								) : (
-									<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
-										{points} pnt.
-									</p>
+									<div className="flex item-center gap-[10px]">
+										<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
+										<p
+											className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
+												!createTeam
+													? "opacity-100"
+													: canAdd || isActive
+													? "opacity-100"
+													: "opacity-50"
+											}`}
+										>
+											{price} {coinName}
+										</p>
+									</div>
 								)}
 							</>
+						) : (
+							<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
+								{points} pnt.
+							</p>
 						)}
 					</div>
 
