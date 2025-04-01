@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Cog6ToothIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { Award } from "lucide-react";
 
 export default function League({ league, onAddParticipant }) {
 	const navigate = useNavigate();
@@ -68,7 +69,7 @@ export default function League({ league, onAddParticipant }) {
 					</h4>
 					{isRegistered ? (
 						<div className="flex gap-[4px]">
-							<TrophyIcon className="w-[16px] h-[16x] stroke-[#B01DFF] stroke-2" />
+							<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
 							<span className="body-small font-semibold">
 								{position}&#176; Posto
 							</span>

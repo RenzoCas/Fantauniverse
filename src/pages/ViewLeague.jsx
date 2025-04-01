@@ -22,7 +22,7 @@ function ViewLega() {
 	const { state } = useLocation();
 	const { league, getLeague, updateLeague } = useLeague();
 	const { deleteParticipant } = useParticipant();
-	const { getMyTeam } = useTeam();
+	const { getMyTeam, teamParticipant } = useTeam();
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -211,29 +211,28 @@ function ViewLega() {
 							</picture>
 							{status != "PENDING" && (
 								<>
-									<div className="flex items-center justify-between">
-										{!(
-											tabActive === "MyTeam" &&
-											status === "NOT_STARTED"
-										) && (
-											<>
-												<h2 className="title-h4 break-all">
-													{name}
-												</h2>
-												{status == "NOT_STARTED" &&
-													isRegistered && (
-														<button
-															className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
-															onClick={
-																showModalConfirmDelete
-															}
-														>
-															Esci dalla lega
-														</button>
-													)}
-											</>
-										)}
-									</div>
+									{!(
+										tabActive === "MyTeam" ||
+										status === "NOT_STARTED" ||
+										teamParticipant
+									) && (
+										<div className="flex items-center justify-between">
+											<h2 className="title-h4 font-medium break-all">
+												{name}
+											</h2>
+											{status == "NOT_STARTED" &&
+												isRegistered && (
+													<button
+														className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
+														onClick={
+															showModalConfirmDelete
+														}
+													>
+														Esci dalla lega
+													</button>
+												)}
+										</div>
+									)}
 								</>
 							)}
 							{status === "PENDING" && (
@@ -245,7 +244,9 @@ function ViewLega() {
 
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
-							{tabActive === "Ranking" && <Ranking />}
+							{tabActive === "Ranking" && (
+								<Ranking handleTabChange={handleTabChange} />
+							)}
 							{tabActive === "Points" && <Points />}
 							{tabActive === "Players" && <Players />}
 							{tabActive === "Participants" && <Participants />}

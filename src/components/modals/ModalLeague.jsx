@@ -5,6 +5,7 @@ import GenericInput from "../../atoms/Inputs/GenericInput";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 // import Radio from "../../atoms/Inputs/Radio";
 import TabButton from "../../atoms/Buttons/TabButton";
+import Switch from "../../atoms/Inputs/Switch";
 
 function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 	const [formData, setFormData] = useState(
@@ -15,10 +16,14 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 			coinName: "",
 			maxCoins: "",
 			teamMaxPlayers: "",
+			enableCaptain: false,
 		}
 	);
 	const [errors, setErrors] = useState({});
 	const { createLeague, updateLeague } = useLeague();
+	const [isEnableCaptain, setIsEnableCaptain] = useState(
+		formData.enableCaptain
+	);
 
 	// const visibilityObj = [
 	// 	{
@@ -79,6 +84,14 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 		setFormData({
 			...formData,
 			visibility: value,
+		});
+	};
+
+	const handleChangeSwitch = () => {
+		setIsEnableCaptain((prevState) => {
+			const newState = !prevState;
+			setFormData({ ...formData, enableCaptain: newState });
+			return newState;
 		});
 	};
 
@@ -179,7 +192,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								htmlFor="name"
 								className="body-small text-(--black-light-active) font-medium"
 							>
-								Nome lega:
+								Nome lega*:
 							</label>
 							<GenericInput
 								type="text"
@@ -215,7 +228,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 									htmlFor="coinName"
 									className="body-small text-(--black-light-active) font-medium"
 								>
-									Nome della moneta:
+									Nome della moneta*:
 								</label>
 								<GenericInput
 									type="text"
@@ -233,7 +246,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 									htmlFor="maxCoins"
 									className="body-small text-(--black-light-active) font-medium"
 								>
-									Budget:
+									Budget*:
 								</label>
 								<GenericInput
 									type="text"
@@ -252,7 +265,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								htmlFor="teamMaxPlayers"
 								className="body-normal text-(--black-light-active) font-medium"
 							>
-								Numero massimo di player del team:
+								Numero massimo di player del team*:
 							</label>
 							<GenericInput
 								type="text"
@@ -263,6 +276,17 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								value={formData.teamMaxPlayers}
 								handleChange={handleChange}
 								handleBlur={handleBlur}
+							/>
+						</div>
+						<div className="flex flex-col gap-[8px]">
+							<p className="body-normal text-(--black-light-active) font-medium">
+								Capitano:
+							</p>
+							<Switch
+								text="Attiva la scelta del capitano alla
+                                                                creazione della squadra."
+								enabled={isEnableCaptain}
+								onChange={handleChangeSwitch}
 							/>
 						</div>
 

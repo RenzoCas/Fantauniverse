@@ -21,6 +21,7 @@ import { Coins, PiggyBank, Save, Sparkles } from "lucide-react";
 import Rules from "./Rules";
 import { useParticipant } from "../contexts/ParticipantContext";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import Players from "./Players";
 
 function GeneralSettings() {
 	const { league, deleteLeague, updateLeague, changeStatus } = useLeague();
@@ -597,13 +598,19 @@ function GeneralSettings() {
 								handleClick={() => setTabActive("Info")}
 								active={tabActive === "Info"}
 							>
-								<p className="body-normal">Informazioni lega</p>
+								<p className="body-normal">Info</p>
 							</TabButton>
 							<TabButton
 								handleClick={() => setTabActive("Rules")}
 								active={tabActive === "Rules"}
 							>
 								<p className="body-normal">Regole</p>
+							</TabButton>
+							<TabButton
+								handleClick={() => setTabActive("Players")}
+								active={tabActive === "Players"}
+							>
+								<p className="body-normal">Players</p>
 							</TabButton>
 						</div>
 						{tabActive === "Info" ? (
@@ -721,10 +728,10 @@ function GeneralSettings() {
 									/>
 								)}
 							</>
+						) : tabActive === "Rules" ? (
+							<Rules />
 						) : (
-							<>
-								<Rules />
-							</>
+							<Players />
 						)}
 					</>
 				)}

@@ -5,8 +5,8 @@ import { useLeague } from "./LeagueContext";
 const TeamContext = createContext();
 
 const initialState = {
-	team: {},
-	teamParticipant: {},
+	team: null,
+	teamParticipant: null,
 };
 
 function reducer(state, action) {
@@ -37,13 +37,13 @@ function reducer(state, action) {
 		case "resetTeamPartecipant":
 			return {
 				...state,
-				teamParticipant: {},
+				teamParticipant: null,
 			};
 
 		case "deleteTeam":
 			return {
 				...state,
-				team: {},
+				team: null,
 			};
 
 		default:

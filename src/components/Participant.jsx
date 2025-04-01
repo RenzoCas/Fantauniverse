@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import { useLeague } from "../contexts/LeagueContext";
 import GenericPopup from "./popups/GenericPopup";
 import { useUser } from "../contexts/UserContext";
-import { useNavigate } from "react-router";
 
-function Participant({ participantObj, idx, isRanking, handleClick }) {
-	const navigate = useNavigate();
+function Participant({
+	participantObj,
+	idx,
+	isRanking,
+	handleClick,
+	handleTabChange,
+}) {
 	const { id, user: participantUser, team, points } = participantObj;
 	const name = team?.name;
 	const { icon, username } = participantUser;
@@ -28,10 +32,10 @@ function Participant({ participantObj, idx, isRanking, handleClick }) {
 	};
 
 	const handleViewPartecipant = async () => {
-		if (status != "NOT_STARTED") {
+		if (participantUser.id === currentUser.id) {
+			handleTabChange("MyTeam");
+		} else if (status != "NOT_STARTED") {
 			await handleClick(id);
-		} else if (participantUser.id === currentUser.id) {
-			navigate("viewTeam");
 		} else {
 			showPopup(
 				"error",

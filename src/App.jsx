@@ -13,7 +13,6 @@ import ProtectedRoute from "./guards/ProtectedRoute";
 import Registration from "./pages/Registration";
 import ViewLeague from "./pages/ViewLeague";
 import Dashboard from "./pages/Dashboard";
-import ViewTeam from "./pages/ViewTeam";
 import GenericRules from "./pages/GenericRules";
 import Login from "./pages/Login";
 import Account from "./pages/Account";
@@ -79,10 +78,6 @@ function App() {
 												<Route
 													path="league/:id"
 													element={<ViewLeague />}
-												/>
-												<Route
-													path="league/:id/viewTeam"
-													element={<ViewTeam />}
 												/>
 												<Route
 													path="league/:id/setDay"

@@ -12,7 +12,7 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 				active={tabActive == "General"}
 				handleClick={() => handleTabChange("General")}
 			>
-				<Newspaper className="h-[20px] w-[20px]" />
+				<Newspaper className="h-[24px] w-[24px]" />
 			</TabBottomNav>
 			{status === "NOT_STARTED" ? (
 				<TabBottomNav
@@ -20,7 +20,7 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 					active={tabActive == "Participants"}
 					handleClick={() => handleTabChange("Participants")}
 				>
-					<Users className="h-[20px] w-[20px]" />
+					<Users className="h-[24px] w-[24px]" />
 				</TabBottomNav>
 			) : (
 				<TabBottomNav
@@ -28,7 +28,7 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 					active={tabActive == "Ranking"}
 					handleClick={() => handleTabChange("Ranking")}
 				>
-					<Trophy className="h-[20px] w-[20px]" />
+					<Trophy className="h-[24px] w-[24px]" />
 				</TabBottomNav>
 			)}
 			{status != "NOT_STARTED" && (
@@ -37,7 +37,7 @@ function BottomNavbar({ tabActive, handleTabChange }) {
 					active={tabActive == "Points"}
 					handleClick={() => handleTabChange("Points")}
 				>
-					<ChartLine className="h-[20px] w-[20px]" />
+					<ChartLine className="h-[24px] w-[24px]" />
 				</TabBottomNav>
 			)}
 

@@ -1,4 +1,8 @@
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import {
+	ChevronDownIcon,
+	ChevronUpIcon,
+	PencilSquareIcon,
+} from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import { useEffect, useState } from "react";
 import { Coins, SquareMinus, SquarePlus } from "lucide-react";
@@ -16,6 +20,7 @@ function Player({
 	addPoints,
 	dataDay,
 	handleAddPoints,
+	viewTeam = false,
 }) {
 	const { name, price, points, icon, id } = playerObj;
 	const { league } = useLeague();
@@ -24,6 +29,7 @@ function Player({
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 	const [totalPoints, setTotalPoints] = useState(0);
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -49,12 +55,15 @@ function Player({
 	return (
 		<li
 			className={`flex border-b border-(--black-light) pb-[8px] gap-[20px] transform transition-all duration-300`}
+			onClick={viewTeam ? () => setIsExpanded(!isExpanded) : undefined}
 		>
 			<picture
 				className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] ${
-					createTeam && (canAdd || isActive)
-						? "opacity-50"
-						: "opacity-100"
+					!createTeam
+						? "opacity-100"
+						: canAdd || isActive
+						? "opacity-100"
+						: "opacity-50"
 				}`}
 			>
 				{icon == null ? (
@@ -70,54 +79,79 @@ function Player({
 					/>
 				)}
 			</picture>
-			<div className={`flex flex-col gap-[4px] w-full`}>
-				<p
-					className={`font-semibold break-all ${
-						createTeam && (canAdd || isActive)
-							? "opacity-50 body-small"
-							: "opacity-100 body-normal"
-					}`}
-				>
-					{name}
-				</p>
-				{canEdit && status == "PENDING" ? (
+			{viewTeam ? (
+				<>
 					<p
-						className={`body-small font-semibold text-(--black-normal) whitespace-nowrap`}
+						className={`text-(--black-darker) font-semibold break-all self-center`}
 					>
-						{price} {coinName}
+						{name}
 					</p>
-				) : status == "NOT_STARTED" ? (
-					<div className="flex item-center gap-[10px]">
-						<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
+					<div className="flex items-center gap-[8px] ml-auto">
+						<p className="font-semibold text-(--black-darker) whitespace-nowrap">
+							{points} pnt.
+						</p>
+						{isExpanded ? (
+							<ChevronUpIcon className="h-[20px] w-[20px]" />
+						) : (
+							<ChevronDownIcon className="h-[20px] w-[20px]" />
+						)}
+					</div>
+				</>
+			) : (
+				<div className={`flex flex-col gap-[4px] w-full`}>
+					<p
+						className={`font-semibold break-all ${
+							!createTeam
+								? "opacity-100"
+								: canAdd || isActive
+								? "opacity-100"
+								: "opacity-50"
+						}`}
+					>
+						{name}
+					</p>
+					{canEdit && status == "PENDING" ? (
 						<p
-							className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
-								createTeam && (canAdd || isActive)
-									? "opacity-50"
-									: "opacity-100"
-							}`}
+							className={`body-small font-semibold text-(--black-normal) whitespace-nowrap`}
 						>
 							{price} {coinName}
 						</p>
-					</div>
-				) : (
-					<>
-						{addPoints ? (
-							<>
-								<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
-									{points} pnt. totali
-								</p>
-								<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
-									{totalPoints || 0} pnt. giornata
-								</p>
-							</>
-						) : (
-							<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
-								{points} pnt.
+					) : status == "NOT_STARTED" ? (
+						<div className="flex item-center gap-[10px]">
+							<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
+							<p
+								className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
+									!createTeam
+										? "opacity-100"
+										: canAdd || isActive
+										? "opacity-100"
+										: "opacity-50"
+								}`}
+							>
+								{price} {coinName}
 							</p>
-						)}
-					</>
-				)}
-			</div>
+						</div>
+					) : (
+						<>
+							{addPoints ? (
+								<>
+									<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
+										{points} pnt. totali
+									</p>
+									<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
+										{totalPoints || 0} pnt. giornata
+									</p>
+								</>
+							) : (
+								<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
+									{points} pnt.
+								</p>
+							)}
+						</>
+					)}
+				</div>
+			)}
+
 			{canEdit && status == "PENDING" && (
 				<button className="flex" onClick={() => onEdit(playerObj)}>
 					<PencilSquareIcon className="h-[20px] w-[20px]" />

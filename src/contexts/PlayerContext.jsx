@@ -109,4 +109,3 @@ function usePlayer() {
 }
 
 export { PlayerProvider, usePlayer };
-// Compare this snippet from fantauniverse/src/pages/Settings.jsx:

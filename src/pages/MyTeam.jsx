@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import { useTeam } from "../contexts/TeamContext";
-import { PiggyBank, Save } from "lucide-react";
+import { Award, PiggyBank, Save } from "lucide-react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Player from "../components/Player";
@@ -238,139 +238,169 @@ function MyTeam() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<div className="flex flex-col gap-[24px]">
-				<div className="flex flex-col gap-[12px]">
-					{status == "NOT_STARTED" && (
-						<div className="flex items-center justify-between gap-[8px]">
-							<h2 className="title-h4 font-medium">
-								{!tempTeam.id ? "Crea" : "Modifica"} squadra
-							</h2>
-							{tempTeam.id && (
-								<button
-									className="body-small font-semibold text-[#F87171] whitespace-nowrap"
-									onClick={() => showModalConfirmDelete()}
-								>
-									Cancella team
-								</button>
-							)}
-						</div>
-					)}
-
+			{status != "NOT_STARTED" ? (
+				<div className="flex flex-col gap-[24px]">
 					<div className="flex flex-col gap-[8px]">
-						<label
-							htmlFor="name"
-							className="body-normal text-(--black-light-active) font-medium"
-						>
-							Nome:
-						</label>
-						<div className="flex gap-[10px]">
-							<button
-								className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
-								onClick={() => toggleEditing("name")}
-							>
-								{isEditing.name ? (
-									<Save className="h-[20px] w-[20px]" />
-								) : (
-									<PencilSquareIcon className="h-[20px] w-[20px]" />
-								)}
-							</button>
-							{isEditing.name ? (
-								<GenericInput
-									type="text"
-									required
-									placeholder={`Nome team`}
-									name={tempTeam.name}
-									value={tempTeam.name}
-									handleChange={handleChangeData}
-									handleBlur={handleBlur}
-									messageError={errors.name}
-									autoFocus={true}
-									maxLength={50}
-								></GenericInput>
-							) : (
-								<div
-									className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
-								>
-									<p
-										className={`break-all self-center px-[24px] py-[10px] body-normal`}
-									>
-										{tempTeam.name}
-									</p>
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
-				<div className="flex flex-col gap-[8px]">
-					<div className="flex items-center justify-between gap-[8px]">
-						<p className="body-normal text-(--black-light-active) font-medium break-word">
-							Seleziona giocatori:
-						</p>
-						<div
-							className={`py-[2px] px-[8px] rounded-[4px] ${
-								isMaxPlayersReached
-									? "bg-(--accent-normal)"
-									: "bg-(--error-light)"
-							}`}
-						>
-							<p
-								className={`body-normal font-semibold ${
-									isMaxPlayersReached
-										? "text-white"
-										: "text-(--error-normal)"
-								}`}
-							>
-								{tempTeam.players.length}/{teamMaxPlayers}
+						<h2 className="title-h4 font-medium break-all">
+							{team.name}
+						</h2>
+						<div className="flex items-center gap-[10px]">
+							<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
+							<p className="body-regular">
+								{team.position}o Posto
 							</p>
 						</div>
 					</div>
-					<div className="w-full flex gap-[8px] items-center justify-center bg-(--black-light) rounded-[4px] px-[12px] py-[4px]">
-						<PiggyBank className="stroke-(--black-normal) h-[24px] w-[24px]" />
-						<p className="body-small font-medium">
-							{tempMaxCoins}/{maxCoins} {coinName}
-						</p>
-					</div>
+
 					<ul className="flex flex-col gap-[8px]">
 						{leaguePlayers.map((p) => (
 							<Player
 								key={p.id}
 								playersObj={tempTeam.players}
 								playerObj={p}
-								createTeam={true}
-								canAdd={
-									canAddPlayers[p.id] && !isMaxPlayersReached
-								}
-								canEdit={false}
 								onSelect={handleSelectPlayer}
 								onDeselect={handleDeselectPlayer}
+								viewTeam={true}
 							/>
 						))}
 					</ul>
-					<NormalButton
-						text="Conferma"
-						action={handleSubmitTeam}
-						disabled={!isFormValid() || isEditingAnyField}
-						icon={false}
+				</div>
+			) : (
+				<div className="flex flex-col gap-[24px]">
+					<div className="flex flex-col gap-[12px]">
+						{status == "NOT_STARTED" && (
+							<div className="flex items-center justify-between gap-[8px]">
+								<h2 className="title-h4 font-medium">
+									{!tempTeam.id ? "Crea" : "Modifica"} squadra
+								</h2>
+								{tempTeam.id && (
+									<button
+										className="body-small font-semibold text-[#F87171] whitespace-nowrap"
+										onClick={() => showModalConfirmDelete()}
+									>
+										Cancella team
+									</button>
+								)}
+							</div>
+						)}
+
+						<div className="flex flex-col gap-[8px]">
+							<label
+								htmlFor="name"
+								className="body-normal text-(--black-light-active) font-medium"
+							>
+								Nome:
+							</label>
+							<div className="flex gap-[10px]">
+								<button
+									className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+									onClick={() => toggleEditing("name")}
+								>
+									{isEditing.name ? (
+										<Save className="h-[20px] w-[20px]" />
+									) : (
+										<PencilSquareIcon className="h-[20px] w-[20px]" />
+									)}
+								</button>
+								{isEditing.name ? (
+									<GenericInput
+										type="text"
+										required
+										placeholder={`Nome team`}
+										name={tempTeam.name}
+										value={tempTeam.name}
+										handleChange={handleChangeData}
+										handleBlur={handleBlur}
+										messageError={errors.name}
+										autoFocus={true}
+										maxLength={50}
+									></GenericInput>
+								) : (
+									<div
+										className={`bg-[#FAF8F8] w-full rounded-[16px] flex items-center gap-[4px] justify-between`}
+									>
+										<p
+											className={`break-all self-center px-[24px] py-[10px] body-normal`}
+										>
+											{tempTeam.name}
+										</p>
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className="flex flex-col gap-[8px]">
+						<div className="flex items-center justify-between gap-[8px]">
+							<p className="body-normal text-(--black-light-active) font-medium break-word">
+								Seleziona giocatori:
+							</p>
+							<div
+								className={`py-[2px] px-[8px] rounded-[4px] ${
+									isMaxPlayersReached
+										? "bg-(--accent-normal)"
+										: "bg-(--error-light)"
+								}`}
+							>
+								<p
+									className={`body-normal font-semibold ${
+										isMaxPlayersReached
+											? "text-white"
+											: "text-(--error-normal)"
+									}`}
+								>
+									{tempTeam.players.length}/{teamMaxPlayers}
+								</p>
+							</div>
+						</div>
+						<div className="w-full flex gap-[8px] items-center justify-center bg-(--black-light) rounded-[4px] px-[12px] py-[4px]">
+							<PiggyBank className="stroke-(--black-normal) h-[24px] w-[24px]" />
+							<p className="body-small font-medium">
+								{tempMaxCoins}/{maxCoins} {coinName}
+							</p>
+						</div>
+						<ul className="flex flex-col gap-[8px]">
+							{leaguePlayers.map((p) => (
+								<Player
+									key={p.id}
+									playersObj={tempTeam.players}
+									playerObj={p}
+									createTeam={true}
+									canAdd={
+										canAddPlayers[p.id] &&
+										!isMaxPlayersReached
+									}
+									canEdit={false}
+									onSelect={handleSelectPlayer}
+									onDeselect={handleDeselectPlayer}
+								/>
+							))}
+						</ul>
+						<NormalButton
+							text="Conferma"
+							action={handleSubmitTeam}
+							disabled={!isFormValid() || isEditingAnyField}
+							icon={false}
+						/>
+					</div>
+					<ModalConfirmAction
+						isOpen={isModalConfirmOpen.value}
+						dataModal={dataModalConfirm}
+						onClose={() =>
+							setIsModalConfirmOpen({
+								action: null,
+								value: false,
+							})
+						}
+						onConfirmAction={handleDeleteTeam}
+					></ModalConfirmAction>
+					<GenericPopup
+						isOpen={popupData.isOpen}
+						type={popupData.type}
+						title={popupData.title}
+						message={popupData.message}
 					/>
 				</div>
-			</div>
-			<ModalConfirmAction
-				isOpen={isModalConfirmOpen.value}
-				dataModal={dataModalConfirm}
-				onClose={() =>
-					setIsModalConfirmOpen({
-						action: null,
-						value: false,
-					})
-				}
-				onConfirmAction={handleDeleteTeam}
-			></ModalConfirmAction>
-			<GenericPopup
-				isOpen={popupData.isOpen}
-				type={popupData.type}
-				title={popupData.title}
-				message={popupData.message}
-			/>
+			)}
 		</>
 	);
 }
