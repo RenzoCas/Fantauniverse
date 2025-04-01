@@ -274,7 +274,7 @@ function MyTeam() {
 					</div>
 
 					<ul className="flex flex-col gap-[8px]">
-						{leaguePlayers.map((p, idx) => (
+						{tempTeam.players.map((p, idx) => (
 							<Player
 								key={p.id}
 								playersObj={tempTeam.players}
