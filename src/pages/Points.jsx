@@ -206,9 +206,14 @@ function Points() {
 						</NormalButton>
 					</>
 				) : (
-					<p className="body-normal font-semibold text-black text-center">
-						Non sono ancora presenti giornate per questa lega.
-					</p>
+					<div className="flex flex-col gap-[16px]">
+						<h2 className="title-h4 font-medium break-all">
+							{league.name}
+						</h2>
+						<p className="body-normal font-semibold text-black text-center">
+							Non sono ancora presenti giornate per questa lega.
+						</p>
+					</div>
 				)
 			) : (
 				<>

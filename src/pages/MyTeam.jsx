@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import { useTeam } from "../contexts/TeamContext";
-import { Award, PiggyBank, Save } from "lucide-react";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { Award, CircleAlert, PiggyBank, Save, X } from "lucide-react";
+import { CheckIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Player from "../components/Player";
 import Loader from "../components/Loader";
@@ -398,6 +398,79 @@ function MyTeam() {
 								/>
 							))}
 						</ul>
+						<div
+							className={`flex gap-[12px] bg-white rounded-[12px] p-[24px] border border-(--black-light-hover)`}
+						>
+							<CircleAlert className="h-[24px] w-[24px] stroke-(--error-normal)" />
+							<div className="flex flex-col gap-[10px]">
+								<h4 className="body-regular font-medium">
+									Attenzione, assicurati di:
+								</h4>
+								<ul className="flex flex-col gap-[10px]">
+									<li className="flex gap-[8px]">
+										{tempTeam.name.trim() !== "" &&
+										!isEditingAnyField ? (
+											<CheckIcon className="w-[16px] h-[16px] stroke-[#35C950] flex-shrink-0" />
+										) : (
+											<X className="w-[16px] h-[16px] stroke-(--error-normal) flex-shrink-0" />
+										)}
+										<p
+											className={`body-small self-center ${
+												tempTeam.name.trim() !== "" &&
+												!isEditingAnyField
+													? "text-(--black-normal)"
+													: "text-(--error-normal)"
+											}`}
+										>
+											Inserire e salvare un nome per la
+											squadra.
+										</p>
+									</li>
+									<li className="flex gap-[8px]">
+										{isMaxPlayersReached ? (
+											<CheckIcon className="w-[16px] h-[16px] stroke-[#35C950] flex-shrink-0" />
+										) : (
+											<X className="w-[16px] h-[16px] stroke-(--error-normal) flex-shrink-0" />
+										)}
+										<p
+											className={`body-small self-center ${
+												isMaxPlayersReached
+													? "text-(--black-normal)"
+													: "text-(--error-normal)"
+											}`}
+										>
+											Rispettare il numero di partecipanti
+											del team.
+										</p>
+									</li>
+									{enableCaptain && (
+										<li className="flex gap-[8px]">
+											{!enableCaptain ||
+											tempTeam.players.some(
+												(p) => p.isCaptain
+											) ? (
+												<CheckIcon className="w-[16px] h-[16px] stroke-[#35C950] flex-shrink-0" />
+											) : (
+												<X className="w-[16px] h-[16px] stroke-(--error-normal) flex-shrink-0" />
+											)}
+											<p
+												className={`body-small self-center ${
+													!enableCaptain ||
+													tempTeam.players.some(
+														(p) => p.isCaptain
+													)
+														? "text-(--black-normal)"
+														: "text-(--error-normal)"
+												}`}
+											>
+												Scegliere un capitano.
+											</p>
+										</li>
+									)}
+								</ul>
+							</div>
+						</div>
+
 						<NormalButton
 							text="Conferma"
 							action={handleSubmitTeam}

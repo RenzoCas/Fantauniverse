@@ -102,14 +102,18 @@ function Player({
 							<p className="body-normal font-semibold text-(--black-darker) whitespace-nowrap">
 								{points} pnt.
 							</p>
-							{isExpanded ? (
-								<ChevronUpIcon className="h-[20px] w-[20px]" />
-							) : (
-								<ChevronDownIcon className="h-[20px] w-[20px]" />
+							{playerDay?.dayPoints.length > 0 && (
+								<>
+									{isExpanded ? (
+										<ChevronUpIcon className="h-[20px] w-[20px]" />
+									) : (
+										<ChevronDownIcon className="h-[20px] w-[20px]" />
+									)}
+								</>
 							)}
 						</div>
 					</div>
-					{isExpanded && (
+					{isExpanded && playerDay?.dayPoints.length > 0 && (
 						<ul className="flex flex-col gap-[8px]">
 							{playerDay.dayPoints.map((pd, idx) => (
 								<li

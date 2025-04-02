@@ -8,15 +8,17 @@ function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 				id={`ModalConfirmAction-${title}`}
 				tabIndex="-1"
 				aria-hidden={!isOpen}
-				className={`fixed bottom-0 left-0 w-screen h-screen px-[16px] bg-(--black-normal)/50 transition-opacity duration-1000 ease z-1000 ${
-					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+				className={`fixed bottom-0 left-0 w-screen h-screen px-[16px] bg-(--black-normal)/50 transition-all duration-300 ease z-1000 ${
+					isOpen
+						? "opacity-100 visible"
+						: "opacity-0 invisible delay-150"
 				}`}
 			></div>
 			<div
-				className={`fixed left-[16px] bg-white shadow-lg rounded-[24px] w-full transition-all duration-1000 ease flex flex-col gap-[24px] max-w-[calc(100vw-32px)] sm:max-w-[600px] p-[20px] z-1001 ${
+				className={`fixed left-[16px] bg-white shadow-lg rounded-[24px] w-full transition-all duration-300 ease flex flex-col gap-[24px] max-w-[calc(100vw-32px)] sm:max-w-[600px] p-[20px] z-1001 ${
 					isOpen
-						? "top-1/2 -translate-y-1/2"
-						: "translate-y-full top-full"
+						? "scale-100 opacity-100 bottom-1/2 translate-y-1/2 visible delay-150"
+						: "scale-80 opacity-30 bottom-[100px] invisible"
 				}`}
 			>
 				<div className="flex items-center justify-between gap-[8px]">

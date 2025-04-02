@@ -271,17 +271,19 @@ function ViewLega() {
 							title={popupData.title}
 							message={popupData.message}
 						/>
-						<ModalConfirmAction
-							isOpen={isModalConfirmOpen.value}
-							dataModal={dataModalConfirm}
-							onClose={() =>
-								setIsModalConfirmOpen({
-									action: null,
-									value: false,
-								})
-							}
-							onConfirmAction={handleRemovePartecipant}
-						></ModalConfirmAction>
+						{status == "NOT_STARTED" && isRegistered && (
+							<ModalConfirmAction
+								isOpen={isModalConfirmOpen.value}
+								dataModal={dataModalConfirm}
+								onClose={() =>
+									setIsModalConfirmOpen({
+										action: null,
+										value: false,
+									})
+								}
+								onConfirmAction={handleRemovePartecipant}
+							/>
+						)}
 					</div>
 				</>
 			)}
