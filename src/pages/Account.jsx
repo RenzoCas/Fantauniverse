@@ -10,6 +10,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import ModalChangePassword from "../components/modals/ModalChangePassword";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 
 function Account() {
 	const { user, updateUser, unregister } = useUser();
@@ -24,6 +25,17 @@ function Account() {
 		isOpen: false,
 		type: "",
 		message: "",
+	});
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
+
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
 	});
 	const [isModalPasswordVisible, setIsModalPasswordVisible] = useState(false);
 	const [randomColor, setRandomColor] = useState("#ffffff");
@@ -180,7 +192,17 @@ function Account() {
 		);
 	};
 
-	const handleUnregistered = async (e) => {
+	const showModalConfirmUnregister = () => {
+		setDataModalConfirm({
+			title: "Elimina account",
+			text: "Confermando il tuo account verrá definitivamente cancellato.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
+		setIsModalConfirmOpen({ action: "delete", value: true });
+	};
+
+	const handleUnregister = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
 		const res = await unregister();
@@ -332,17 +354,23 @@ function Account() {
 						text="Elimina Account"
 						customIcon={true}
 						classOpt="text-(--error-normal)"
-						action={handleUnregistered}
+						action={showModalConfirmUnregister}
 					>
 						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px]" />
 					</GhostButton>
 				</section>
-
 				<ModalChangePassword
 					isOpen={isModalPasswordVisible}
 					onClose={() => setIsModalPasswordVisible(false)}
 				/>
-
+				<ModalConfirmAction
+					isOpen={isModalConfirmOpen.value}
+					onClose={() =>
+						setIsModalConfirmOpen({ action: null, value: false })
+					}
+					onConfirmAction={handleUnregister}
+					dataModal={dataModalConfirm}
+				/>
 				<GenericPopup
 					isOpen={popupData.isOpen}
 					type={popupData.type}

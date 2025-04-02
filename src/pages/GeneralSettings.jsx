@@ -756,7 +756,7 @@ function GeneralSettings() {
 							: handleDeleteLeague
 					}
 					dataModal={dataModalConfirm}
-				></ModalConfirmAction>
+				/>
 				<GenericPopup
 					isOpen={popupData.isOpen}
 					type={popupData.type}

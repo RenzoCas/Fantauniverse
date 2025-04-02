@@ -367,16 +367,17 @@ function Points() {
 										)}
 									</div>
 								)}
-								<ModalCreateDay
-									isOpen={isModalOpen}
-									onClose={() => setIsModalOpen(false)}
-									handleSubmit={handleSubmit}
-								/>
 							</div>
 						</>
 					)}
 				</>
 			)}
+
+			<ModalCreateDay
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				handleSubmit={handleSubmit}
+			/>
 
 			<GenericPopup
 				isOpen={popupData.isOpen}

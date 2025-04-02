@@ -488,7 +488,7 @@ function MyTeam() {
 							})
 						}
 						onConfirmAction={handleDeleteTeam}
-					></ModalConfirmAction>
+					/>
 					<GenericPopup
 						isOpen={popupData.isOpen}
 						type={popupData.type}

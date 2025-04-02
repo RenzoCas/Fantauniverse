@@ -16,6 +16,7 @@ import Logo from "../atoms/Logo";
 import { useLeague } from "../contexts/LeagueContext";
 import Loader from "./Loader";
 import GenericPopup from "./popups/GenericPopup";
+import ModalConfirmAction from "./modals/ModalConfirmAction";
 
 export default function Navbar() {
 	const navigate = useNavigate();
@@ -30,6 +31,17 @@ export default function Navbar() {
 		isOpen: false,
 		type: "",
 		message: "",
+	});
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
+
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
 	});
 
 	useEffect(() => {
@@ -57,6 +69,16 @@ export default function Navbar() {
 	const handleLogout = async () => {
 		await logout();
 		navigate("/");
+	};
+
+	const showModalConfirmUnregister = () => {
+		setDataModalConfirm({
+			title: "Elimina account",
+			text: "Confermando il tuo account verrá definitivamente cancellato.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
+		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
 	const handleUnregister = async (e) => {
@@ -326,7 +348,7 @@ export default function Navbar() {
 							<li>
 								<button
 									className="flex items-center gap-[20px] text-(--error-normal) font-medium body-normal"
-									onClick={handleUnregister}
+									onClick={showModalConfirmUnregister}
 								>
 									<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] stroke-2" />
 									Elimina l&lsquo;account
@@ -335,6 +357,14 @@ export default function Navbar() {
 						</ul>
 					</div>
 				</div>
+				<ModalConfirmAction
+					isOpen={isModalConfirmOpen.value}
+					onClose={() =>
+						setIsModalConfirmOpen({ action: null, value: false })
+					}
+					onConfirmAction={handleUnregister}
+					dataModal={dataModalConfirm}
+				/>
 				<GenericPopup
 					isOpen={popupData.isOpen}
 					type={popupData.type}
