@@ -14,14 +14,12 @@ import {
 import ModalCreateDay from "../components/modals/ModalCreateDay";
 import Loader from "../components/Loader";
 import GenericPopup from "../components/popups/GenericPopup";
-import { useNavigate } from "react-router";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import { useDay } from "../contexts/DayContext";
 import Player from "../components/Player";
 import ModalAddPoints from "../components/modals/ModalAddPoints";
 
 function Points() {
-	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
@@ -357,9 +355,7 @@ function Points() {
 												customIcon={true}
 												icon={false}
 												action={() =>
-													navigate("setDay", {
-														state: activeDay,
-													})
+													setIsUpdateDay(true)
 												}
 											>
 												<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
