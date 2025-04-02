@@ -21,6 +21,7 @@ import ModalAddPoints from "../components/modals/ModalAddPoints";
 
 function Points() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalAddPointsOpen, setIsModalAddPointsOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league, createDay } = useLeague();
@@ -35,6 +36,10 @@ function Points() {
 
 	const [activeDay, setActiveDay] = useState();
 	const [infoDay, setInfoDay] = useState();
+	const [tempDay, setTempDay] = useState({
+		id: infoDay?.id || null,
+		players: infoDay?.players || [],
+	});
 
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
 
@@ -51,6 +56,9 @@ function Points() {
 		try {
 			const response = await getDay(dayId);
 			setInfoDay(response);
+			setTempDay((prev) => {
+				return { ...prev, id: response.id, players: response.players };
+			});
 		} catch (error) {
 			console.error("Errore nel recupero di infoDay:", error);
 		}
@@ -85,7 +93,7 @@ function Points() {
 		setIsModalOpen(false);
 		let result = null;
 		if (isUpdateDay) {
-			result = await updateDay(infoDay);
+			result = await updateDay(tempDay);
 		} else {
 			result = await createDay(formData);
 		}
@@ -151,11 +159,11 @@ function Points() {
 	const [playerObj, setPlayeObj] = useState(players[0]);
 	const handleAddPoints = (player) => {
 		setPlayeObj(player);
-		setIsModalOpen(true);
+		setIsModalAddPointsOpen(true);
 	};
 
 	const confirmPlayerRules = async (player, selectedRules) => {
-		await setInfoDay((prev) => {
+		await setTempDay((prev) => {
 			const playerExists = prev.players.some(
 				(p) => p.player.id === player.id
 			);
@@ -252,8 +260,8 @@ function Points() {
 								/>
 							</div>
 							<ModalAddPoints
-								isOpen={isModalOpen}
-								onClose={() => setIsModalOpen(false)}
+								isOpen={isModalAddPointsOpen}
+								onClose={() => setIsModalAddPointsOpen(false)}
 								playerObj={playerObj}
 								dataDay={infoDay}
 								onConfirm={confirmPlayerRules}
@@ -308,7 +316,7 @@ function Points() {
 										{formatDate(days[activeIndex].date)}
 									</p>
 								</div>
-								{infoDay?.players.length > 0 ? (
+								{tempDay?.players.length > 0 ? (
 									<>
 										{isAdmin && status != "FINISHED" && (
 											<button

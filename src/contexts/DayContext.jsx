@@ -92,7 +92,7 @@ function DayProvider({ children }) {
 				throw new Error("Errore nella cancellazione della giornata.");
 			}
 
-			await getLeague(league.id);
+			// await getLeague(league.id);
 
 			return true;
 		} catch (error) {

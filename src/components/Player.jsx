@@ -181,10 +181,7 @@ function Player({
 								{addPoints ? (
 									<>
 										<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
-											{points} pnt. totali
-										</p>
-										<p className="body-small font-semibold text-(--black-normal) whitespace-nowrap">
-											{totalPoints || 0} pnt. giornata
+											{totalPoints || 0} pnt.
 										</p>
 									</>
 								) : (

@@ -182,6 +182,7 @@ function TeamProvider({ children }) {
 			}
 
 			dispatch({ type: "deleteTeam" });
+			await getLeague(league.id);
 			return true;
 		} catch (error) {
 			console.error(error.message);

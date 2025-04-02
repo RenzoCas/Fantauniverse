@@ -89,7 +89,7 @@ export default function League({ league, onAddParticipant }) {
 						<h6 className="body-small font-semibold">Gioca con:</h6>
 						<ul className="flex items-center">
 							{Array.from({
-								length: Math.min(numParticipants, 3),
+								length: Math.min(numParticipants, 2),
 							}).map((_, index) => (
 								<li
 									key={index}
@@ -108,6 +108,18 @@ export default function League({ league, onAddParticipant }) {
 								></li>
 							))}
 
+							{numParticipants == 3 && (
+								<li
+									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-20"
+									style={{
+										backgroundColor:
+											randomColors[
+												randomColors.length - 1
+											],
+									}}
+								></li>
+							)}
+
 							{numParticipants > 3 && (
 								<li
 									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15 flex items-center justify-center"
@@ -119,7 +131,7 @@ export default function League({ league, onAddParticipant }) {
 									}}
 								>
 									<p className="body-normal font-semibold">
-										+{numParticipants - 3}
+										+{numParticipants - 2}
 									</p>
 								</li>
 							)}

@@ -44,12 +44,6 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 					[name]: "Il valore massimo è 10.000",
 				}));
 				return;
-			} else if (numericValue < 1) {
-				setErrors((prevErrors) => ({
-					...prevErrors,
-					[name]: "Il valore minimo é 1.",
-				}));
-				return;
 			} else {
 				setErrors((prevErrors) => ({
 					...prevErrors,
@@ -90,6 +84,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 			formData.coinName.trim() !== "" &&
 			formData.maxCoins !== "" &&
 			formData.maxCoins > 0 &&
+			formData.teamMaxPlayers > 0 &&
 			!Object.values(errors).some((error) => error !== "")
 		);
 	};
@@ -130,6 +125,8 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						visibility: "PUBLIC",
 						coinName: "",
 						maxCoins: "",
+						teamMaxPlayers: "",
+						enableCaptain: false,
 					});
 			}
 		} else {
