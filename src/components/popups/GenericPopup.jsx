@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import {
+	CheckCircleIcon,
+	XCircleIcon,
+	ExclamationTriangleIcon,
+} from "@heroicons/react/24/solid";
 
 function GenericPopup({ isOpen, type, title, message, classOpt }) {
 	const [fixedPopupHeight, setFixedPopupHeight] = useState(0);
@@ -18,7 +22,7 @@ function GenericPopup({ isOpen, type, title, message, classOpt }) {
 
 	return (
 		<div
-			className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] border border-(--black-normal)/70 fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px]
+			className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] border border-(--black-light-active) fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px]
                 ${isOpen ? "translate-y-0" : "translate-y-full"} ${
 				classOpt ? classOpt : ""
 			}`}
@@ -27,6 +31,8 @@ function GenericPopup({ isOpen, type, title, message, classOpt }) {
 			<div className="flex gap-[4px]">
 				{type === "success" ? (
 					<CheckCircleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-green-500" />
+				) : type === "alert" ? (
+					<ExclamationTriangleIcon className="w-[20px] h-[20px] flex-shrink-0 fill-orange-500" />
 				) : (
 					<XCircleIcon className="h-[16px] w-[16px] flex-shrink-0 fill-(--error-normal)" />
 				)}

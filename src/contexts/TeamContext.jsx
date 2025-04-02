@@ -5,8 +5,8 @@ import { useLeague } from "./LeagueContext";
 const TeamContext = createContext();
 
 const initialState = {
-	team: {},
-	teamParticipant: {},
+	team: null,
+	teamParticipant: null,
 };
 
 function reducer(state, action) {
@@ -37,13 +37,13 @@ function reducer(state, action) {
 		case "resetTeamPartecipant":
 			return {
 				...state,
-				teamParticipant: {},
+				teamParticipant: null,
 			};
 
 		case "deleteTeam":
 			return {
 				...state,
-				team: {},
+				team: null,
 			};
 
 		default:
@@ -54,7 +54,7 @@ function reducer(state, action) {
 function TeamProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
-	const { league } = useLeague();
+	const { league, getLeague } = useLeague();
 
 	const getMyTeam = async (leagueId) => {
 		try {
@@ -132,6 +132,7 @@ function TeamProvider({ children }) {
 			const data = await response.json();
 
 			dispatch({ type: "createTeam", payload: data });
+			await getLeague(league.id);
 			return data;
 		} catch (error) {
 			console.error(error.message);
@@ -157,6 +158,7 @@ function TeamProvider({ children }) {
 			const data = await response.json();
 
 			dispatch({ type: "updateTeam", payload: data });
+			await getLeague(league.id);
 			return data;
 		} catch (error) {
 			console.error(error.message);
@@ -180,6 +182,7 @@ function TeamProvider({ children }) {
 			}
 
 			dispatch({ type: "deleteTeam" });
+			await getLeague(league.id);
 			return true;
 		} catch (error) {
 			console.error(error.message);

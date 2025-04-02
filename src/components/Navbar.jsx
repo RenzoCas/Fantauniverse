@@ -14,6 +14,9 @@ import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
 import Logo from "../atoms/Logo";
 import { useLeague } from "../contexts/LeagueContext";
+import Loader from "./Loader";
+import GenericPopup from "./popups/GenericPopup";
+import ModalConfirmAction from "./modals/ModalConfirmAction";
 
 export default function Navbar() {
 	const navigate = useNavigate();
@@ -23,24 +26,44 @@ export default function Navbar() {
 	const { myLeagues } = useLeague();
 	const [randomColors, setRandomColors] = useState([]);
 	const [visibleCount, setVisibleCount] = useState(3);
-	const [leagues, setLeagues] = useState();
+	const [isLoading, setIsLoading] = useState(false);
+	const [popupData, setPopupData] = useState({
+		isOpen: false,
+		type: "",
+		message: "",
+	});
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
+
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
+	});
 
 	useEffect(() => {
-		setLeagues(myLeagues);
-	}, [myLeagues]);
-
-	useEffect(() => {
-		const numColors = leagues?.length + 1;
+		const numColors = myLeagues?.length + 1;
 
 		const colors = Array.from({ length: numColors }, () =>
 			randomLightColor()
 		);
 		setRandomColors(colors);
-	}, [leagues]);
+	}, [myLeagues]);
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 		setVisibleCount(3);
+	};
+
+	const showPopup = (type, title, message) => {
+		setPopupData({ isOpen: true, type, title, message });
+		setTimeout(
+			() => setPopupData({ isOpen: false, type, title, message }),
+			2000
+		);
 	};
 
 	const handleLogout = async () => {
@@ -48,13 +71,35 @@ export default function Navbar() {
 		navigate("/");
 	};
 
-	const handleUnregister = async () => {
+	const showModalConfirmUnregister = () => {
+		setDataModalConfirm({
+			title: "Elimina account",
+			text: "Confermando il tuo account verrá definitivamente cancellato.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
+		setIsModalConfirmOpen({ action: "delete", value: true });
+	};
+
+	const handleUnregister = async (e) => {
+		e.preventDefault();
+		setIsLoading(true);
 		const res = await unregister();
 		if (!res) {
-			alert("viao");
-		} else {
-			navigate("/");
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Account non eliminato!",
+				"C'é stato un problema nella cancellazione dell'account. Riprova."
+			);
+			return;
 		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Account eliminato!",
+			"L'account é stato elimiato correttamente."
+		);
 	};
 
 	const loadMore = () => {
@@ -90,218 +135,243 @@ export default function Navbar() {
 	};
 
 	return (
-		<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex justify-between items-center border-b-[2px] border-black relative z-100">
-			<Logo />
-			<div className="flex gap-3 items-center">
-				<button onClick={toggleMenu}>
-					<Bars3Icon className="h-[24px] w-[24px]" />
-				</button>
-			</div>
-
-			<div
-				className={`fixed top-0 right-0 h-full w-full bg-(--black-normal)/50 ${
-					isMenuOpen ? "flex" : "hidden"
-				}`}
-				onClick={toggleMenu}
-			></div>
-			<div
-				className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 px-[16px] py-[35px] flex flex-col gap-[10px] flex-1 ${
-					isMenuOpen ? "translate-x-0" : "translate-x-full"
-				}`}
-			>
-				<div className="flex items-center justify-between gap-[8px]">
-					<div className="flex gap-[20px] items-center">
-						<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden">
-							{icon == null ? (
-								<div
-									className={`h-full object-cover`}
-									style={{
-										backgroundColor: randomColors[0],
-									}}
-								></div>
-							) : (
-								<img
-									src={`data:image/png;base64,${icon}`}
-									alt={`Icona utente`}
-									className="h-full object-cover"
-								/>
-							)}
-						</picture>
-						<h3 className="body-regular">
-							Bentornato, <br />
-							<span className="font-medium break-words">
-								{username}
-							</span>
-						</h3>
-					</div>
-					<button
-						onClick={toggleMenu}
-						className="p-[8px] rounded-[4px] border border-solid border-(--black-light)"
-					>
-						<XMarkIcon className="h-[24px] w-[24px] stroke-2" />
+		<>
+			{isLoading && <Loader />}
+			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex justify-between items-center border-b-[2px] border-black relative z-100">
+				<Logo />
+				<div className="flex gap-3 items-center">
+					<button onClick={toggleMenu}>
+						<Bars3Icon className="h-[24px] w-[24px]" />
 					</button>
 				</div>
-				<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
-				<div className="flex flex-col gap-[10px] flex-1 overflow-y-auto">
-					<div className="flex flex-col gap-[10px]">
-						<h2 className="body-regular text-[#B0B0B0] font-semibold">
-							Le tue leghe
-						</h2>
-						{leagues?.length > 0 ? (
-							<>
-								<ul className="flex flex-col gap-[10px]">
-									{leagues
-										.slice(0, visibleCount)
-										.map((league, idx) => (
-											<li
-												key={league.id}
-												className="flex items-center gap-[20px]"
+
+				<div
+					className={`fixed top-0 right-0 h-full w-full bg-(--black-normal)/50 ${
+						isMenuOpen ? "flex" : "hidden"
+					}`}
+					onClick={toggleMenu}
+				></div>
+				<div
+					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 px-[16px] py-[24px] flex flex-col gap-[10px] flex-1 ${
+						isMenuOpen ? "translate-x-0" : "translate-x-full"
+					}`}
+				>
+					<div className="flex items-center justify-between gap-[8px]">
+						<div className="flex gap-[20px] items-center">
+							<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden">
+								{icon == null ? (
+									<div
+										className={`h-full object-cover`}
+										style={{
+											backgroundColor: randomColors[0],
+										}}
+									></div>
+								) : (
+									<img
+										src={`data:image/png;base64,${icon}`}
+										alt={`Icona utente`}
+										className="h-full object-cover"
+									/>
+								)}
+							</picture>
+							<h3 className="body-regular">
+								Bentornato, <br />
+								<span className="font-medium break-all">
+									{username}
+								</span>
+							</h3>
+						</div>
+						<button
+							onClick={toggleMenu}
+							className="p-[8px] rounded-[4px] border border-solid border-(--black-light)"
+						>
+							<XMarkIcon className="h-[24px] w-[24px] stroke-2" />
+						</button>
+					</div>
+					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
+					<div className="flex flex-col gap-[10px] flex-1 overflow-y-auto">
+						<div className="flex flex-col gap-[10px]">
+							<h2 className="body-regular text-[#B0B0B0] font-semibold">
+								Le tue leghe
+							</h2>
+							{myLeagues?.length > 0 ? (
+								<>
+									<ul className="flex flex-col gap-[10px]">
+										{myLeagues
+											.slice(0, visibleCount)
+											.map((league, idx) => (
+												<li
+													key={league.id}
+													className="flex items-center gap-[20px]"
+													onClick={() =>
+														handleClickLeague(
+															league
+														)
+													}
+												>
+													<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden">
+														{league.icon == null ? (
+															<div
+																className={`h-full object-cover`}
+																style={{
+																	backgroundColor:
+																		randomColors[
+																			idx
+																		],
+																}}
+															></div>
+														) : (
+															<img
+																src={`data:image/png;base64,${league.icon}`}
+																alt={`Icona utente`}
+																className="h-full object-cover"
+															/>
+														)}
+													</picture>
+													<h4 className="body-normal font-medium break-all">
+														{league.name}
+													</h4>
+													<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+												</li>
+											))}
+									</ul>
+									{visibleCount < myLeagues.length && (
+										<button onClick={loadMore}>
+											Carica di più
+										</button>
+									)}
+								</>
+							) : (
+								<>
+									<p className="body-normal font-medium text-(--black-normal)">
+										Sembra che tu non abbia ancora una lega.
+										Cerca una nuova lega oppure creane una
+										da zero.
+									</p>
+									<ul className="flex flex-col gap-[10px]">
+										<li>
+											<button
+												className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
 												onClick={() =>
-													handleClickLeague(league)
+													handleClickLink("/app")
 												}
 											>
-												<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden">
-													{league.icon == null ? (
-														<div
-															className={`h-full object-cover`}
-															style={{
-																backgroundColor:
-																	randomColors[
-																		idx
-																	],
-															}}
-														></div>
-													) : (
-														<img
-															src={`data:image/png;base64,${league.icon}`}
-															alt={`Icona utente`}
-															className="h-full object-cover"
-														/>
-													)}
-												</picture>
-												<h4 className="body-normal font-medium break-words">
-													{league.name}
-												</h4>
+												<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+												<span className="body-normal font-medium text-(--black-normal)">
+													Vai alla Dashboard
+												</span>
 												<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
-											</li>
-										))}
-								</ul>
-								{visibleCount < leagues.length && (
-									<button onClick={loadMore}>
-										Carica di più
-									</button>
-								)}
-							</>
-						) : (
-							<>
-								<p className="body-normal font-medium text-(--black-normal)">
-									Sembra che tu non abbia ancora una lega.
-									Cerca una nuova lega oppure creane una da
-									zero.
-								</p>
-								<ul className="flex flex-col gap-[10px]">
+											</button>
+										</li>
+									</ul>
+								</>
+							)}
+						</div>
+						<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
+						<div className="flex flex-col gap-[10px]">
+							<h2 className="body-regular text-[#B0B0B0] font-semibold">
+								Links
+							</h2>
+							<ul className="flex flex-col gap-[10px]">
+								{myLeagues?.length > 0 && (
 									<li>
 										<button
-											className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
+											className="flex gap-[20px] text-(--black-normal) w-full text-left"
 											onClick={() =>
 												handleClickLink("/app")
 											}
 										>
 											<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
-											<span className="body-normal font-medium text-(--black-normal)">
+											<span className="body-normal font-medium text-(--black-normal) self-center">
 												Vai alla Dashboard
 											</span>
 											<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 										</button>
 									</li>
-								</ul>
-							</>
-						)}
-					</div>
-					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
-					<div className="flex flex-col gap-[10px]">
-						<h2 className="body-regular text-[#B0B0B0] font-semibold">
-							Links
-						</h2>
-						<ul className="flex flex-col gap-[10px]">
-							{leagues?.length > 0 && (
+								)}
 								<li>
 									<button
 										className="flex gap-[20px] text-(--black-normal) w-full text-left"
-										onClick={() => handleClickLink("/app")}
+										onClick={() =>
+											handleClickLink("/rules")
+										}
 									>
-										<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+										<ExclamationCircleIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
 										<span className="body-normal font-medium text-(--black-normal) self-center">
-											Vai alla Dashboard
+											Come funziona?
 										</span>
 										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
 									</button>
 								</li>
-							)}
+								<li>
+									<button
+										className="flex gap-[20px] text-(--black-normal) w-full text-left"
+										onClick={() =>
+											handleClickLink("/account")
+										}
+									>
+										<Cog6ToothIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+										<span className="body-normal font-medium text-(--black-normal) self-center">
+											Modifica il tuo profilo
+										</span>
+										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+									</button>
+								</li>
+								<li>
+									<button
+										className="flex gap-[20px] text-(--black-normal) w-full text-left"
+										onClick={() => handleClickLink("/faq")}
+									>
+										<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+										<span className="body-normal font-medium text-(--black-normal) self-center">
+											Hai bisogno di aiuto? Controlla le
+											nostre FAQ
+										</span>
+										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+									</button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div className="flex flex-col gap-[10px] sticky bottom-0 bg-white">
+						<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
+						<ul className="flex flex-col gap-[10px]">
 							<li>
 								<button
-									className="flex gap-[20px] text-(--black-normal) w-full text-left"
-									onClick={() => handleClickLink("/rules")}
+									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal"
+									onClick={handleLogout}
 								>
-									<ExclamationCircleIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
-									<span className="body-normal font-medium text-(--black-normal) self-center">
-										Come funziona?
-									</span>
-									<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+									<ArrowUpTrayIcon className="w-[24px] h-[24px] stroke-2 rotate-90" />
+									Disconnetti l&lsquo;account
 								</button>
 							</li>
 							<li>
 								<button
-									className="flex gap-[20px] text-(--black-normal) w-full text-left"
-									onClick={() => handleClickLink("/account")}
+									className="flex items-center gap-[20px] text-(--error-normal) font-medium body-normal"
+									onClick={showModalConfirmUnregister}
 								>
-									<Cog6ToothIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
-									<span className="body-normal font-medium text-(--black-normal) self-center">
-										Modifica il tuo profilo
-									</span>
-									<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
-								</button>
-							</li>
-							<li>
-								<button
-									className="flex gap-[20px] text-(--black-normal) w-full text-left"
-									onClick={() => handleClickLink("/faq")}
-								>
-									<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
-									<span className="body-normal font-medium text-(--black-normal) self-center">
-										Hai bisogno di aiuto? Controlla le
-										nostre FAQ
-									</span>
-									<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+									<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] stroke-2" />
+									Elimina l&lsquo;account
 								</button>
 							</li>
 						</ul>
 					</div>
 				</div>
-				<div className="flex flex-col gap-[10px] sticky bottom-0 bg-white">
-					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
-					<ul className="flex flex-col gap-[10px]">
-						<li>
-							<button
-								className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal"
-								onClick={handleLogout}
-							>
-								<ArrowUpTrayIcon className="w-[24px] h-[24px] stroke-2 rotate-90" />
-								Disconnetti l&lsquo;account
-							</button>
-						</li>
-						<li>
-							<button
-								className="flex items-center gap-[20px] text-(--error-normal) font-medium body-normal"
-								onClick={handleUnregister}
-							>
-								<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] stroke-2" />
-								Elimina l&lsquo;account
-							</button>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+				<ModalConfirmAction
+					isOpen={isModalConfirmOpen.value}
+					onClose={() =>
+						setIsModalConfirmOpen({ action: null, value: false })
+					}
+					onConfirmAction={handleUnregister}
+					dataModal={dataModalConfirm}
+				/>
+				<GenericPopup
+					isOpen={popupData.isOpen}
+					type={popupData.type}
+					title={popupData.title}
+					message={popupData.message}
+				/>
+			</nav>
+		</>
 	);
 }

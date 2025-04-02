@@ -132,6 +132,7 @@ function Players() {
 								playerObj={el}
 								onEdit={handleEditPlayer}
 								canEdit={isAdmin && status === "PENDING"}
+								viewTeam={false}
 							/>
 						))}
 					</ul>
@@ -143,9 +144,12 @@ function Players() {
 						acquistabile per la tua lega.
 					</p>
 					<NormalButton
-						text="Aggiungi Player"
+						text="Aggiungi giocatore"
 						action={handleAddPlayer}
-					/>
+						customIcon={true}
+					>
+						<PlusIcon className="h-[24px] w-[24px]" />
+					</NormalButton>
 				</div>
 			)}
 

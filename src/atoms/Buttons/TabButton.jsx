@@ -7,6 +7,7 @@ export default function TabButton({ handleClick, children, active }) {
 					? "bg-white text-(--black-darker) border border-(--black-light-hover)"
 					: "bg-transparent text-(--black-light-active)"
 			}`}
+			type="button"
 		>
 			{children}
 		</button>

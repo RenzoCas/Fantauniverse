@@ -1,48 +1,49 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { ChevronLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Rules from "../pages/Rules";
 import Tab from "../components/Tab";
 import Ranking from "../pages/Ranking";
 import Loader from "../components/Loader";
-import FixedPopup from "../components/popups/FixedPopup";
 import Players from "./Players";
 import GenericPopup from "../components/popups/GenericPopup";
 import GeneralSettings from "./GeneralSettings";
-import NormalButton from "../atoms/Buttons/NormalButton";
 import { useParticipant } from "../contexts/ParticipantContext";
 import Participants from "./Participants";
-import CardSquadra from "../components/CardSquadra";
 import { useTeam } from "../contexts/TeamContext";
 import Points from "./Points";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import BottomNavbar from "../components/BottomNavbar";
+import MyTeam from "./MyTeam";
 
 function ViewLega() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const { league, getLeague, updateLeague } = useLeague();
-	const { addParticipant, deleteParticipant } = useParticipant();
-	const { team, getMyTeam } = useTeam();
-
+	const { deleteParticipant } = useParticipant();
+	const { getMyTeam, teamParticipant } = useTeam();
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
 		type: "",
 		message: "",
 	});
-	const { id, isAdmin, isRegistered: testRegistered } = state.league;
+	const { id, isAdmin } = state.league;
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 
-	const { description, name, status, icon, isRegistered } = league;
+	const { name, status, icon, isRegistered } = league;
 	const [tabActive, setTabActive] = useState();
-	const [textModal, setTextModal] = useState();
-	const [disclaimerModal, setDisclaimerModal] = useState();
 	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
 		action: null,
 		value: false,
+	});
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
 	});
 
 	useEffect(() => {
@@ -57,23 +58,17 @@ function ViewLega() {
 	}, [id]);
 
 	const showModalConfirmDelete = () => {
-		setTextModal("Sei sicuro di volerti disiscrivere da questa lega?");
-		setDisclaimerModal("Confermando non parteciperai piú a questa lega.");
+		setDataModalConfirm({
+			title: "Disiscrizione",
+			text: "Confermando non parteciperai piú a questa lega.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
 		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
 	useEffect(() => {
-		setTabActive(
-			`${
-				status == "FINISHED"
-					? "Ranking"
-					: isAdmin
-					? "General"
-					: status == "NOT_STARTED"
-					? "Participants"
-					: "Ranking"
-			}`
-		);
+		setTabActive("General");
 	}, [status, isAdmin]);
 
 	const showPopup = (type, title, message) => {
@@ -86,26 +81,6 @@ function ViewLega() {
 
 	const handleTabChange = (tab) => {
 		setTabActive(tab);
-	};
-
-	const handleAddParticipant = async () => {
-		setIsLoading(true);
-		const res = await addParticipant(id);
-		if (!res) {
-			setIsLoading(false);
-			showPopup(
-				"error",
-				"Errore nell'iscrizione alla lega!",
-				"L'iscrizione a questa lega non é andata a buon fine. Riprova."
-			);
-			return;
-		}
-		setIsLoading(false);
-		showPopup(
-			"success",
-			"Iscrizione effettuata!",
-			"L'iscrizione a questa lega é andata a buon fine."
-		);
 	};
 
 	const handleRemovePartecipant = async () => {
@@ -198,15 +173,6 @@ function ViewLega() {
 			) : (
 				<>
 					<div className="flex flex-col gap-[16px] flex-1">
-						<button
-							onClick={() => {
-								navigate("/app");
-							}}
-							className="flex items-center gap-[4px] text-(--accent-normal)"
-						>
-							<ChevronLeftIcon className="h-[20px] w-[20px]" />
-							<p className="body-normal">Indietro</p>
-						</button>
 						<div className="top flex flex-col gap-[16px] flex-1">
 							{status === "PENDING" && (
 								<input
@@ -245,103 +211,80 @@ function ViewLega() {
 							</picture>
 							{status != "PENDING" && (
 								<>
-									<div className="flex items-center justify-between">
-										<h2 className="title-h4 break-words">
-											{name}
-										</h2>
-										{status == "NOT_STARTED" &&
-											isRegistered && (
-												<button
-													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
-													onClick={
-														showModalConfirmDelete
-													}
-												>
-													Esci dalla lega
-												</button>
-											)}
-									</div>
-									{description != null && (
-										<p className="body-normal text-(--black-normal) break-words">
-											{description}
-										</p>
+									{!(
+										tabActive === "MyTeam" ||
+										tabActive === "Points" ||
+										teamParticipant
+									) && (
+										<div className="flex items-center justify-between">
+											<h2 className="title-h4 font-medium break-all">
+												{name}
+											</h2>
+											{status == "NOT_STARTED" &&
+												isRegistered && (
+													<button
+														className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
+														onClick={
+															showModalConfirmDelete
+														}
+													>
+														Esci dalla lega
+													</button>
+												)}
+										</div>
 									)}
 								</>
 							)}
+							{status === "PENDING" && (
+								<Tab
+									tabActive={tabActive}
+									handleTabChange={handleTabChange}
+								/>
+							)}
 
-							<Tab
-								tabActive={tabActive}
-								handleTabChange={handleTabChange}
-								isAdmin={isAdmin}
-								status={status}
-							/>
 							{tabActive === "General" && <GeneralSettings />}
 							{tabActive === "Rules" && <Rules />}
-							{tabActive === "Ranking" && <Ranking />}
-							{tabActive === "Days" && <Points />}
+							{tabActive === "Ranking" && (
+								<Ranking handleTabChange={handleTabChange} />
+							)}
+							{tabActive === "Points" && <Points />}
 							{tabActive === "Players" && <Players />}
-							{tabActive === "Participants" && <Participants />}
+							{tabActive === "Participants" && (
+								<Participants
+									handleTabChange={handleTabChange}
+								/>
+							)}
+							{tabActive === "MyTeam" && <MyTeam />}
+
+							{status != "PENDING" && (
+								<BottomNavbar
+									tabActive={tabActive}
+									handleTabChange={handleTabChange}
+									isAdmin={isAdmin}
+									status={status}
+								/>
+							)}
 						</div>
-						{status === "NOT_STARTED" ? (
-							!isRegistered ? (
-								<NormalButton
-									text="Unisciti alla lega"
-									action={handleAddParticipant}
-									classOpt="sticky bottom-[32px]"
-								/>
-							) : (
-								<CardSquadra
-									team={team}
-									handleClick={() => navigate("viewTeam")}
-								/>
-							)
-						) : status === "STARTED" && isRegistered ? (
-							<>
-								{tabActive == "Ranking" && (
-									<CardSquadra
-										team={team}
-										handleClick={() => navigate("viewTeam")}
-									/>
-								)}
-							</>
-						) : status === "STARTED" && !testRegistered ? (
-							<FixedPopup
-								title="Lega giá avviata!"
-								message={`Questa lega é stata giá avviata, non puoi piú iscriverti.`}
-								customIcon={true}
-							>
-								<ExclamationTriangleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-orange-500" />
-							</FixedPopup>
-						) : (
-							status === "FINISHED" && (
-								<FixedPopup
-									title="Lega terminata"
-									message={`Questa lega é terminata. Controlla la classifica per verificare il vincitore.`}
-									customIcon={true}
-								>
-									<ExclamationTriangleIcon className="w-[16px] h-[16px] flex-shrink-0 fill-orange-500" />
-								</FixedPopup>
-							)
+						<GenericPopup
+							isOpen={popupData.isOpen}
+							type={popupData.type}
+							title={popupData.title}
+							message={popupData.message}
+						/>
+						{status == "NOT_STARTED" && isRegistered && (
+							<ModalConfirmAction
+								isOpen={isModalConfirmOpen.value}
+								dataModal={dataModalConfirm}
+								onClose={() =>
+									setIsModalConfirmOpen({
+										action: null,
+										value: false,
+									})
+								}
+								onConfirmAction={handleRemovePartecipant}
+							/>
 						)}
 					</div>
-					<GenericPopup
-						isOpen={popupData.isOpen}
-						type={popupData.type}
-						title={popupData.title}
-						message={popupData.message}
-					/>
-					<ModalConfirmAction
-						isOpen={isModalConfirmOpen.value}
-						text={textModal}
-						disclaimer={disclaimerModal}
-						onClose={() =>
-							setIsModalConfirmOpen({
-								action: null,
-								value: false,
-							})
-						}
-						onConfirmAction={handleRemovePartecipant}
-					></ModalConfirmAction>
 				</>
 			)}
 		</>

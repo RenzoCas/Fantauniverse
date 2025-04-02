@@ -1,9 +1,29 @@
 import TabButton from "../atoms/Buttons/TabButton";
 
-function Tab({ tabActive, handleTabChange, isAdmin, status }) {
+function Tab({ tabActive, handleTabChange }) {
 	return (
 		<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover)">
-			{isAdmin ? (
+			<>
+				<TabButton
+					handleClick={() => handleTabChange("General")}
+					active={tabActive === "General"}
+				>
+					<p className="body-normal">Info</p>
+				</TabButton>
+				<TabButton
+					handleClick={() => handleTabChange("Players")}
+					active={tabActive === "Players"}
+				>
+					<p className="body-normal">Giocatori</p>
+				</TabButton>
+				<TabButton
+					handleClick={() => handleTabChange("Rules")}
+					active={tabActive === "Rules"}
+				>
+					<p className="body-normal">Regole</p>
+				</TabButton>
+			</>
+			{/* {isAdmin ? (
 				status == "PENDING" ? (
 					<>
 						<TabButton
@@ -154,7 +174,7 @@ function Tab({ tabActive, handleTabChange, isAdmin, status }) {
 						<p className="body-normal">Regole</p>
 					</TabButton>
 				</>
-			)}
+			)} */}
 		</div>
 	);
 }

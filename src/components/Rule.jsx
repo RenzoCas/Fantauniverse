@@ -61,7 +61,7 @@ function Rule({
 			</div>
 			<div className="flex gap-[8px] ml-auto">
 				<p className="body-small font-semibold whitespace-nowrap">
-					{value} ptn.
+					{value} pnt.
 				</p>
 				{isAddPoints && (
 					<button

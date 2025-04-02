@@ -20,7 +20,7 @@ function CreateDay() {
 	const { state } = useLocation();
 	const [dataDay, setDataDay] = useState({
 		id: state?.id || null,
-		players: [],
+		players: state?.players || [],
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -28,6 +28,7 @@ function CreateDay() {
 		type: "",
 		message: "",
 	});
+
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
 		setTimeout(
@@ -105,7 +106,7 @@ function CreateDay() {
 					<p className="body-normal">Indietro</p>
 				</button>
 				<div className="flex flex-col gap-[16px]">
-					<h2 className="body-regular break-words">
+					<h2 className="body-regular break-all">
 						Giornata:{" "}
 						<span className="font-semibold">{state.name}</span>
 					</h2>

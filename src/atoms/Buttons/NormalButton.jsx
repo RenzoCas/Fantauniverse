@@ -15,7 +15,7 @@ export default function NormalButton({
 			onClick={action}
 			disabled={disabled}
 			type="button"
-			className={`group flex items-center justify-center gap-[8px]  px-[24px] py-[12px] ${
+			className={`group flex items-center justify-center gap-[8px] px-[24px] py-[12px] ${
 				roundedFull ? "rounded-full" : ""
 			}
             ${classOpt ? classOpt : ""}

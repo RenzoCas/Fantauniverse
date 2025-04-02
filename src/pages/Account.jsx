@@ -10,9 +10,10 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import ModalChangePassword from "../components/modals/ModalChangePassword";
+import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 
 function Account() {
-	const { user, updateUser } = useUser();
+	const { user, updateUser, unregister } = useUser();
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [formData, setFormData] = useState({
@@ -25,10 +26,29 @@ function Account() {
 		type: "",
 		message: "",
 	});
+	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
+		action: null,
+		value: false,
+	});
+
+	const [dataModalConfirm, setDataModalConfirm] = useState({
+		title: "",
+		text: "",
+		conferma: "",
+		annulla: "",
+	});
 	const [isModalPasswordVisible, setIsModalPasswordVisible] = useState(false);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 	const messageError = "Campo obbligatorio";
 	const fileInputRef = useRef(null);
+	const [isEditing, setIsEditing] = useState({
+		username: false,
+		email: false,
+	});
+
+	const isEditingAnyField = Object.values(isEditing).some(
+		(isEditing) => isEditing
+	);
 
 	useEffect(() => {
 		setRandomColor(randomLightColor());
@@ -108,7 +128,6 @@ function Account() {
 			"Aggiornamento completato!",
 			"Immagine rimossa correttamente."
 		);
-		setIsLoading(false);
 	};
 
 	const handleFileChange = async (event) => {
@@ -173,14 +192,36 @@ function Account() {
 		);
 	};
 
-	const [isEditing, setIsEditing] = useState({
-		username: false,
-		email: false,
-	});
+	const showModalConfirmUnregister = () => {
+		setDataModalConfirm({
+			title: "Elimina account",
+			text: "Confermando il tuo account verrá definitivamente cancellato.",
+			conferma: "Conferma",
+			annulla: "Annulla",
+		});
+		setIsModalConfirmOpen({ action: "delete", value: true });
+	};
 
-	const isEditingAnyField = Object.values(isEditing).some(
-		(isEditing) => isEditing
-	);
+	const handleUnregister = async (e) => {
+		e.preventDefault();
+		setIsLoading(true);
+		const res = await unregister();
+		if (!res) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Account non eliminato!",
+				"C'é stato un problema nella cancellazione dell'account. Riprova."
+			);
+			return;
+		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Account eliminato!",
+			"L'account é stato elimiato correttamente."
+		);
+	};
 
 	const toggleEditing = (field) => {
 		setIsEditing((prev) => ({
@@ -276,7 +317,7 @@ function Account() {
 									/>
 								) : (
 									<p
-										className={`break-words self-center ${
+										className={`break-all self-center ${
 											field === "name"
 												? "body-regular font-medium"
 												: "body-normal"
@@ -313,16 +354,23 @@ function Account() {
 						text="Elimina Account"
 						customIcon={true}
 						classOpt="text-(--error-normal)"
+						action={showModalConfirmUnregister}
 					>
 						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px]" />
 					</GhostButton>
 				</section>
-
 				<ModalChangePassword
 					isOpen={isModalPasswordVisible}
 					onClose={() => setIsModalPasswordVisible(false)}
 				/>
-
+				<ModalConfirmAction
+					isOpen={isModalConfirmOpen.value}
+					onClose={() =>
+						setIsModalConfirmOpen({ action: null, value: false })
+					}
+					onConfirmAction={handleUnregister}
+					dataModal={dataModalConfirm}
+				/>
 				<GenericPopup
 					isOpen={popupData.isOpen}
 					type={popupData.type}

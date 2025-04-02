@@ -83,10 +83,10 @@ function CardSquadra({ team, handleClick }) {
 						)}
 					</div>
 
-					<h4 className="body-regular text-white break-words">
+					<h4 className="body-regular text-white break-all">
 						{name}
 					</h4>
-					<p className="body-xsmall text-white break-words">
+					<p className="body-xsmall text-white break-all">
 						{position}
 						<sup>°</sup> posto in classifica
 					</p>

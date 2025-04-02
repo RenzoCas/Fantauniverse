@@ -232,7 +232,7 @@ function Dashboard() {
 		<>
 			{isLoading && <Loader />}
 			<div className="flex flex-col gap-[16px]">
-				<h1 className="title-h4 text-(--primary) break-words">
+				<h1 className="title-h4 text-(--primary) break-all">
 					Bentornato {user.username}
 				</h1>
 				<section className="flex flex-col gap-[16px]">

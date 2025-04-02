@@ -105,10 +105,7 @@ function DayProvider({ children }) {
 				throw new Error("Errore nella cancellazione della giornata.");
 			}
 
-			dispatchLeague({
-				type: "deleteDay",
-				payload: dayId,
-			});
+			// await getLeague(league.id);
 
 			return true;
 		} catch (error) {

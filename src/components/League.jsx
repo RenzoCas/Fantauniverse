@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Cog6ToothIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { Award } from "lucide-react";
 
 export default function League({ league, onAddParticipant }) {
 	const navigate = useNavigate();
@@ -68,7 +69,7 @@ export default function League({ league, onAddParticipant }) {
 					</h4>
 					{isRegistered ? (
 						<div className="flex gap-[4px]">
-							<TrophyIcon className="w-[16px] h-[16x] stroke-[#B01DFF] stroke-2" />
+							<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
 							<span className="body-small font-semibold">
 								{position}&#176; Posto
 							</span>
@@ -88,7 +89,7 @@ export default function League({ league, onAddParticipant }) {
 						<h6 className="body-small font-semibold">Gioca con:</h6>
 						<ul className="flex items-center">
 							{Array.from({
-								length: Math.min(numParticipants, 3),
+								length: Math.min(numParticipants, 2),
 							}).map((_, index) => (
 								<li
 									key={index}
@@ -107,6 +108,18 @@ export default function League({ league, onAddParticipant }) {
 								></li>
 							))}
 
+							{numParticipants == 3 && (
+								<li
+									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-20"
+									style={{
+										backgroundColor:
+											randomColors[
+												randomColors.length - 1
+											],
+									}}
+								></li>
+							)}
+
 							{numParticipants > 3 && (
 								<li
 									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15 flex items-center justify-center"
@@ -118,7 +131,7 @@ export default function League({ league, onAddParticipant }) {
 									}}
 								>
 									<p className="body-normal font-semibold">
-										+{numParticipants - 3}
+										+{numParticipants - 2}
 									</p>
 								</li>
 							)}
