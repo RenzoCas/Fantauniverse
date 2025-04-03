@@ -140,6 +140,7 @@ function Dashboard() {
 			setIsLoading(false);
 			setIsModalSearchOpen(true);
 		}
+		document.querySelector("#searchLeaga").blur();
 	};
 
 	const showPopup = (type, title, message) => {

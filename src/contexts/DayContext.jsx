@@ -24,7 +24,7 @@ function reducer(state, action) {
 function DayProvider({ children }) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
-	const { league, getLeague } = useLeague();
+	const { dispatchLeague } = useLeague();
 
 	// Funzione per recuperare la singola giornata
 	const getDay = async (dayId) => {
@@ -51,6 +51,35 @@ function DayProvider({ children }) {
 		}
 	};
 
+	const createDay = async (dataDay) => {
+		try {
+			const response = await fetch(`${urlServer}/day`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(dataDay),
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nella creazione della giornata.");
+			}
+
+			const updatedLeagueData = await response.json();
+
+			dispatchLeague({
+				type: "updateLeague",
+				payload: updatedLeagueData,
+			});
+
+			return updatedLeagueData;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	// Funzione per aggiornare una giornata
 	const updateDay = async (dataDay) => {
 		try {
@@ -69,8 +98,7 @@ function DayProvider({ children }) {
 
 			const updatedDay = await response.json();
 
-			dispatch({ type: "setDay", payload: updatedDay });
-			await getLeague(league.id);
+			dispatchLeague({ type: "updateDay", payload: updatedDay });
 			return updatedDay;
 		} catch (error) {
 			console.error(error.message);
@@ -92,8 +120,7 @@ function DayProvider({ children }) {
 				throw new Error("Errore nella cancellazione della giornata.");
 			}
 
-			// await getLeague(league.id);
-
+			dispatchLeague({ type: "deleteDay", payload: dayId });
 			return true;
 		} catch (error) {
 			console.error(error.message);
@@ -106,6 +133,7 @@ function DayProvider({ children }) {
 			value={{
 				day: state.day,
 				getDay,
+				createDay,
 				updateDay,
 				deleteDay,
 			}}

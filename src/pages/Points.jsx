@@ -24,9 +24,9 @@ function Points() {
 	const [isModalAddPointsOpen, setIsModalAddPointsOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
-	const { league, createDay } = useLeague();
-	const { getDay, deleteDay, updateDay } = useDay();
+	const { league } = useLeague();
 	const { days, status, isAdmin, players } = league;
+	const { getDay, createDay, deleteDay, updateDay } = useDay();
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -35,10 +35,11 @@ function Points() {
 	});
 
 	const [activeDay, setActiveDay] = useState();
-	const [infoDay, setInfoDay] = useState();
 	const [tempDay, setTempDay] = useState({
-		id: infoDay?.id || null,
-		players: infoDay?.players || [],
+		id: days[activeIndex]?.id || null,
+		name: days[activeIndex]?.name || "",
+		date: days[activeIndex]?.date || Date.now(),
+		players: days[activeIndex]?.players || [],
 	});
 
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
@@ -55,10 +56,7 @@ function Points() {
 	const fetchInfoDay = async (dayId) => {
 		try {
 			const response = await getDay(dayId);
-			setInfoDay(response);
-			setTempDay((prev) => {
-				return { ...prev, id: response.id, players: response.players };
-			});
+			setTempDay(response);
 		} catch (error) {
 			console.error("Errore nel recupero di infoDay:", error);
 		}
@@ -228,7 +226,7 @@ function Points() {
 							<div className="flex items-center justify-between">
 								<h2 className="body-regular break-all">
 									<span className="font-semibold">
-										{infoDay.name}
+										{tempDay.name}
 									</span>
 								</h2>
 								<button
@@ -247,7 +245,7 @@ function Points() {
 										key={p.id}
 										playerObj={p}
 										addPoints={true}
-										dataDay={infoDay.players[idx]}
+										dataDay={tempDay.players[idx]}
 										handleAddPoints={handleAddPoints}
 									></Player>
 								))}
@@ -263,7 +261,7 @@ function Points() {
 								isOpen={isModalAddPointsOpen}
 								onClose={() => setIsModalAddPointsOpen(false)}
 								playerObj={playerObj}
-								dataDay={infoDay}
+								dataDay={tempDay}
 								onConfirm={confirmPlayerRules}
 								startTabActive="Bonus"
 							/>
@@ -332,7 +330,7 @@ function Points() {
 											</button>
 										)}
 										<ul className="flex flex-col">
-											{infoDay?.players?.map((el) => (
+											{tempDay?.players?.map((el) => (
 												<DayPlayer
 													key={el.id}
 													playerObj={el.player}
@@ -357,7 +355,7 @@ function Points() {
 										>
 											<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
 										</GhostButton>
-										{infoDay?.players.length == 0 && (
+										{tempDay?.players.length == 0 && (
 											<NormalButton
 												text="Modifica"
 												customIcon={true}
