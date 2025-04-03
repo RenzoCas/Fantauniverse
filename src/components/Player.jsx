@@ -37,7 +37,10 @@ function Player({
 		(p) => p.id === playerObj.id && p.isCaptain
 	);
 	const [randomColor, setRandomColor] = useState("#ffffff");
-	const [totalPoints, setTotalPoints] = useState(0);
+	const totalPoints =
+		dataDay?.players?.find((p) => p.player.id === playerObj.id)?.points ||
+		0;
+
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	const randomLightColor = () => {
@@ -51,7 +54,6 @@ function Player({
 	};
 
 	useEffect(() => {
-		setTotalPoints(() => dataDay?.points);
 		setRandomColor(randomLightColor());
 	}, []);
 

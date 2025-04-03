@@ -25,7 +25,7 @@ function Points() {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league } = useLeague();
-	const { days, status, isAdmin, players } = league;
+	const { days, status, isAdmin, players, rules } = league;
 	const { getDay, createDay, deleteDay, updateDay } = useDay();
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -41,7 +41,7 @@ function Points() {
 		date: days[activeIndex]?.date || Date.now(),
 		players: days[activeIndex]?.players || [],
 	});
-
+	const [infoDay, setInfoDay] = useState();
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
 
 	useEffect(() => {
@@ -56,6 +56,7 @@ function Points() {
 	const fetchInfoDay = async (dayId) => {
 		try {
 			const response = await getDay(dayId);
+			setInfoDay(response);
 			setTempDay(response);
 		} catch (error) {
 			console.error("Errore nel recupero di infoDay:", error);
@@ -96,6 +97,7 @@ function Points() {
 			result = await createDay(formData);
 		}
 
+		setInfoDay(tempDay);
 		setIsLoading(false);
 		if (!result) {
 			showPopup(
@@ -110,17 +112,20 @@ function Points() {
 			"Giornata aggiunta!",
 			"La giornata é stata creata correttamente."
 		);
-		setActiveIndex(() => {
-			const newIndex = result.days.length - 1;
 
-			setTimeout(() => {
-				if (swiperInstance) {
-					swiperInstance.slideTo(newIndex);
-				}
-			}, 100);
+		if (!isUpdateDay) {
+			setActiveIndex(() => {
+				const newIndex = result.days.length - 1;
 
-			return newIndex;
-		});
+				setTimeout(() => {
+					if (swiperInstance) {
+						swiperInstance.slideTo(newIndex);
+					}
+				}, 100);
+
+				return newIndex;
+			});
+		}
 	};
 
 	const handleDeleteDay = async () => {
@@ -160,11 +165,26 @@ function Points() {
 		setIsModalAddPointsOpen(true);
 	};
 
+	const handleCancelUpdate = async () => {
+		setTempDay(infoDay);
+		setIsUpdateDay(false);
+	};
+
 	const confirmPlayerRules = async (player, selectedRules) => {
 		await setTempDay((prev) => {
 			const playerExists = prev.players.some(
 				(p) => p.player.id === player.id
 			);
+
+			const points = selectedRules.reduce((total, rule) => {
+				const matchingRule = rules.find((r) => r.id === rule);
+				if (matchingRule) {
+					return matchingRule.malus
+						? total - matchingRule.value
+						: total + matchingRule.value;
+				}
+				return total;
+			}, 0);
 
 			const updatedPlayers = playerExists
 				? prev.players.map((p) =>
@@ -174,6 +194,7 @@ function Points() {
 									rules: selectedRules.map((ruleId) => ({
 										id: ruleId,
 									})),
+									points: points,
 							  }
 							: p
 				  )
@@ -184,6 +205,7 @@ function Points() {
 							rules: selectedRules.map((ruleId) => ({
 								id: ruleId,
 							})),
+							points: points,
 						},
 				  ];
 
@@ -230,9 +252,7 @@ function Points() {
 									</span>
 								</h2>
 								<button
-									onClick={() => {
-										setIsUpdateDay(false);
-									}}
+									onClick={handleCancelUpdate}
 									className="flex items-center gap-[4px] text-(--accent-normal)"
 								>
 									<p className="body-normal">Annulla</p>
@@ -240,12 +260,12 @@ function Points() {
 							</div>
 
 							<ul className="flex flex-col gap-[12px]">
-								{players.map((p, idx) => (
+								{players.map((p) => (
 									<Player
 										key={p.id}
 										playerObj={p}
 										addPoints={true}
-										dataDay={tempDay.players[idx]}
+										dataDay={tempDay}
 										handleAddPoints={handleAddPoints}
 									></Player>
 								))}
@@ -261,7 +281,7 @@ function Points() {
 								isOpen={isModalAddPointsOpen}
 								onClose={() => setIsModalAddPointsOpen(false)}
 								playerObj={playerObj}
-								dataDay={tempDay}
+								dataDay={infoDay}
 								onConfirm={confirmPlayerRules}
 								startTabActive="Bonus"
 							/>
@@ -314,7 +334,7 @@ function Points() {
 										{formatDate(days[activeIndex].date)}
 									</p>
 								</div>
-								{tempDay?.players.length > 0 ? (
+								{infoDay?.players.length > 0 ? (
 									<>
 										{isAdmin && status != "FINISHED" && (
 											<button
@@ -330,7 +350,7 @@ function Points() {
 											</button>
 										)}
 										<ul className="flex flex-col">
-											{tempDay?.players?.map((el) => (
+											{infoDay?.players?.map((el) => (
 												<DayPlayer
 													key={el.id}
 													playerObj={el.player}
@@ -355,7 +375,7 @@ function Points() {
 										>
 											<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
 										</GhostButton>
-										{tempDay?.players.length == 0 && (
+										{infoDay?.players.length == 0 && (
 											<NormalButton
 												text="Modifica"
 												customIcon={true}

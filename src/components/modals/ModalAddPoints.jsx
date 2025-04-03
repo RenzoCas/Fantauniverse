@@ -85,7 +85,6 @@ function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 						}}
 						icon={false}
 						text="Conferma"
-						disabled={selectedRules.length == 0}
 						classOpt="sticky bottom-0"
 					/>
 				</div>
