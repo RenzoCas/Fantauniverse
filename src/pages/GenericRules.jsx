@@ -14,10 +14,10 @@ export default function GenericRules() {
 					<Navbar />
 					<button
 						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal"
-						onClick={() => navigate("/registration")}
+						onClick={() => navigate("/app")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
-						Torna alla registrazione
+						Torna alla dashboard
 					</button>
 				</>
 			) : (
@@ -29,10 +29,10 @@ export default function GenericRules() {
 					</header>
 					<button
 						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal"
-						onClick={() => navigate("/app")}
+						onClick={() => navigate("/registration")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
-						Torna alla dashboard
+						Vai alla registrazione
 					</button>
 				</>
 			)}
