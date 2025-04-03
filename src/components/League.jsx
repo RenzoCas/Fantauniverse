@@ -5,10 +5,20 @@ import { Award } from "lucide-react";
 
 export default function League({ league, onAddParticipant }) {
 	const navigate = useNavigate();
-	const { id, name, icon, isAdmin, isRegistered, position, status } = league;
-	const numParticipants = league.participants
-		? league.participants?.length
-		: league.numberParticipants;
+	const {
+		id,
+		name,
+		icon,
+		isAdmin,
+		isRegistered,
+		position,
+		status,
+		participants,
+		numberParticipants,
+	} = league;
+	const numParticipants = participants
+		? participants?.length
+		: numberParticipants;
 
 	const [randomColors, setRandomColors] = useState([]);
 

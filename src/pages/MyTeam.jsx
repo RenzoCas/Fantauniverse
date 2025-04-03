@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import { useTeam } from "../contexts/TeamContext";
-import { Award, CircleAlert, PiggyBank, Save, X } from "lucide-react";
+import {
+	Award,
+	CircleAlert,
+	CircleCheckBig,
+	PiggyBank,
+	Save,
+	X,
+} from "lucide-react";
 import { CheckIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Player from "../components/Player";
@@ -401,9 +408,14 @@ function MyTeam() {
 						<div
 							className={`flex gap-[12px] bg-white rounded-[12px] p-[24px] border border-(--black-light-hover)`}
 						>
-							<CircleAlert className="h-[24px] w-[24px] stroke-(--error-normal) flex-shrink-0" />
+							{isFormValid() && !isEditingAnyField ? (
+								<CircleCheckBig className="h-[24px] w-[24px] stroke-[#35C950] flex-shrink-0" />
+							) : (
+								<CircleAlert className="h-[24px] w-[24px] stroke-(--error-normal) flex-shrink-0" />
+							)}
+
 							<div className="flex flex-col gap-[10px]">
-								<h4 className="body-regular font-medium">
+								<h4 className="body-normal font-medium">
 									Attenzione, assicurati di:
 								</h4>
 								<ul className="flex flex-col gap-[10px]">
