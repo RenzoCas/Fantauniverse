@@ -266,7 +266,7 @@ function MyTeam() {
 							{team.name}
 						</h2>
 						<div className="flex items-center gap-[10px]">
-							<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
+							<Award className="h-[24px] w-[24px] stroke-[#B01DFF] flex-shrink-0" />
 							<p className="body-regular">
 								{team.position}o Posto
 							</p>
@@ -375,7 +375,7 @@ function MyTeam() {
 							</div>
 						</div>
 						<div className="w-full flex gap-[8px] items-center justify-center bg-(--black-light) rounded-[4px] px-[12px] py-[4px]">
-							<PiggyBank className="stroke-(--black-normal) h-[24px] w-[24px]" />
+							<PiggyBank className="stroke-(--black-normal) h-[24px] w-[24px] flex-shrink-0" />
 							<p className="body-small font-medium">
 								{tempMaxCoins}/{maxCoins} {coinName}
 							</p>
@@ -401,7 +401,7 @@ function MyTeam() {
 						<div
 							className={`flex gap-[12px] bg-white rounded-[12px] p-[24px] border border-(--black-light-hover)`}
 						>
-							<CircleAlert className="h-[24px] w-[24px] stroke-(--error-normal)" />
+							<CircleAlert className="h-[24px] w-[24px] stroke-(--error-normal) flex-shrink-0" />
 							<div className="flex flex-col gap-[10px]">
 								<h4 className="body-regular font-medium">
 									Attenzione, assicurati di:

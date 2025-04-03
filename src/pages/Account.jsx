@@ -356,7 +356,7 @@ function Account() {
 						classOpt="text-(--error-normal)"
 						action={showModalConfirmUnregister}
 					>
-						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px]" />
+						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] flex-shrink-0" />
 					</GhostButton>
 				</section>
 				<ModalChangePassword

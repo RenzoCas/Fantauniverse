@@ -140,7 +140,7 @@ function Rules() {
 									className="flex items-center gap-[8px] justify-end body-small"
 								>
 									Aggiungi regola
-									<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full" />
+									<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />
 								</button>
 							</div>
 						</>
@@ -171,7 +171,7 @@ function Rules() {
 						action={handleAddRule}
 						customIcon={true}
 					>
-						<PlusIcon className="h-[24px] w-[24px]" />
+						<PlusIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</NormalButton>
 				</div>
 			)}

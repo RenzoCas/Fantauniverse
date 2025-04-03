@@ -19,7 +19,7 @@ export default function FAQPage() {
 				className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal"
 				onClick={() => navigate("/app")}
 			>
-				<ChevronLeft className="h-[24px] w-[24px]" />
+				<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
 				Torna alla dashboard
 			</button>
 			<main className="max-w-3xl mx-auto py-8 px-4 lg:py-16 lg:px-6 flex flex-col gap-4 min-h-[calc(100dvh-64px)]">
@@ -40,9 +40,9 @@ export default function FAQPage() {
 								>
 									{faq.question}
 									{openIndex === index ? (
-										<ChevronUp className="h-[24px] w-[24px]" />
+										<ChevronUp className="h-[24px] w-[24px] flex-shrink-0" />
 									) : (
-										<ChevronDown className="h-[24px] w-[24px]" />
+										<ChevronDown className="h-[24px] w-[24px] flex-shrink-0" />
 									)}
 								</button>
 								<div

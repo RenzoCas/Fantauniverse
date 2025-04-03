@@ -42,7 +42,7 @@ function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 				}`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[24px] w-[24px]" />
+					<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 				</button>
 				<div className="flex flex-col gap-[16px] relative">
 					<h5 className="body-normal font-semibold">

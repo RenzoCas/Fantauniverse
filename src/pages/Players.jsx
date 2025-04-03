@@ -120,7 +120,7 @@ function Players() {
 								<p className="body-small whitespace-nowrap">
 									Aggiungi player
 								</p>
-								<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full" />
+								<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />
 							</button>
 						</div>
 					)}
@@ -148,7 +148,7 @@ function Players() {
 						action={handleAddPlayer}
 						customIcon={true}
 					>
-						<PlusIcon className="h-[24px] w-[24px]" />
+						<PlusIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</NormalButton>
 				</div>
 			)}

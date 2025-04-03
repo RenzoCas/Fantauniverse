@@ -248,7 +248,7 @@ function Dashboard() {
 								<p className="body-small whitespace-nowrap">
 									Crea lega
 								</p>
-								<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full" />
+								<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />
 							</button>
 						)}
 					</div>
@@ -366,9 +366,9 @@ function Dashboard() {
 											>
 												<p>{renderSelectedText()}</p>
 												{filterStateOpen ? (
-													<ChevronUpIcon className="w-[16px] h-[16px]" />
+													<ChevronUpIcon className="w-[16px] h-[16px] flex-shrink-0" />
 												) : (
-													<ChevronDownIcon className="w-[16px] h-[16px]" />
+													<ChevronDownIcon className="w-[16px] h-[16px] flex-shrink-0" />
 												)}
 											</div>
 											{filterStateOpen && (
@@ -443,7 +443,7 @@ function Dashboard() {
 						className="group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white bg-(--accent-normal)"
 					>
 						<span>Crea una nuova lega</span>
-						<PlusIcon className="h-[24px] w-[24px] text-(--black-normal) bg-white p-[4px] rounded-full" />
+						<PlusIcon className="h-[24px] w-[24px] text-(--black-normal) bg-white p-[4px] rounded-full flex-shrink-0" />
 					</button>
 				)}
 				<ModalSearchLeague

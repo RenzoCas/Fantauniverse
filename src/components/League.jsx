@@ -69,7 +69,7 @@ export default function League({ league, onAddParticipant }) {
 					</h4>
 					{isRegistered ? (
 						<div className="flex gap-[4px]">
-							<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
+							<Award className="h-[24px] w-[24px] stroke-[#B01DFF] flex-shrink-0" />
 							<span className="body-small font-semibold">
 								{position}&#176; Posto
 							</span>

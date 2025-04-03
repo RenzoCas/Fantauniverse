@@ -49,9 +49,9 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 						{dayPoints} pnt.
 					</p>
 					{expanded ? (
-						<ChevronUpIcon className="h-[16px] w-[16px] stroke-2" />
+						<ChevronUpIcon className="h-[16px] w-[16px] flex-shrink-0 stroke-2" />
 					) : (
-						<ChevronDownIcon className="h-[16px] w-[16px] stroke-2" />
+						<ChevronDownIcon className="h-[16px] w-[16px] flex-shrink-0 stroke-2" />
 					)}
 				</div>
 			</div>

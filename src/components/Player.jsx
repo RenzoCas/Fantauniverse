@@ -186,7 +186,7 @@ function Player({
 									</>
 								) : (
 									<div className="flex item-center gap-[10px]">
-										<Coins className="stroke-(--black-light-active) w-[16px] h-[16px]" />
+										<Coins className="stroke-(--black-light-active) w-[16px] h-[16px] flex-shrink-0" />
 										<p
 											className={`body-small font-light text-(--black-normal) whitespace-nowrap ${
 												!createTeam
@@ -235,7 +235,7 @@ function Player({
 											}
 										>
 											<SparklesIcon
-												className={`h-[24px] w-[24px] stroke-1 ${
+												className={`h-[24px] w-[24px] stroke-1 flex-shrink-0 ${
 													isCaptain
 														? "fill-[#DCC939]"
 														: ""
@@ -247,7 +247,7 @@ function Player({
 									<button
 										onClick={() => onDeselect(playerObj)}
 									>
-										<SquareMinus className="h-[24px] w-[24px] stroke-(--error-normal)" />
+										<SquareMinus className="h-[24px] w-[24px] stroke-(--error-normal) flex-shrink-0" />
 									</button>
 								</div>
 							) : (
@@ -261,7 +261,7 @@ function Player({
 									}
 									disabled={!canAdd}
 								>
-									<SquarePlus className="h-[24px] w-[24px]" />
+									<SquarePlus className="h-[24px] w-[24px] flex-shrink-0" />
 								</button>
 							)}
 						</>

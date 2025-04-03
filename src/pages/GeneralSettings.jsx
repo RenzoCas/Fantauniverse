@@ -536,11 +536,11 @@ function GeneralSettings() {
 												}
 											>
 												{field === "coinName" ? (
-													<Coins className="stroke-white w-[24px] h-[24px]" />
+													<Coins className="stroke-white w-[24px] h-[24px] flex-shrink-0" />
 												) : field === "maxCoins" ? (
-													<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+													<PiggyBank className="stroke-white w-[24px] h-[24px] flex-shrink-0" />
 												) : (
-													<UserGroupIcon className="stroke-white w-[24px] h-[24px]" />
+													<UserGroupIcon className="stroke-white w-[24px] h-[24px] flex-shrink-0" />
 												)}
 											</GenericInput>
 										) : (
@@ -559,11 +559,11 @@ function GeneralSettings() {
 												</p>
 												<div className="bg-(--black-darker) rounded-r-[16px] px-[16px] py-[10px] h-full flex items-center">
 													{field === "coinName" ? (
-														<Coins className="stroke-white w-[24px] h-[24px]" />
+														<Coins className="stroke-white w-[24px] h-[24px] flex-shrink-0" />
 													) : field === "maxCoins" ? (
-														<PiggyBank className="stroke-white w-[24px] h-[24px]" />
+														<PiggyBank className="stroke-white w-[24px] h-[24px] flex-shrink-0" />
 													) : (
-														<UserGroupIcon className="stroke-white w-[24px] h-[24px]" />
+														<UserGroupIcon className="stroke-white w-[24px] h-[24px] flex-shrink-0" />
 													)}
 												</div>
 											</div>
@@ -591,7 +591,7 @@ function GeneralSettings() {
 								disabled={!isFormValid() || isEditingAnyField}
 								customIcon={true}
 							>
-								<Save className="h-[24px] w-[24px]" />
+								<Save className="h-[24px] w-[24px] flex-shrink-0" />
 							</NormalButton>
 							<GhostButton
 								text="Elimina lega"
@@ -600,7 +600,7 @@ function GeneralSettings() {
 								disabled={isEditingAnyField}
 								customIcon={true}
 							>
-								<TrashIcon className="w-[24px] h-[24px]" />
+								<TrashIcon className="w-[24px] h-[24px] flex-shrink-0" />
 							</GhostButton>
 						</div>
 					</>
@@ -669,7 +669,7 @@ function GeneralSettings() {
 										Nome della moneta:
 									</h2>
 									<div className="flex gap-[10px]">
-										<Coins className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<Coins className="stroke-(--black-light-active) w-[24px] h-[24px] flex-shrink-0" />
 										<p className="body-normal text-(--black-normal) self-center">
 											{coinName}
 										</p>
@@ -680,7 +680,7 @@ function GeneralSettings() {
 										Budget:
 									</h2>
 									<div className="flex gap-[10px]">
-										<PiggyBank className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<PiggyBank className="stroke-(--black-light-active) w-[24px] h-[24px] flex-shrink-0" />
 										<p className="body-normal text-(--black-normal) self-center">
 											{maxCoins}
 										</p>
@@ -691,7 +691,7 @@ function GeneralSettings() {
 										Numero di player del team:
 									</h2>
 									<div className="flex gap-[10px]">
-										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px] flex-shrink-0" />
 										<p className="body-normal text-(--black-normal) self-center">
 											5 players
 										</p>
@@ -702,7 +702,7 @@ function GeneralSettings() {
 										&Egrave; concesso un capitano:
 									</h2>
 									<div className="flex gap-[10px]">
-										<Sparkles className="stroke-(--black-light-active) w-[24px] h-[24px]" />
+										<Sparkles className="stroke-(--black-light-active) w-[24px] h-[24px] flex-shrink-0" />
 										<p className="body-normal text-(--black-normal) self-center">
 											{enableCaptain ? "Si" : "No"}, i
 											giocatori{" "}
@@ -720,7 +720,7 @@ function GeneralSettings() {
 										</p>
 										<div className="flex gap-[10px]">
 											<button onClick={handleCopy}>
-												<Clipboard className="w-[24px] h-[24px] stroke-(--black-light-active)" />
+												<Clipboard className="w-[24px] h-[24px] stroke-(--black-light-active) flex-shrink-0" />
 											</button>
 											<p
 												onClick={handleCopy}

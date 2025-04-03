@@ -28,7 +28,7 @@ function ModalSearchLeague({
 						Leghe trovate:
 					</h4>
 					<button onClick={onClose}>
-						<XMarkIcon className="h-[24px] w-[24px]" />
+						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>
 
