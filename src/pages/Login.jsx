@@ -116,6 +116,7 @@ export default function Login() {
 							}
 							action={handleSubmit}
 							disabled={!isFormValid()}
+							icon={false}
 						/>
 						<GhostButton
 							text="Non sei registrato? Registrati"

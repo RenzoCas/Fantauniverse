@@ -185,6 +185,7 @@ export default function Registrazione() {
 							}
 							action={handleSubmit}
 							disabled={!isFormValid() || isLoading}
+							icon={false}
 						/>
 
 						<GhostButton
