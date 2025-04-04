@@ -141,13 +141,15 @@ function AuthInitializer() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<GenericPopup
-				isOpen={popupData.isOpen}
-				type={popupData.type}
-				title={popupData.title}
-				message={popupData.message}
-				classOpt="left-[16px]"
-			/>
+			{popupData.isOpen && (
+				<GenericPopup
+					isOpen={popupData.isOpen}
+					type={popupData.type}
+					title={popupData.title}
+					message={popupData.message}
+					classOpt="left-[16px]"
+				/>
+			)}
 		</>
 	);
 }
