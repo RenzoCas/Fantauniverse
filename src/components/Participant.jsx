@@ -91,6 +91,7 @@ function Participant({
 							src={`data:image/png;base64,${icon}`}
 							alt={`immagine giocatore`}
 							className="rounded-[3px] h-[48px] w-[48px] object-cover cursor-pointer"
+							loading="lazy"
 						/>
 					)}
 				</picture>

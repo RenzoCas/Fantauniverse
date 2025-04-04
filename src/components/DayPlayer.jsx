@@ -38,6 +38,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 							src={`data:image/png;base64,${icon}`}
 							alt={`immagine giocatore`}
 							className="rounded-[3px] h-[40px] w-[40px] object-cover"
+							loading="lazy"
 						/>
 					)}
 				</picture>

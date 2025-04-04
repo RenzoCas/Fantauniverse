@@ -72,6 +72,7 @@ function CardSquadra({ team, handleClick }) {
 							src={`data:image/png;base64,${icon}`}
 							alt={`Icona utente`}
 							className="h-full object-cover"
+							loading="lazy"
 						/>
 					)}
 				</picture>

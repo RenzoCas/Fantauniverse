@@ -76,6 +76,7 @@ export default function League({ league, onAddParticipant }) {
 						src={`data:image/png;base64,${icon}`}
 						alt={`Logo lega ${name}`}
 						className="h-full object-cover"
+						loading="lazy"
 					/>
 				)}
 			</picture>

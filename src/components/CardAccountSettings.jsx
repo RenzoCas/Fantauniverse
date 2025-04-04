@@ -37,6 +37,7 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 											src={`data:image/png;base64,${value}`}
 											alt={`Icona utente`}
 											className="h-full object-cover"
+											loading="lazy"
 										/>
 									)}
 								</picture>

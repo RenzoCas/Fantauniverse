@@ -171,6 +171,7 @@ export default function Navbar() {
 										src={`data:image/png;base64,${icon}`}
 										alt={`Icona utente`}
 										className="h-full object-cover"
+										loading="lazy"
 									/>
 								)}
 							</picture>
@@ -225,6 +226,7 @@ export default function Navbar() {
 																src={`data:image/png;base64,${league.icon}`}
 																alt={`Icona utente`}
 																className="h-full object-cover"
+																loading="lazy"
 															/>
 														)}
 													</picture>

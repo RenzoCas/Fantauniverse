@@ -92,6 +92,7 @@ function Player({
 									src={`data:image/png;base64,${icon}`}
 									alt={`immagine player`}
 									className="rounded-[3px] h-[38px] w-[38px] object-cover"
+									loading="lazy"
 								/>
 							)}
 						</picture>
@@ -157,6 +158,7 @@ function Player({
 								src={`data:image/png;base64,${icon}`}
 								alt={`immagine player`}
 								className="rounded-[3px] h-[38px] w-[38px] object-cover"
+								loading="lazy"
 							/>
 						)}
 					</picture>

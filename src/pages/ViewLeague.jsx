@@ -201,6 +201,7 @@ function ViewLega() {
 										src={`data:image/png;base64,${icon}`}
 										alt={`Logo lega`}
 										className="w-full rounded-[8px] h-auto object-cover cursor-pointer"
+										loading="lazy"
 									/>
 								)}
 								{status === "PENDING" && (

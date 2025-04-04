@@ -11,6 +11,7 @@ export default function NotFound() {
 				src="https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif"
 				alt="404 gif"
 				className="h-full w-full"
+				loading="lazy"
 			/>
 			<p className="body-regular text-center font-semibold">
 				La pagina che cercavi non &egrave; disponibile.
