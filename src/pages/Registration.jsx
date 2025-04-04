@@ -98,73 +98,78 @@ export default function Registrazione() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<header className="relative h-[46px] border-b-[2px] border-b-(--black-normal)">
+			<header className="relative h-[46px] border-b-[2px] border-b-(--black-normal) lg:hidden">
 				<div className="absolute left-1/2 -translate-x-1/2 bottom-[-10px]">
 					<Logo />
 				</div>
 			</header>
 
-			<main className="md:max-w-sm flex flex-col justify-center gap-[32px] mx-auto py-[40px] px-[16px] min-h-[calc(100dvh-46px)]">
-				<h2 className="title-h2 font-semibold">Registrazione utente</h2>
-				<form
-					className="flex flex-col gap-[32px]"
-					onSubmit={handleSubmit}
-				>
-					<div className="flex flex-col gap-[10px]">
-						{serverError && (
-							<p className="text-(--error-normal)">
-								{serverError}
-							</p>
-						)}
-						<GenericInput
-							type="text"
-							required
-							name="username"
-							id="usernameUtente"
-							placeholder="Username"
-							messageError={errors.username}
-							value={formData.username}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-							autocomplete="username"
-						/>
-						<GenericInput
-							type="email"
-							required
-							name="email"
-							id="emailUtente"
-							placeholder="Email"
-							messageError={errors.email}
-							value={formData.email}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-							autocomplete="email"
-						/>
-						<GenericInput
-							type="password"
-							required
-							name="password"
-							id="passwordUtente"
-							placeholder="Password"
-							messageError={errors.password}
-							value={formData.password}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-							autocomplete="new-password"
-						/>
-						<GenericInput
-							type="password"
-							required
-							name="confermaPassword"
-							id="confermaPasswordUtente"
-							placeholder="Conferma Password"
-							messageError={errors.confermaPassword}
-							value={formData.confermaPassword}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-							autocomplete="new-password"
-						/>
-						{/* <div className="flex align-start gap-[10px]">
+			<main className="flex lg:grid lg:grid-cols-2 mx-auto py-[40px] px-[16px] min-h-[calc(100dvh-46px)]">
+				<div className="absolute top-[100px] left-0 h-[16px] w-screen bg-(--black-darker) hidden lg:block"></div>
+				<div className="absolute top-[120px] left-0 h-[16px] w-screen bg-(--black-darker) hidden lg:block"></div>
+				<section className="flex flex-col justify-center gap-[32px] max-w-[360px] mx-auto">
+					<h2 className="title-h2 font-semibold bg-white z-1 lg:px-[16px]">
+						Registrazione utente
+					</h2>
+					<form
+						className="flex flex-col gap-[32px]"
+						onSubmit={handleSubmit}
+					>
+						<div className="flex flex-col gap-[10px]">
+							{serverError && (
+								<p className="text-(--error-normal)">
+									{serverError}
+								</p>
+							)}
+							<GenericInput
+								type="text"
+								required
+								name="username"
+								id="usernameUtente"
+								placeholder="Username"
+								messageError={errors.username}
+								value={formData.username}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								autocomplete="username"
+							/>
+							<GenericInput
+								type="email"
+								required
+								name="email"
+								id="emailUtente"
+								placeholder="Email"
+								messageError={errors.email}
+								value={formData.email}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								autocomplete="email"
+							/>
+							<GenericInput
+								type="password"
+								required
+								name="password"
+								id="passwordUtente"
+								placeholder="Password"
+								messageError={errors.password}
+								value={formData.password}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								autocomplete="new-password"
+							/>
+							<GenericInput
+								type="password"
+								required
+								name="confermaPassword"
+								id="confermaPasswordUtente"
+								placeholder="Conferma Password"
+								messageError={errors.confermaPassword}
+								value={formData.confermaPassword}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+								autocomplete="new-password"
+							/>
+							{/* <div className="flex align-start gap-[10px]">
 							<Checkbox
 								name="privacy"
 								id="privacyPolicy"
@@ -175,25 +180,44 @@ export default function Registrazione() {
 								handleChange={handleChange}
 							/>
 						</div> */}
-					</div>
-					<div className="flex flex-col gap-[8px]">
-						<NormalButton
-							text={
-								isLoading
-									? "Registrazione in corso..."
-									: "Registrati subito"
-							}
-							action={handleSubmit}
-							disabled={!isFormValid() || isLoading}
-							icon={false}
-						/>
+						</div>
+						<div className="flex flex-col gap-[8px]">
+							<NormalButton
+								text={
+									isLoading
+										? "Registrazione in corso..."
+										: "Registrati subito"
+								}
+								action={handleSubmit}
+								disabled={!isFormValid() || isLoading}
+								icon={false}
+							/>
 
-						<GhostButton
-							text="Gi&agrave; registrato? Accedi"
-							action={() => navigate("/login")}
-						/>
+							<GhostButton
+								text="Gi&agrave; registrato? Accedi"
+								action={() => navigate("/login")}
+							/>
+							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
+							<GhostButton
+								text="Oppure registrati con google."
+								action={() => alert("register google")}
+								icon={false}
+							/>
+						</div>
+					</form>
+				</section>
+				<section className="relative hidden lg:block max-w-[708px] bg-[url(../../public/bgHome.jpg)] bg-centre bg-no-repeat bg-cover rounded-[24px]">
+					<div className="flex flex-col gap-[8px] px-[32px] md:px-0 absolute bottom-[30px] left-[30px]">
+						<Logo white={true}></Logo>
+						<h1 className="title-h2 font-bold text-white">
+							All.
+							<br />
+							The league.
+							<br />
+							That u want.
+						</h1>
 					</div>
-				</form>
+				</section>
 			</main>
 		</>
 	);

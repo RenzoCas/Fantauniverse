@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { Award } from "lucide-react";
+// import { useUser } from "../contexts/UserContext";
 
 export default function League({ league, onAddParticipant }) {
 	const navigate = useNavigate();
+	// const { user } = useUser();
 	const {
 		id,
 		name,
@@ -21,6 +23,9 @@ export default function League({ league, onAddParticipant }) {
 		: numberParticipants;
 
 	const [randomColors, setRandomColors] = useState([]);
+	// const participantsIcon = participants?.map(
+	// 	(participant) => participant.id != user.id && participant.icon
+	// );
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;

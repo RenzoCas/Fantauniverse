@@ -126,6 +126,7 @@ function Points() {
 				return newIndex;
 			});
 		}
+		setIsUpdateDay(false);
 	};
 
 	const handleDeleteDay = async () => {
@@ -350,14 +351,16 @@ function Points() {
 											</button>
 										)}
 										<ul className="flex flex-col">
-											{infoDay?.players?.map((el) => (
-												<DayPlayer
-													key={el.id}
-													playerObj={el.player}
-													rules={el.rules}
-													dayPoints={el.points}
-												/>
-											))}
+											{infoDay?.players?.map(
+												(el, idx) => (
+													<DayPlayer
+														key={idx}
+														playerObj={el.player}
+														rules={el.rules}
+														dayPoints={el.points}
+													/>
+												)
+											)}
 										</ul>
 									</>
 								) : (
