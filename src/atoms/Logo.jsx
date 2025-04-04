@@ -9,6 +9,7 @@ export default function Logo({ large = false, white = false }) {
           ${large == true ? "h-[62px] w-[62px]" : "h-[46px] w-[46px]"}
           ${white == true ? "bg-white" : "bg-(--black-normal)"}
         `}
+			name="logo"
 		>
 			<span
 				className={`absolute rounded-full

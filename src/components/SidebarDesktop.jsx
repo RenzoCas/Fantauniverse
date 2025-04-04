@@ -6,7 +6,6 @@ import {
 	ExclamationCircleIcon,
 	HomeIcon,
 	TrashIcon,
-	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
@@ -18,7 +17,6 @@ import ModalConfirmAction from "./modals/ModalConfirmAction";
 
 export default function SidebarDesktop() {
 	const navigate = useNavigate();
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, logout, unregister } = useUser();
 	const { icon, username } = user;
 	const { myLeagues } = useLeague();
@@ -50,11 +48,6 @@ export default function SidebarDesktop() {
 		);
 		setRandomColors(colors);
 	}, [myLeagues]);
-
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-		setVisibleCount(3);
-	};
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -115,7 +108,6 @@ export default function SidebarDesktop() {
 	};
 
 	const handleClickLeague = (league) => {
-		setIsMenuOpen(false);
 		setVisibleCount(3);
 		navigate(`league/${league.id}`, {
 			state: { league, deleteLeague: null },
@@ -125,10 +117,8 @@ export default function SidebarDesktop() {
 
 	const handleClickLink = (path) => {
 		if (window.location.pathname === path) {
-			setIsMenuOpen(false);
 			return;
 		}
-		setIsMenuOpen(false);
 		navigate(path);
 	};
 
@@ -136,7 +126,7 @@ export default function SidebarDesktop() {
 		<>
 			{isLoading && <Loader />}
 			<nav
-				className={`hidden lg:flex h-full px-[16px] py-[24px] flex-col gap-[10px] w-[370px]`}
+				className={`hidden lg:flex h-full px-[16px] py-[24px] flex-col gap-[10px] max-w-[370px] flex-shrink-0`}
 			>
 				<div className="flex items-center justify-between gap-[8px]">
 					<div className="flex gap-[20px] items-center">
@@ -164,12 +154,6 @@ export default function SidebarDesktop() {
 							</span>
 						</h3>
 					</div>
-					<button
-						onClick={toggleMenu}
-						className="p-[8px] rounded-[4px] border border-solid border-(--black-light)"
-					>
-						<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
-					</button>
 				</div>
 				<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
 				<div className="flex flex-col gap-[10px] flex-1 overflow-y-auto">

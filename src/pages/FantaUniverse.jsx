@@ -2,7 +2,6 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { ChevronLeft } from "lucide-react";
 import SidebarDesktop from "../components/SidebarDesktop";
-import Logo from "../atoms/Logo";
 
 export default function FantaUniverse() {
 	const navigate = useNavigate();
@@ -24,15 +23,15 @@ export default function FantaUniverse() {
 
 			<main className="flex max-w-xl mx-auto py-[24px] px-[16px] min-h-[calc(100dvh-64px)] bg-white lg:bg-(--black-light) lg:max-w-full lg:py-[8px] lg:px-0 lg:max-h-screen lg:h-screen">
 				<SidebarDesktop />
-				<section className="w-full lg:bg-white lg:rounded-l-[24px] lg:py-[20px] lg:flex lg:flex-col">
-					<div className="hidden lg:flex lg:px-[20px] lg:pb-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover)">
-						<Logo />
-					</div>
-					<div className="w-full lg:max-w-[840px] lg:max-h-full lg:mx-auto lg:py-[55px] lg:px-[24px] overflow-x-auto">
+				<section className="w-full lg:bg-white lg:rounded-l-[24px] lg:pb-[20px] lg:pt-[88px] lg:flex lg:flex-col">
+					<div className="w-full lg:max-w-[840px] lg:max-h-full lg:mx-auto lg:py-[55px] lg:px-[24px] lg:overflow-x-auto">
 						<Outlet />
 					</div>
 				</section>
 			</main>
+			{/* <main className="flex flex-col max-w-xl mx-auto py-[24px] px-[16px] lg:py-16 lg:px-6 min-h-[calc(100dvh-64px)]">
+				<Outlet />
+			</main> */}
 		</>
 	);
 }

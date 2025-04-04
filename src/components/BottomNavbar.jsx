@@ -2,11 +2,16 @@ import { ChartLine, Newspaper, ShieldHalf, Trophy, Users } from "lucide-react";
 import TabBottomNav from "../atoms/Buttons/TabBottomNav";
 import { useLeague } from "../contexts/LeagueContext";
 
-function BottomNavbar({ tabActive, handleTabChange }) {
+function BottomNavbar({ tabActive, handleTabChange, classOpt }) {
 	const { league } = useLeague();
 	const { status, isRegistered } = league;
 	return (
-		<nav className="sticky bottom-[24px] mt-auto px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]">
+		<nav
+			className={`sticky bottom-[24px] mt-auto px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]
+                ${
+					classOpt ? classOpt : ""
+				} lg:border-0 lg:shadow-none lg:rounded-none`}
+		>
 			<TabBottomNav
 				text="Info"
 				active={tabActive == "General"}

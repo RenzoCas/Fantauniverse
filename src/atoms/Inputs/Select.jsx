@@ -22,7 +22,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 			)}
 
 			<div
-				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px]"
+				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px] lg:max-w-1/2 lg:mx-auto"
 				onClick={toggleMenu}
 			>
 				<span className="body-small font-semibold text-(--error-normal)">
