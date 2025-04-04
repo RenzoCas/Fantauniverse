@@ -137,7 +137,7 @@ export default function Navbar() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex justify-between items-center border-b-[2px] border-black relative z-100">
+			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex lg:hidden justify-between items-center border-b-[2px] border-black relative z-100">
 				<Logo />
 				<div className="flex gap-3 items-center">
 					<button onClick={toggleMenu}>

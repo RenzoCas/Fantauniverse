@@ -55,8 +55,10 @@ export default function League({ league, onAddParticipant }) {
 
 	return (
 		<li
-			className="relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer"
+			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer lg:max-w-[400px]
+                `}
 			onClick={isRegistered ? handleClick : undefined}
+			tabIndex={isRegistered ? 0 : undefined}
 		>
 			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden">
 				{isAdmin && (
@@ -155,14 +157,14 @@ export default function League({ league, onAddParticipant }) {
 				) : (
 					<div className="flex items-center justify-end gap-[8px]">
 						<button
-							className="border-2 border-solid border-(--black-normal) rounded-[4px] px-[18px] py-[4px] body-small font-semibold bg-white"
+							className="border-2 border-solid border-(--black-normal) rounded-[4px] px-[18px] py-[4px] body-small font-semibold bg-white cursor-pointer focus:outline-(--black-normal) focus:outline-2"
 							onClick={handleClick}
 						>
 							{isAdmin ? "Aggiorna" : "Scopri"}
 						</button>
 						{status == "NOT_STARTED" && (
 							<button
-								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal)"
+								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal) focus:outline-(--accent-normal) focus:outline-2"
 								onClick={() => onAddParticipant(id)}
 							>
 								Iscriviti

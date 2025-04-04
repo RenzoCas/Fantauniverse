@@ -48,6 +48,8 @@ function Dashboard() {
 	const [filterStateOpen, setFilterStateOpen] = useState(false);
 	const filterRef = useRef(null);
 	const buttonRef = useRef(null);
+	const filterDeskRef = useRef(null);
+	const buttonDeskRef = useRef(null);
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -96,14 +98,23 @@ function Dashboard() {
 
 	useEffect(() => {
 		function handleClickOutside(event) {
-			if (buttonRef.current && buttonRef.current.contains(event.target)) {
+			// Se il click è sul pulsante (mobile o desktop), apri/chiudi i filtri
+			if (
+				(buttonRef.current &&
+					buttonRef.current.contains(event.target)) ||
+				(buttonDeskRef.current &&
+					buttonDeskRef.current.contains(event.target))
+			) {
 				setShowFilters((prev) => !prev);
 				return;
 			}
 
+			// Se il click è fuori sia dal filtro mobile che desktop, chiudi i filtri
 			if (
-				filterRef.current &&
-				!filterRef.current.contains(event.target)
+				(!filterRef.current ||
+					!filterRef.current.contains(event.target)) &&
+				(!filterDeskRef.current ||
+					!filterDeskRef.current.contains(event.target))
 			) {
 				setShowFilters(false);
 			}
@@ -140,7 +151,6 @@ function Dashboard() {
 			setIsLoading(false);
 			setIsModalSearchOpen(true);
 		}
-		document.querySelector("#searchLeaga").blur();
 	};
 
 	const showPopup = (type, title, message) => {
@@ -253,21 +263,151 @@ function Dashboard() {
 							</button>
 						)}
 					</div>
-					<form onSubmit={handleSubmit}>
-						<GenericInput
-							type="text"
-							name="leagueName"
-							id="searchLeaga"
-							placeholder="Cerca una lega a cui iscriverti"
-							value={formData.leagueName}
-							handleChange={handleChange}
-						/>
-					</form>
+					<div className="w-full lg:flex lg:gap-[8px]">
+						<form
+							onSubmit={handleSubmit}
+							className="w-full lg:max-w-[350px]"
+						>
+							<GenericInput
+								type="text"
+								name="leagueName"
+								id="searchLeaga"
+								placeholder="Cerca una lega a cui iscriverti"
+								value={formData.leagueName}
+								handleChange={handleChange}
+							/>
+						</form>
+						<div className="relative hidden lg:flex lg:gap-[8px] lg:ml-auto lg:items-center lg:justify-end">
+							{showFilters && (
+								<div
+									ref={filterDeskRef}
+									className={`absolute top-[40px] z-3 w-fit min-w-[180px] flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white hidden lg:flex lg:right-0`}
+								>
+									<div className="flex items-center justify-between">
+										<p className="font-semibold">Stato</p>
+										<button
+											disabled={
+												filterLeagueState.length ===
+													0 && !enabledSwitch
+											}
+											className={`text-[#F87171] font-semibold disabled:text-(--black-light)`}
+											onClick={() => {
+												setFilterState([]);
+												setEnabledSwitch(false);
+											}}
+										>
+											Reimposta
+										</button>
+									</div>
+									<div className="relative flex flex-col gap-[8px] border border-solid border-(--black-light-active) rounded-[6px] z-50 px-[12px] py-[8px]">
+										<div
+											className={`flex items-center justify-between gap-[8px] ${
+												filterStateOpen &&
+												"pb-[8px] border-b border-b-solid border-b-(--black-light-active)"
+											}`}
+											onClick={() =>
+												setFilterStateOpen(
+													!filterStateOpen
+												)
+											}
+										>
+											<p>{renderSelectedText()}</p>
+											{filterStateOpen ? (
+												<ChevronUpIcon className="w-[16px] h-[16px] flex-shrink-0" />
+											) : (
+												<ChevronDownIcon className="w-[16px] h-[16px] flex-shrink-0" />
+											)}
+										</div>
+										{filterStateOpen && (
+											<div className="bg-white w-full flex flex-col gap-[8px]">
+												<ul className="flex flex-col gap-[8px]">
+													<li
+														data-value="NOT_STARTED"
+														onClick={handleSelect}
+													>
+														Pubblicate
+													</li>
+													<li
+														data-value="STARTED"
+														onClick={handleSelect}
+													>
+														Avviate
+													</li>
+													<li
+														data-value="FINISHED"
+														onClick={handleSelect}
+													>
+														Terminate
+													</li>
+												</ul>
+											</div>
+										)}
+									</div>
+									<Switch
+										enabled={enabledSwitch}
+										onChange={handleChangeSwitch}
+										text="Create da me"
+									/>
+								</div>
+							)}
+							{(filterLeagueState.length > 0 ||
+								enabledSwitch) && (
+								<ul className="flex items-center gap-[8px] overflow-x-auto hide-scrollbar">
+									{filterLeagueState.map((state, index) => (
+										<li
+											key={index}
+											className="border border-solid border-[#716868] px-[8px] py-[4px] rounded-[5px] flex items-center gap-[4px]"
+										>
+											<p className="body-normal text-[#716868]">
+												{state == "NOT_STARTED"
+													? "Pubblicate"
+													: state == "STARTED"
+													? "Avviate"
+													: "Terminate"}
+											</p>
+											<button
+												className="flex"
+												onClick={() =>
+													handleRemoveSelect(state)
+												}
+											>
+												<XMarkIcon className="w-[20px] h-[20px] stroke-[#F87171]" />
+											</button>
+										</li>
+									))}
+									{enabledSwitch && (
+										<li
+											key="Admin"
+											className="border border-solid border-[#716868] px-[8px] py-[4px] rounded-[5px] flex items-center gap-[4px]"
+										>
+											<p className="body-normal text-[#716868]">
+												Admin
+											</p>
+											<button
+												className="flex"
+												onClick={() =>
+													setEnabledSwitch(false)
+												}
+											>
+												<XMarkIcon className="w-[20px] h-[20px] stroke-[#F87171]" />
+											</button>
+										</li>
+									)}
+								</ul>
+							)}
+							<button
+								ref={buttonDeskRef}
+								className="items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit filterBtn hidden lg:flex lg:h-[30px]"
+							>
+								<FunnelIcon className="h-[20px] w-[20px] filterBtn" />
+							</button>
+						</div>
+					</div>
 
 					{myLeagues.length !== 0 ? (
 						<>
 							<div className="relative z-3 flex flex-col gap-[10px]">
-								<div className="flex justify-end gap-[12px]">
+								<div className="flex justify-end gap-[12px] lg:hidden">
 									{(filterLeagueState.length > 0 ||
 										enabledSwitch) && (
 										<ul className="flex items-center gap-[8px] overflow-x-auto hide-scrollbar">
@@ -333,7 +473,7 @@ function Dashboard() {
 								{showFilters && (
 									<div
 										ref={filterRef}
-										className={`absolute top-[40px] z-3 w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white`}
+										className={`absolute top-[40px] z-3 w-fit min-w-[180px] flex flex-col gap-[16px] self-end border border-solid border-(--black-light-hover) rounded-[8px] p-[12px] bg-white lg:hidden`}
 									>
 										<div className="flex items-center justify-between">
 											<p className="font-semibold">
@@ -412,7 +552,7 @@ function Dashboard() {
 								)}
 							</div>
 							{filteredLeague?.length > 0 ? (
-								<ul className="flex flex-col gap-[10px]">
+								<ul className="flex flex-col gap-[10px] lg:grid lg:grid-cols-2 lg:gap-[20px]">
 									{filteredLeague.map((el) => (
 										<League
 											key={el.id}
