@@ -27,7 +27,7 @@ function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 						className="p-[2px] border border-solid border-(--black-light-active)"
 						onClick={onClose}
 					>
-						<XIcon className="w-[24px] h-[24px] stroke-(--black-light-active)" />
+						<XIcon className="w-[24px] h-[24px] stroke-(--black-light-active) flex-shrink-0" />
 					</button>
 				</div>
 				<p className="body-normal font-regular">{text}</p>

@@ -51,9 +51,9 @@ function Rule({
 							onClick={() => setExpanded(!expanded)}
 						>
 							{expanded ? (
-								<ChevronUpIcon className="h-[16px] w-[16px] stroke-2" />
+								<ChevronUpIcon className="h-[16px] w-[16px] stroke-2 flex-shrink-0" />
 							) : (
-								<ChevronDownIcon className="h-[16px] w-[16px] stroke-2" />
+								<ChevronDownIcon className="h-[16px] w-[16px] stroke-2 flex-shrink-0" />
 							)}
 						</button>
 					)}

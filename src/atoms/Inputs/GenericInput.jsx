@@ -108,9 +108,9 @@ export default function GenericInput({
 						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal) break-all"
 					>
 						{showPassword ? (
-							<EyeSlashIcon className="h-[24px] w-[24px]" />
+							<EyeSlashIcon className="h-[24px] w-[24px] flex-shrink-0" />
 						) : (
-							<EyeIcon className="h-[24px] w-[24px]" />
+							<EyeIcon className="h-[24px] w-[24px] flex-shrink-0" />
 						)}
 					</button>
 				)}

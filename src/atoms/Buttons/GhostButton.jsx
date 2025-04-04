@@ -26,7 +26,7 @@ export default function GhostButton({
 
 			{icon && !customIcon && (
 				<BoltIcon
-					className={`h-[24px] w-[24px] p-[4px] rounded-full ${
+					className={`h-[24px] w-[24px] p-[4px] rounded-full flex-shrink-0 ${
 						disabled
 							? "bg-(--black-light)/25 opacity-[25]"
 							: "text-(--black-normal) bg-(--black-light) group-hover:bg-(--black-light)"

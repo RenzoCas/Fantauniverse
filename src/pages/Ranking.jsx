@@ -28,7 +28,7 @@ function Ranking({ handleTabChange }) {
 									{teamParticipant.name}
 								</h2>
 								<div className="flex items-center gap-[10px]">
-									<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
+									<Award className="h-[24px] w-[24px] stroke-[#B01DFF] flex-shrink-0" />
 									<p className="body-regular">
 										{teamParticipant.position}o Posto
 									</p>

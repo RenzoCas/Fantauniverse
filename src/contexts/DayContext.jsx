@@ -6,7 +6,7 @@ const DayContext = createContext();
 
 function DayProvider({ children }) {
 	const { user, urlServer } = useUser();
-	const { league, dispatchLeague } = useLeague();
+	const { dispatchLeague } = useLeague();
 
 	// Funzione per recuperare la singola giornata
 	const getDay = async (dayId) => {
@@ -32,7 +32,7 @@ function DayProvider({ children }) {
 		}
 	};
 
-	const addDay = async (dataDay) => {
+	const createDay = async (dataDay) => {
 		try {
 			const response = await fetch(`${urlServer}/day`, {
 				method: "POST",
@@ -40,23 +40,21 @@ function DayProvider({ children }) {
 					Authorization: `Bearer ${user.token}`,
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					leagueId: league.id,
-					days: dataDay.days,
-				}),
+				body: JSON.stringify(dataDay),
 			});
 
 			if (!response.ok) {
 				throw new Error("Errore nella creazione della giornata.");
 			}
 
-			const updatedDays = await response.json();
+			const updatedLeagueData = await response.json();
+
 			dispatchLeague({
-				type: "addDay",
-				payload: updatedDays.days,
+				type: "updateLeague",
+				payload: updatedLeagueData,
 			});
 
-			return updatedDays.days;
+			return updatedLeagueData;
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -80,11 +78,9 @@ function DayProvider({ children }) {
 			}
 
 			const updatedDay = await response.json();
-			dispatchLeague({
-				type: "updateDay",
-				payload: updatedDay,
-			});
-			return true;
+
+			dispatchLeague({ type: "updateDay", payload: updatedDay });
+			return updatedDay;
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -105,8 +101,7 @@ function DayProvider({ children }) {
 				throw new Error("Errore nella cancellazione della giornata.");
 			}
 
-			// await getLeague(league.id);
-
+			dispatchLeague({ type: "deleteDay", payload: dayId });
 			return true;
 		} catch (error) {
 			console.error(error.message);
@@ -118,7 +113,7 @@ function DayProvider({ children }) {
 		<DayContext.Provider
 			value={{
 				getDay,
-				addDay,
+				createDay,
 				updateDay,
 				deleteDay,
 			}}

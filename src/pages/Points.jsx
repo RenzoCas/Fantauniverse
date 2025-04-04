@@ -24,9 +24,9 @@ function Points() {
 	const [isModalAddPointsOpen, setIsModalAddPointsOpen] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
-	const { league, createDay } = useLeague();
-	const { getDay, deleteDay, updateDay } = useDay();
-	const { days, status, isAdmin, players } = league;
+	const { league } = useLeague();
+	const { days, status, isAdmin, players, rules } = league;
+	const { getDay, createDay, deleteDay, updateDay } = useDay();
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -35,12 +35,13 @@ function Points() {
 	});
 
 	const [activeDay, setActiveDay] = useState();
-	const [infoDay, setInfoDay] = useState();
 	const [tempDay, setTempDay] = useState({
-		id: infoDay?.id || null,
-		players: infoDay?.players || [],
+		id: days[activeIndex]?.id || null,
+		name: days[activeIndex]?.name || "",
+		date: days[activeIndex]?.date || Date.now(),
+		players: days[activeIndex]?.players || [],
 	});
-
+	const [infoDay, setInfoDay] = useState();
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
 
 	useEffect(() => {
@@ -56,9 +57,7 @@ function Points() {
 		try {
 			const response = await getDay(dayId);
 			setInfoDay(response);
-			setTempDay((prev) => {
-				return { ...prev, id: response.id, players: response.players };
-			});
+			setTempDay(response);
 		} catch (error) {
 			console.error("Errore nel recupero di infoDay:", error);
 		}
@@ -98,6 +97,7 @@ function Points() {
 			result = await createDay(formData);
 		}
 
+		setInfoDay(tempDay);
 		setIsLoading(false);
 		if (!result) {
 			showPopup(
@@ -112,17 +112,21 @@ function Points() {
 			"Giornata aggiunta!",
 			"La giornata é stata creata correttamente."
 		);
-		setActiveIndex(() => {
-			const newIndex = result.length - 1;
 
-			setTimeout(() => {
-				if (swiperInstance) {
-					swiperInstance.slideTo(newIndex);
-				}
-			}, 100);
+		if (!isUpdateDay) {
+			setActiveIndex(() => {
+				const newIndex = result.days.length - 1;
 
-			return newIndex;
-		});
+				setTimeout(() => {
+					if (swiperInstance) {
+						swiperInstance.slideTo(newIndex);
+					}
+				}, 100);
+
+				return newIndex;
+			});
+		}
+		setIsUpdateDay(false);
 	};
 
 	const handleDeleteDay = async () => {
@@ -162,11 +166,26 @@ function Points() {
 		setIsModalAddPointsOpen(true);
 	};
 
+	const handleCancelUpdate = async () => {
+		setTempDay(infoDay);
+		setIsUpdateDay(false);
+	};
+
 	const confirmPlayerRules = async (player, selectedRules) => {
 		await setTempDay((prev) => {
 			const playerExists = prev.players.some(
 				(p) => p.player.id === player.id
 			);
+
+			const points = selectedRules.reduce((total, rule) => {
+				const matchingRule = rules.find((r) => r.id === rule);
+				if (matchingRule) {
+					return matchingRule.malus
+						? total - matchingRule.value
+						: total + matchingRule.value;
+				}
+				return total;
+			}, 0);
 
 			const updatedPlayers = playerExists
 				? prev.players.map((p) =>
@@ -176,6 +195,7 @@ function Points() {
 									rules: selectedRules.map((ruleId) => ({
 										id: ruleId,
 									})),
+									points: points,
 							  }
 							: p
 				  )
@@ -186,6 +206,7 @@ function Points() {
 							rules: selectedRules.map((ruleId) => ({
 								id: ruleId,
 							})),
+							points: points,
 						},
 				  ];
 
@@ -228,13 +249,11 @@ function Points() {
 							<div className="flex items-center justify-between">
 								<h2 className="body-regular break-all">
 									<span className="font-semibold">
-										{infoDay.name}
+										{tempDay.name}
 									</span>
 								</h2>
 								<button
-									onClick={() => {
-										setIsUpdateDay(false);
-									}}
+									onClick={handleCancelUpdate}
 									className="flex items-center gap-[4px] text-(--accent-normal)"
 								>
 									<p className="body-normal">Annulla</p>
@@ -242,12 +261,12 @@ function Points() {
 							</div>
 
 							<ul className="flex flex-col gap-[12px]">
-								{players.map((p, idx) => (
+								{players.map((p) => (
 									<Player
 										key={p.id}
 										playerObj={p}
 										addPoints={true}
-										dataDay={infoDay.players[idx]}
+										dataDay={tempDay}
 										handleAddPoints={handleAddPoints}
 									></Player>
 								))}
@@ -316,7 +335,7 @@ function Points() {
 										{formatDate(days[activeIndex].date)}
 									</p>
 								</div>
-								{tempDay?.players.length > 0 ? (
+								{infoDay?.players.length > 0 ? (
 									<>
 										{isAdmin && status != "FINISHED" && (
 											<button
@@ -332,14 +351,16 @@ function Points() {
 											</button>
 										)}
 										<ul className="flex flex-col">
-											{infoDay?.players?.map((el) => (
-												<DayPlayer
-													key={el.id}
-													playerObj={el.player}
-													rules={el.rules}
-													dayPoints={el.points}
-												/>
-											))}
+											{infoDay?.players?.map(
+												(el, idx) => (
+													<DayPlayer
+														key={idx}
+														playerObj={el.player}
+														rules={el.rules}
+														dayPoints={el.points}
+													/>
+												)
+											)}
 										</ul>
 									</>
 								) : (

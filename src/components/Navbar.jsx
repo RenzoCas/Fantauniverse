@@ -137,11 +137,11 @@ export default function Navbar() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex justify-between items-center border-b-[2px] border-black relative z-100">
+			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex lg:hidden justify-between items-center border-b-[2px] border-black relative z-100">
 				<Logo />
 				<div className="flex gap-3 items-center">
 					<button onClick={toggleMenu}>
-						<Bars3Icon className="h-[24px] w-[24px]" />
+						<Bars3Icon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>
 
@@ -185,7 +185,7 @@ export default function Navbar() {
 							onClick={toggleMenu}
 							className="p-[8px] rounded-[4px] border border-solid border-(--black-light)"
 						>
-							<XMarkIcon className="h-[24px] w-[24px] stroke-2" />
+							<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 						</button>
 					</div>
 					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
@@ -231,7 +231,7 @@ export default function Navbar() {
 													<h4 className="body-normal font-medium break-all">
 														{league.name}
 													</h4>
-													<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+													<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 												</li>
 											))}
 									</ul>
@@ -256,11 +256,11 @@ export default function Navbar() {
 													handleClickLink("/app")
 												}
 											>
-												<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+												<HomeIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 												<span className="body-normal font-medium text-(--black-normal)">
 													Vai alla Dashboard
 												</span>
-												<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+												<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 											</button>
 										</li>
 									</ul>
@@ -281,11 +281,11 @@ export default function Navbar() {
 												handleClickLink("/app")
 											}
 										>
-											<HomeIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+											<HomeIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 											<span className="body-normal font-medium text-(--black-normal) self-center">
 												Vai alla Dashboard
 											</span>
-											<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+											<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 										</button>
 									</li>
 								)}
@@ -296,11 +296,11 @@ export default function Navbar() {
 											handleClickLink("/rules")
 										}
 									>
-										<ExclamationCircleIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+										<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 										<span className="body-normal font-medium text-(--black-normal) self-center">
 											Come funziona?
 										</span>
-										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 									</button>
 								</li>
 								<li>
@@ -310,11 +310,11 @@ export default function Navbar() {
 											handleClickLink("/account")
 										}
 									>
-										<Cog6ToothIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
-										<span className="body-normal font-medium text-(--black-normal) self-center">
+										<Cog6ToothIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+										<span className="body-normal font-medium text-(--black-normal) self-center flex-shrink-0">
 											Modifica il tuo profilo
 										</span>
-										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 									</button>
 								</li>
 								<li>
@@ -322,12 +322,12 @@ export default function Navbar() {
 										className="flex gap-[20px] text-(--black-normal) w-full text-left"
 										onClick={() => handleClickLink("/faq")}
 									>
-										<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] min-w-[24px] max-w-[24px] stroke-2" />
+										<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 										<span className="body-normal font-medium text-(--black-normal) self-center">
 											Hai bisogno di aiuto? Controlla le
 											nostre FAQ
 										</span>
-										<ChevronRightIcon className="h-[24px] min-w-[24px] max-w-[24px] ml-auto stroke-2" />
+										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 									</button>
 								</li>
 							</ul>
@@ -341,7 +341,7 @@ export default function Navbar() {
 									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal"
 									onClick={handleLogout}
 								>
-									<ArrowUpTrayIcon className="w-[24px] h-[24px] stroke-2 rotate-90" />
+									<ArrowUpTrayIcon className="w-[24px] h-[24px] stroke-2 rotate-90 flex-shrink-0" />
 									Disconnetti l&lsquo;account
 								</button>
 							</li>
@@ -350,7 +350,7 @@ export default function Navbar() {
 									className="flex items-center gap-[20px] text-(--error-normal) font-medium body-normal"
 									onClick={showModalConfirmUnregister}
 								>
-									<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] stroke-2" />
+									<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] stroke-2 flex-shrink-0" />
 									Elimina l&lsquo;account
 								</button>
 							</li>

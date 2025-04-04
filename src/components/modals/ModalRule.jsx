@@ -123,7 +123,7 @@ function ModalRule({
 				}`}
 			>
 				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[24px] w-[24px]" />
+					<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 				</button>
 				<div className="flex flex-col gap-[16px]">
 					<h4 className="font-semibold text-(--black-normal)">
@@ -204,7 +204,7 @@ function ModalRule({
 								classOpt="text-(--error-normal)"
 								customIcon={true}
 							>
-								<TrashIcon className="w-[24px] h-[24px]" />
+								<TrashIcon className="w-[24px] h-[24px] flex-shrink-0" />
 							</GhostButton>
 						)}
 					</form>

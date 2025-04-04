@@ -172,7 +172,7 @@ function ViewLega() {
 				<Loader />
 			) : (
 				<>
-					<div className="flex flex-col gap-[16px] flex-1">
+					<section className="flex flex-col gap-[16px] flex-1">
 						<div className="top flex flex-col gap-[16px] flex-1">
 							{status === "PENDING" && (
 								<input
@@ -284,7 +284,7 @@ function ViewLega() {
 								onConfirmAction={handleRemovePartecipant}
 							/>
 						)}
-					</div>
+					</section>
 				</>
 			)}
 		</>

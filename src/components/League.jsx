@@ -2,15 +2,30 @@ import { useState, useEffect } from "react";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { Award } from "lucide-react";
+// import { useUser } from "../contexts/UserContext";
 
 export default function League({ league, onAddParticipant }) {
 	const navigate = useNavigate();
-	const { id, name, icon, isAdmin, isRegistered, position, status } = league;
-	const numParticipants = league.participants
-		? league.participants?.length
-		: league.numberParticipants;
+	// const { user } = useUser();
+	const {
+		id,
+		name,
+		icon,
+		isAdmin,
+		isRegistered,
+		position,
+		status,
+		participants,
+		numberParticipants,
+	} = league;
+	const numParticipants = participants
+		? participants?.length
+		: numberParticipants;
 
 	const [randomColors, setRandomColors] = useState([]);
+	// const participantsIcon = participants?.map(
+	// 	(participant) => participant.id != user.id && participant.icon
+	// );
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -40,8 +55,10 @@ export default function League({ league, onAddParticipant }) {
 
 	return (
 		<li
-			className="relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer"
+			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer lg:max-w-[400px]
+                `}
 			onClick={isRegistered ? handleClick : undefined}
+			tabIndex={isRegistered ? 0 : undefined}
 		>
 			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden">
 				{isAdmin && (
@@ -69,7 +86,7 @@ export default function League({ league, onAddParticipant }) {
 					</h4>
 					{isRegistered ? (
 						<div className="flex gap-[4px]">
-							<Award className="h-[24px] w-[24px] stroke-[#B01DFF]" />
+							<Award className="h-[24px] w-[24px] stroke-[#B01DFF] flex-shrink-0" />
 							<span className="body-small font-semibold">
 								{position}&#176; Posto
 							</span>
@@ -140,14 +157,14 @@ export default function League({ league, onAddParticipant }) {
 				) : (
 					<div className="flex items-center justify-end gap-[8px]">
 						<button
-							className="border-2 border-solid border-(--black-normal) rounded-[4px] px-[18px] py-[4px] body-small font-semibold bg-white"
+							className="border-2 border-solid border-(--black-normal) rounded-[4px] px-[18px] py-[4px] body-small font-semibold bg-white cursor-pointer focus:outline-(--black-normal) focus:outline-2"
 							onClick={handleClick}
 						>
 							{isAdmin ? "Aggiorna" : "Scopri"}
 						</button>
 						{status == "NOT_STARTED" && (
 							<button
-								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal)"
+								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal) focus:outline-(--accent-normal) focus:outline-2"
 								onClick={() => onAddParticipant(id)}
 							>
 								Iscriviti
