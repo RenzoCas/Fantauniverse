@@ -2,7 +2,7 @@ import TabButton from "../atoms/Buttons/TabButton";
 
 function Tab({ tabActive, handleTabChange }) {
 	return (
-		<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover)">
+		<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover) lg:w-1/2 lg:mx-auto">
 			<>
 				<TabButton
 					handleClick={() => handleTabChange("General")}
@@ -14,7 +14,7 @@ function Tab({ tabActive, handleTabChange }) {
 					handleClick={() => handleTabChange("Players")}
 					active={tabActive === "Players"}
 				>
-					<p className="body-normal">Giocatori</p>
+					<p className="body-normal">Players</p>
 				</TabButton>
 				<TabButton
 					handleClick={() => handleTabChange("Rules")}

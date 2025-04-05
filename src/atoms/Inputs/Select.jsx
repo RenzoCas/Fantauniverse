@@ -37,7 +37,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 			</div>
 
 			{isOpen && (
-				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full">
+				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full lg:max-w-1/2 lg:left-1/2 lg:-translate-x-1/2">
 					{options.map((option) => (
 						<button
 							key={option.value}

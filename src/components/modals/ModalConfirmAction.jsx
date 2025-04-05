@@ -1,21 +1,21 @@
 import { XIcon } from "lucide-react";
+import { useModal } from "../../contexts/ModalContext";
+import { useEffect } from "react";
 
 function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 	const { title, text, conferma, annulla } = dataModal;
+	const { openModal, closeModal } = useModal();
+	useEffect(() => {
+		if (isOpen) {
+			openModal();
+		} else {
+			closeModal();
+		}
+	}, [isOpen]);
 	return (
 		<>
 			<div
-				id={`ModalConfirmAction-${title}`}
-				tabIndex="-1"
-				aria-hidden={!isOpen}
-				className={`fixed bottom-0 left-0 w-screen h-screen px-[16px] bg-(--black-normal)/50 transition-all duration-300 ease z-1000 ${
-					isOpen
-						? "opacity-100 visible"
-						: "opacity-0 invisible delay-150"
-				}`}
-			></div>
-			<div
-				className={`fixed left-[16px] bg-white shadow-lg rounded-[24px] w-full transition-all duration-300 ease flex flex-col gap-[24px] max-w-[calc(100vw-32px)] sm:max-w-[600px] p-[20px] z-1001 ${
+				className={`absolute left-[16px] lg:left-1/2 lg:-translate-x-1/2 bg-white shadow-lg rounded-[24px] w-full transition-all duration-300 ease flex flex-col gap-[24px] lg:max-w-[500px] p-[20px] z-1001 ${
 					isOpen
 						? "scale-100 opacity-100 bottom-1/2 translate-y-1/2 visible delay-150"
 						: "scale-80 opacity-30 bottom-[100px] invisible"

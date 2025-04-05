@@ -185,7 +185,7 @@ function ViewLega() {
 							/>
 						)}
 					</div>
-					<section className="relative flex flex-col gap-[16px] flex-1">
+					<section className="flex flex-col gap-[16px] flex-1">
 						<div className="top flex flex-col gap-[16px] flex-1">
 							<div className="flex lg:items-center lg:gap-[20px]">
 								{status === "PENDING" && (
@@ -225,32 +225,22 @@ function ViewLega() {
 									)}
 								</picture>
 								<div className="hidden lg:flex lg:flex-col lg:gap-[8px] lg:w-full">
-									{status != "PENDING" && (
-										<>
-											{!(
-												tabActive === "MyTeam" ||
-												tabActive === "Points" ||
-												teamParticipant
-											) && (
-												<div className="items-center justify-between hidden lg:flex lg:gap-[8px] lg:w-full">
-													<h2 className="title-h4 font-medium break-all">
-														{name}
-													</h2>
-													{status == "NOT_STARTED" &&
-														isRegistered && (
-															<button
-																className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
-																onClick={
-																	showModalConfirmDelete
-																}
-															>
-																Esci dalla lega
-															</button>
-														)}
-												</div>
+									<div className="items-center justify-between hidden lg:flex lg:gap-[8px] lg:w-full">
+										<h2 className="title-h4 font-medium break-all">
+											{name}
+										</h2>
+										{status == "NOT_STARTED" &&
+											isRegistered && (
+												<button
+													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
+													onClick={
+														showModalConfirmDelete
+													}
+												>
+													Esci dalla lega
+												</button>
 											)}
-										</>
-									)}
+									</div>
 									{description && <p>{description}</p>}
 								</div>
 							</div>

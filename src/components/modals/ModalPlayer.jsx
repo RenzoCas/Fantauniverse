@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 import GhostButton from "../../atoms/Buttons/GhostButton";
+import { useModal } from "../../contexts/ModalContext";
 
 function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	const [formData, setFormData] = useState({
@@ -12,6 +13,15 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	});
 	const [errors, setErrors] = useState({});
 	const [fileKey, setFileKey] = useState(Date.now());
+	const { openModal, closeModal } = useModal();
+
+	useEffect(() => {
+		if (isOpen) {
+			openModal();
+		} else {
+			closeModal();
+		}
+	}, [isOpen]);
 
 	useEffect(() => {
 		if (isEdit && playerObj) {
@@ -103,94 +113,83 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	return (
 		<>
 			<div
-				id="modalPlayer"
-				tabIndex="-1"
-				aria-hidden={!isOpen}
-				className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
-					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-				}`}
-				onClick={onClose}
-			></div>
-			<div
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-4 w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 ${
-					isOpen ? "translate-y-0" : "translate-y-full"
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-4 w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 lg:absolute lg:left-1/2 lg:bottom-[100px] lg:-translate-x-1/2 lg:rounded-[12px] lg:max-w-[500px] ${
+					isOpen
+						? "scale-100 opacity-100 translate-y-0 visible"
+						: "scale-80 opacity-30 translate-y-full invisible"
 				}`}
 			>
-				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
-				</button>
-				<div className="flex flex-col gap-[16px]">
+				<div className="flex items-center justify-between gap-[8px]">
 					<h4 className="font-semibold text-(--black-normal)">
 						{isEdit ? "Modifica" : "Aggiungi"} Player
 					</h4>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-						}}
-						className="flex flex-col gap-4"
-					>
-						<GenericInput
-							type="text"
-							required
-							name="name"
-							id="name"
-							placeholder="Nome player"
-							messageError={errors.name}
-							value={formData.name}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-						/>
-						<GenericInput
-							type="text"
-							required
-							name="price"
-							id="price"
-							placeholder="Prezzo player"
-							messageError={errors.price}
-							value={formData.price}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-						/>
-						<div className="flex flex-col gap-[8px] justify-end">
-							<label
-								htmlFor="immaginePlayer"
-								className="body-small font-semibold text-(--black-normal)"
-							>
-								{isEdit
-									? "Aggiorna immagine"
-									: "Aggiungi immagine"}
-							</label>
-							<input
-								key={fileKey}
-								type="file"
-								name="immaginePlayer"
-								id="immaginePlayer"
-								accept="image/jpeg, image/png"
-								onChange={handleFileChange}
-							/>
-						</div>
-						<NormalButton
-							text={
-								isEdit ? "Modifica Player" : "Aggiungi Player"
-							}
-							action={() => {
-								onSubmit(formData);
-								setFileKey(Date.now());
-							}}
-							disabled={!isFormValid()}
-						/>
-						{isEdit && (
-							<GhostButton
-								text="Elimina Player"
-								action={() => onDelete(playerObj.id)}
-								classOpt="text-(--error-normal)"
-								customIcon={true}
-							>
-								<TrashIcon className="w-[24px] h-[24px] flex-shrink-0" />
-							</GhostButton>
-						)}
-					</form>
+					<button onClick={onClose}>
+						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
+					</button>
 				</div>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+					}}
+					className="flex flex-col gap-4"
+				>
+					<GenericInput
+						type="text"
+						required
+						name="name"
+						id="name"
+						placeholder="Nome player"
+						messageError={errors.name}
+						value={formData.name}
+						handleChange={handleChange}
+						handleBlur={handleBlur}
+					/>
+					<GenericInput
+						type="text"
+						required
+						name="price"
+						id="price"
+						placeholder="Prezzo player"
+						messageError={errors.price}
+						value={formData.price}
+						handleChange={handleChange}
+						handleBlur={handleBlur}
+					/>
+					<div className="flex flex-col gap-[8px] justify-end">
+						<label
+							htmlFor="immaginePlayer"
+							className="body-small font-semibold text-(--black-normal)"
+						>
+							{isEdit ? "Aggiorna immagine" : "Aggiungi immagine"}
+						</label>
+						<input
+							key={fileKey}
+							type="file"
+							name="immaginePlayer"
+							id="immaginePlayer"
+							accept="image/jpeg, image/png"
+							onChange={handleFileChange}
+						/>
+					</div>
+					<NormalButton
+						text={isEdit ? "Modifica Player" : "Aggiungi Player"}
+						action={() => {
+							onSubmit(formData);
+							setFileKey(Date.now());
+						}}
+						disabled={!isFormValid()}
+					/>
+					{isEdit && (
+						<GhostButton
+							text="Elimina Player"
+							action={() => onDelete(playerObj.id)}
+							classOpt="text-(--error-normal)"
+							customIcon={true}
+						>
+							<TrashIcon className="w-[24px] h-[24px] flex-shrink-0" />
+						</GhostButton>
+					)}
+				</form>
 			</div>
 		</>
 	);
