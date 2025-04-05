@@ -15,7 +15,7 @@ export default function FAQPage() {
 	return (
 		<>
 			<button
-				className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1"
+				className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1 cursor-pointer"
 				onClick={() => navigate("/app")}
 			>
 				<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
@@ -36,7 +36,7 @@ export default function FAQPage() {
 								className={`rounded-[12px] p-[8px] transition-all duration-300 ease bg-(--black-light)`}
 							>
 								<button
-									className="w-full flex justify-between items-center gap-[8px] body-normal font-medium text-(--black-normal) text-left bg-white rounded-[4px] p-[10px]"
+									className="w-full flex justify-between items-center gap-[8px] body-normal font-medium text-(--black-normal) text-left bg-white rounded-[4px] p-[10px] cursor-pointer"
 									onClick={() => toggleFAQ(index)}
 									aria-expanded={openIndex === index}
 								>

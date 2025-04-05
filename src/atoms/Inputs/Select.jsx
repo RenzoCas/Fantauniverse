@@ -21,8 +21,8 @@ function Select({ options, selectedValue, handleChange, label }) {
 				</label>
 			)}
 
-			<div
-				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px] lg:max-w-1/2 lg:mx-auto"
+			<button
+				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px] w-full lg:max-w-1/2 lg:mx-auto"
 				onClick={toggleMenu}
 			>
 				<span className="body-small font-semibold text-(--error-normal)">
@@ -34,7 +34,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 				) : (
 					<ChevronDownIcon className="h-[20px] w-[20px]" />
 				)}
-			</div>
+			</button>
 
 			{isOpen && (
 				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full lg:max-w-1/2 lg:left-1/2 lg:-translate-x-1/2">

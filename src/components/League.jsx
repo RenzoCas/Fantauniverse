@@ -165,7 +165,7 @@ export default function League({ league, onAddParticipant }) {
 						</button>
 						{status == "NOT_STARTED" && (
 							<button
-								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal) focus:outline-(--accent-normal) focus:outline-2"
+								className="border-2 border-solid border-(--accent-normal) rounded-[4px] px-[18px] py-[4px] body-small text-white font-semibold bg-(--accent-normal) focus:outline-(--accent-normal) focus:outline-2 cursor-pointer"
 								onClick={() => onAddParticipant(id)}
 							>
 								Iscriviti

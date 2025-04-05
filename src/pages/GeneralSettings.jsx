@@ -385,7 +385,7 @@ function GeneralSettings() {
 						<div className="flex flex-col gap-[8px]">
 							<div className="flex gap-[10px]">
 								<button
-									className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+									className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
 									onClick={() => toggleEditing("name")}
 									disabled={status !== "PENDING"}
 								>
@@ -427,7 +427,7 @@ function GeneralSettings() {
 									</label>
 									<div className="flex gap-[10px]">
 										<button
-											className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+											className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
 											onClick={() =>
 												toggleEditing("description")
 											}
@@ -507,7 +507,7 @@ function GeneralSettings() {
 
 									<div className="flex gap-[10px]">
 										<button
-											className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+											className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
 											onClick={() => toggleEditing(field)}
 											disabled={status !== "PENDING"}
 										>
@@ -721,7 +721,7 @@ function GeneralSettings() {
 										</p>
 										<div className="flex gap-[10px]">
 											<button onClick={handleCopy}>
-												<Clipboard className="w-[24px] h-[24px] stroke-(--black-light-active) flex-shrink-0" />
+												<Clipboard className="w-[24px] h-[24px] stroke-(--black-light-active) flex-shrink-0 cursor-pointer" />
 											</button>
 											<p
 												onClick={handleCopy}

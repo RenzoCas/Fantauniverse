@@ -140,7 +140,7 @@ export default function Navbar() {
 			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex lg:hidden justify-between items-center border-b-[2px] border-black relative z-100">
 				<Logo />
 				<div className="flex gap-3 items-center">
-					<button onClick={toggleMenu}>
+					<button onClick={toggleMenu} className="cursor-pointer">
 						<Bars3Icon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>
@@ -184,7 +184,7 @@ export default function Navbar() {
 						</div>
 						<button
 							onClick={toggleMenu}
-							className="p-[8px] rounded-[4px] border border-solid border-(--black-light)"
+							className="p-[8px] rounded-[4px] border border-solid border-(--black-light) cursor-pointer"
 						>
 							<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 						</button>
@@ -238,7 +238,10 @@ export default function Navbar() {
 											))}
 									</ul>
 									{visibleCount < myLeagues.length && (
-										<button onClick={loadMore}>
+										<button
+											onClick={loadMore}
+											className="cursor-pointer"
+										>
 											Carica di più
 										</button>
 									)}
@@ -253,7 +256,7 @@ export default function Navbar() {
 									<ul className="flex flex-col gap-[10px]">
 										<li>
 											<button
-												className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left"
+												className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal w-full text-left cursor-pointer"
 												onClick={() =>
 													handleClickLink("/app")
 												}
@@ -278,7 +281,7 @@ export default function Navbar() {
 								{myLeagues?.length > 0 && (
 									<li>
 										<button
-											className="flex gap-[20px] text-(--black-normal) w-full text-left"
+											className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 											onClick={() =>
 												handleClickLink("/app")
 											}
@@ -293,7 +296,7 @@ export default function Navbar() {
 								)}
 								<li>
 									<button
-										className="flex gap-[20px] text-(--black-normal) w-full text-left"
+										className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 										onClick={() =>
 											handleClickLink("account")
 										}
@@ -307,7 +310,7 @@ export default function Navbar() {
 								</li>
 								<li>
 									<button
-										className="flex gap-[20px] text-(--black-normal) w-full text-left"
+										className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 										onClick={() => handleClickLink("rules")}
 									>
 										<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
@@ -319,7 +322,7 @@ export default function Navbar() {
 								</li>
 								<li>
 									<button
-										className="flex gap-[20px] text-(--black-normal) w-full text-left"
+										className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 										onClick={() => handleClickLink("faq")}
 									>
 										<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
@@ -338,7 +341,7 @@ export default function Navbar() {
 						<ul className="flex flex-col gap-[10px]">
 							<li>
 								<button
-									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal"
+									className="flex items-center gap-[20px] text-(--black-normal) font-medium body-normal cursor-pointer"
 									onClick={handleLogout}
 								>
 									<ArrowUpTrayIcon className="w-[24px] h-[24px] stroke-2 rotate-90 flex-shrink-0" />
@@ -347,7 +350,7 @@ export default function Navbar() {
 							</li>
 							<li>
 								<button
-									className="flex items-center gap-[20px] text-(--error-normal) font-medium body-normal"
+									className="flex items-center gap-[20px] text-(--error-normal) font-medium body-normal cursor-pointer"
 									onClick={showModalConfirmUnregister}
 								>
 									<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] stroke-2 flex-shrink-0" />

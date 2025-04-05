@@ -254,7 +254,7 @@ function Points() {
 								</h2>
 								<button
 									onClick={handleCancelUpdate}
-									className="flex items-center gap-[4px] text-(--accent-normal)"
+									className="flex items-center gap-[4px] text-(--accent-normal) cursor-pointer"
 								>
 									<p className="body-normal">Annulla</p>
 								</button>
@@ -291,13 +291,13 @@ function Points() {
 					) : (
 						<>
 							<div className="flex flex-col gap-[16px] flex-1">
-								<div className="flex items-center justify-between">
-									<h2 className="title-h4 font-medium break-all">
+								<div className="flex items-center justify-between lg:justify-end">
+									<h2 className="title-h4 font-medium break-all lg:hidden">
 										{league.name}
 									</h2>
 									{isAdmin && status != "FINISHED" && (
 										<button
-											className="flex items-center gap-[4px] body-small font-semibold whitespace-nowrap"
+											className="flex gap-[4px] body-small font-semibold whitespace-nowrap cursor-pointer"
 											onClick={() => setIsModalOpen(true)}
 										>
 											Aggiungi giornata
@@ -343,7 +343,7 @@ function Points() {
 												onClick={() =>
 													setIsUpdateDay(true)
 												}
-												className="flex items-center gap-[8px] justify-center"
+												className="flex items-center gap-[8px] justify-center w-fit self-center cursor-pointer"
 											>
 												<p className="body-normal">
 													Modifica punteggi
@@ -351,7 +351,7 @@ function Points() {
 												<WrenchScrewdriverIcon className="h-[20px] w-[20px]" />
 											</button>
 										)}
-										<ul className="flex flex-col">
+										<div className="flex flex-col">
 											{infoDay?.players?.map(
 												(el, idx) => (
 													<DayPlayer
@@ -362,7 +362,7 @@ function Points() {
 													/>
 												)
 											)}
-										</ul>
+										</div>
 									</>
 								) : (
 									<p className="body-normal text-(black-normal) font-semibold text-center">

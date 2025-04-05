@@ -83,7 +83,7 @@ function ModalChangePassword({ isOpen, onClose }) {
 						Modifica password
 					</h4>
 					<button onClick={onClose}>
-						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
+						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0 cursor-pointer" />
 					</button>
 				</div>
 				<form className="flex flex-col gap-[16px] relative">

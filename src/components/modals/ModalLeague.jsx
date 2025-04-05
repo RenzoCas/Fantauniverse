@@ -169,7 +169,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 					<h4 className="font-semibold text-(--black-normal)">
 						{initialState ? "Aggiorna lega" : "Crea lega"}
 					</h4>
-					<button onClick={onClose}>
+					<button onClick={onClose} className="cursor-pointer">
 						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>

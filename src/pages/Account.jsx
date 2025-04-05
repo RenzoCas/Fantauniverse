@@ -271,13 +271,13 @@ function Account() {
 						<div className="flex items-center gap-[8px]">
 							<button
 								onClick={handleUpdateImage}
-								className="body-normal"
+								className="body-normal cursor-pointer"
 							>
 								Cambia avatar
 							</button>
 							<button
 								onClick={handleDeleteImage}
-								className="body-normal text-(--error-normal)"
+								className="body-normal text-(--error-normal) cursor-pointer"
 							>
 								Elimina avatar
 							</button>
@@ -293,7 +293,7 @@ function Account() {
 							</label>
 							<div className="flex gap-[10px]">
 								<button
-									className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+									className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
 									onClick={() => toggleEditing(field)}
 								>
 									{isEditing[field] ? (

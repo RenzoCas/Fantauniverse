@@ -36,13 +36,13 @@ function Ranking({ handleTabChange }) {
 							</div>
 							<button
 								onClick={resetParticipant}
-								className="body-small font-semibold"
+								className="body-small font-semibold cursor-pointer"
 							>
 								Torna alla classifica
 							</button>
 						</div>
 
-						<ul className="flex flex-col gap-[8px]">
+						<div className="flex flex-col gap-[8px]">
 							{teamParticipant.players.map((p, idx) => (
 								<Player
 									key={p.id}
@@ -52,11 +52,11 @@ function Ranking({ handleTabChange }) {
 									playerDay={teamParticipant.playerDay[idx]}
 								/>
 							))}
-						</ul>
+						</div>
 					</div>
 				</>
 			) : (
-				<ul className="flex flex-col gap-[16px]">
+				<div className="flex flex-col gap-[16px]">
 					{participants.map((el, idx) => (
 						<Participant
 							key={idx}
@@ -67,7 +67,7 @@ function Ranking({ handleTabChange }) {
 							handleTabChange={handleTabChange}
 						/>
 					))}
-				</ul>
+				</div>
 			)}
 		</>
 	);

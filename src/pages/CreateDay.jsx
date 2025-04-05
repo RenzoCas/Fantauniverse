@@ -100,7 +100,7 @@ function CreateDay() {
 					onClick={() => {
 						navigate(-1);
 					}}
-					className="flex items-center gap-[4px] text-(--accent-normal)"
+					className="flex items-center gap-[4px] text-(--accent-normal) cursor-pointer"
 				>
 					<ChevronLeftIcon className="h-[20px] w-[20px]" />
 					<p className="body-normal">Indietro</p>

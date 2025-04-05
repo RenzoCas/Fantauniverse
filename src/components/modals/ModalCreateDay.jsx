@@ -41,7 +41,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 			>
 				<div className="flex items-center justify-between gap-[8px]">
 					<h4 className="body-normal font-semibold">Crea giornata</h4>
-					<button onClick={onClose}>
+					<button onClick={onClose} className="cursor-pointer">
 						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>

@@ -137,7 +137,7 @@ function Rules() {
 								</h6>
 								<button
 									onClick={handleAddRule}
-									className="flex items-center gap-[8px] justify-end body-small"
+									className="flex items-center gap-[8px] justify-end body-small cursor-pointer"
 								>
 									Aggiungi regola
 									<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />

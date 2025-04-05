@@ -123,7 +123,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 					<h4 className="font-semibold text-(--black-normal)">
 						{isEdit ? "Modifica" : "Aggiungi"} Player
 					</h4>
-					<button onClick={onClose}>
+					<button onClick={onClose} className="cursor-pointer">
 						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>

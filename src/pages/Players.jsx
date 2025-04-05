@@ -115,7 +115,7 @@ function Players() {
 							</h6>
 							<button
 								onClick={handleAddPlayer}
-								className="flex items-center gap-[8px] justify-end"
+								className="flex items-center gap-[8px] justify-end cursor-pointer"
 							>
 								<p className="body-small whitespace-nowrap">
 									Aggiungi player

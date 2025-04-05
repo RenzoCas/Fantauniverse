@@ -22,8 +22,8 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 	}, []);
 
 	return (
-		<li
-			className="flex flex-col gap-[8px] py-[8px] border-b border-b-(--black-light)"
+		<button
+			className="flex flex-col gap-[8px] py-[8px] border-b border-b-(--black-light) cursor-pointer"
 			onClick={() => setExpanded(!expanded)}
 		>
 			<div className="flex items-center gap-[20px]">
@@ -42,7 +42,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 						/>
 					)}
 				</picture>
-				<h5 className="body-normal font-semibold flex-1 break-all">
+				<h5 className="body-normal font-semibold flex-1 break-all text-left">
 					{name}
 				</h5>
 				<div className="flex items-center gap-[10px]">
@@ -70,7 +70,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 										{el.value}
 									</p>
 								</div>
-								<p className="body-normal font-light line-clamp-2 break-all">
+								<p className="body-normal font-light line-clamp-2 break-all text-left">
 									{el.rule}
 								</p>
 							</li>
@@ -87,14 +87,14 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 										-{el.value}
 									</p>
 								</div>
-								<p className="body-normal font-light line-clamp-2 break-all">
+								<p className="body-normal font-light line-clamp-2 break-all text-left">
 									{el.rule}
 								</p>
 							</li>
 						))}
 				</ul>
 			)}
-		</li>
+		</button>
 	);
 }
 

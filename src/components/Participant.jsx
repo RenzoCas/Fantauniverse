@@ -61,8 +61,8 @@ function Participant({
 
 	return (
 		<>
-			<li
-				className="flex items-center border-b border-(--black-light) pb-[8px] gap-[20px]"
+			<button
+				className="flex items-center border-b border-(--black-light) pb-[8px] gap-[20px] cursor-pointer"
 				onClick={handleViewPartecipant}
 			>
 				{isRanking && (
@@ -80,7 +80,7 @@ function Participant({
 						<p className="body-normal font-black">{idx + 1}&deg;</p>
 					</div>
 				)}
-				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px]">
+				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px] cursor-pointer">
 					{icon == null ? (
 						<div
 							className={`rounded-[3px] h-[48px] w-[48px] object-cover`}
@@ -90,23 +90,23 @@ function Participant({
 						<img
 							src={`data:image/png;base64,${icon}`}
 							alt={`immagine giocatore`}
-							className="rounded-[3px] h-[48px] w-[48px] object-cover cursor-pointer"
+							className="rounded-[3px] h-[48px] w-[48px] object-cover"
 							loading="lazy"
 						/>
 					)}
 				</picture>
 				<div className={`flex flex-col gap-[4px] w-full`}>
-					<h3 className="body-normal font-semibold break-all">
+					<h3 className="body-normal font-semibold break-all text-left">
 						{username}
 					</h3>
-					<p className="body-small font-semibold text-(--black-normal)/70 break-all">
+					<p className="body-small font-semibold text-(--black-normal)/70 break-all text-left">
 						{name || "Squadra non presente."}
 					</p>
 				</div>
 				<p className="body-normal font-semibold whitespace-nowrap">
 					{points} pnt.
 				</p>
-			</li>
+			</button>
 
 			<GenericPopup
 				isOpen={popupData.isOpen}

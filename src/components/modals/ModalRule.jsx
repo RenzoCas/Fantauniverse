@@ -128,7 +128,7 @@ function ModalRule({
 					<h4 className="font-semibold text-(--black-normal)">
 						{isEdit ? "Modifica" : "Aggiungi"} Regola
 					</h4>
-					<button onClick={onClose}>
+					<button onClick={onClose} className="cursor-pointer">
 						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
 				</div>

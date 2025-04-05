@@ -25,7 +25,7 @@ function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 				<div className="flex items-center justify-between gap-[8px]">
 					<h5 className="body-regular font-medium">{title}</h5>
 					<button
-						className="p-[2px] border border-solid border-(--black-light-active)"
+						className="p-[2px] border border-solid border-(--black-light-active) cursor-pointer"
 						onClick={onClose}
 					>
 						<XIcon className="w-[24px] h-[24px] stroke-(--black-light-active) flex-shrink-0" />
@@ -35,13 +35,13 @@ function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 				<div className="flex gap-[16px] items-center self-end">
 					<button
 						onClick={onClose}
-						className="px-[16px] py-[8px] border border-solid border-(--black-light-active) body-small text-(--black-light-active) rounded-full"
+						className="px-[16px] py-[8px] border border-solid border-(--black-light-active) body-small text-(--black-light-active) rounded-full cursor-pointer"
 					>
 						{annulla}
 					</button>
 					<button
 						onClick={onConfirmAction}
-						className="px-[16px] py-[8px] bg-(--black-normal) body-small text-white rounded-full"
+						className="px-[16px] py-[8px] bg-(--black-normal) body-small text-white rounded-full cursor-pointer"
 					>
 						{conferma}
 					</button>

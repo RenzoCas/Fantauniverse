@@ -49,7 +49,7 @@ function ModalAddPoints({ isOpen, onClose, playerObj, onConfirm, dataDay }) {
 						Aggiungi bonus e malus a {name}
 					</h4>
 					<button onClick={onClose}>
-						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
+						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0 cursor-pointer" />
 					</button>
 				</div>
 

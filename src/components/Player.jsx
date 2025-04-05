@@ -68,8 +68,8 @@ function Player({
 	return (
 		<>
 			{viewTeam ? (
-				<li
-					className={`flex flex-col gap-[8px] border-b border-(--black-light) pb-[8px] transform transition-all duration-300`}
+				<button
+					className={`flex flex-col gap-[8px] border-b border-(--black-light) pb-[8px] transform transition-all duration-300 cursor-pointer`}
 					onClick={() => handleClickPlayer()}
 				>
 					<div className="flex gap-[20px]">
@@ -133,7 +133,7 @@ function Player({
 							))}
 						</ul>
 					)}
-				</li>
+				</button>
 			) : (
 				<li
 					className={`flex border-b border-(--black-light) pb-[8px] gap-[20px] transform transition-all duration-300`}
@@ -214,7 +214,7 @@ function Player({
 
 					{canEdit && status == "PENDING" && (
 						<button
-							className="flex"
+							className="flex cursor-pointer"
 							onClick={() => onEdit(playerObj)}
 						>
 							<PencilSquareIcon className="h-[20px] w-[20px]" />
@@ -222,7 +222,7 @@ function Player({
 					)}
 					{addPoints && (
 						<button
-							className="flex"
+							className="flex cursor-pointer"
 							onClick={() => handleAddPoints(playerObj)}
 						>
 							<PencilSquareIcon className="h-[20px] w-[20px]" />
@@ -237,6 +237,7 @@ function Player({
 											onClick={() =>
 												onSelectCaptain(playerObj)
 											}
+											className="cursor-pointer"
 										>
 											<SparklesIcon
 												className={`h-[24px] w-[24px] stroke-1 flex-shrink-0 ${
@@ -250,13 +251,14 @@ function Player({
 
 									<button
 										onClick={() => onDeselect(playerObj)}
+										className="cursor-pointer"
 									>
 										<SquareMinus className="h-[24px] w-[24px] stroke-(--error-normal) flex-shrink-0" />
 									</button>
 								</div>
 							) : (
 								<button
-									className={`flex self-center ${
+									className={`flex self-center cursor-pointer ${
 										!canAdd &&
 										"opacity-50 cursor-not-allowed"
 									}`}

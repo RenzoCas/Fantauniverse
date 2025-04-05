@@ -187,7 +187,7 @@ function ViewLega() {
 						)}
 					</div>
 					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1"
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1 cursor-pointer"
 						onClick={() => navigate("/app")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
@@ -227,9 +227,9 @@ function ViewLega() {
 										/>
 									)}
 									{status === "PENDING" && (
-										<div className="absolute bottom-[8px] right-[8px] p-[10px] rounded-full bg-(--black-light)">
+										<button className="absolute bottom-[8px] right-[8px] p-[10px] rounded-full bg-(--black-light)">
 											<PencilSquareIcon className="h-[20px] w-[20px]" />
-										</div>
+										</button>
 									)}
 								</picture>
 								<div className="hidden lg:flex lg:flex-col lg:gap-[8px] lg:w-full">
@@ -240,7 +240,7 @@ function ViewLega() {
 										{status == "NOT_STARTED" &&
 											isRegistered && (
 												<button
-													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
+													className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap cursor-pointer"
 													onClick={
 														showModalConfirmDelete
 													}
@@ -266,7 +266,7 @@ function ViewLega() {
 											{status == "NOT_STARTED" &&
 												isRegistered && (
 													<button
-														className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap"
+														className="flex items-center gap-[4px] body-small font-semibold text-[#F87171] whitespace-nowrap cursor-pointer"
 														onClick={
 															showModalConfirmDelete
 														}

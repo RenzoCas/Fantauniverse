@@ -280,7 +280,7 @@ function MyTeam() {
 						</div>
 					</div>
 
-					<ul className="flex flex-col gap-[8px]">
+					<div className="flex flex-col gap-[8px]">
 						{tempTeam.players.map((p, idx) => (
 							<Player
 								key={p.id}
@@ -292,7 +292,7 @@ function MyTeam() {
 								viewTeam={true}
 							/>
 						))}
-					</ul>
+					</div>
 				</div>
 			) : (
 				<div className="flex flex-col gap-[24px]">
@@ -304,7 +304,7 @@ function MyTeam() {
 								</h2>
 								{tempTeam.id && (
 									<button
-										className="body-small font-semibold text-[#F87171] whitespace-nowrap"
+										className="body-small font-semibold text-[#F87171] whitespace-nowrap cursor-pointer"
 										onClick={() => showModalConfirmDelete()}
 									>
 										Cancella team
@@ -322,7 +322,7 @@ function MyTeam() {
 							</label>
 							<div className="flex gap-[10px]">
 								<button
-									className="p-[10px] bg-(--black-light) rounded-full max-h-fit"
+									className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
 									onClick={() => toggleEditing("name")}
 								>
 									{isEditing.name ? (

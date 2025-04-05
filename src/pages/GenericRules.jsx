@@ -12,7 +12,7 @@ export default function GenericRules() {
 			{user.id != "" ? (
 				<>
 					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1"
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1 cursor-pointer"
 						onClick={() => navigate("/app")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
@@ -30,7 +30,7 @@ export default function GenericRules() {
 						</div>
 					</header>
 					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal"
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal cursor-pointer"
 						onClick={() => navigate("/registration")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />

@@ -5,7 +5,7 @@ export default function Logo({ large = false, white = false }) {
 	return (
 		<button
 			onClick={() => navigate("/app")}
-			className={`relative rounded-full focus:outline-(--black-normal) focus:outline-2
+			className={`relative rounded-full focus:outline-(--black-normal) focus:outline-2 cursor-pointer
           ${large == true ? "h-[62px] w-[62px]" : "h-[46px] w-[46px]"}
           ${white == true ? "bg-white" : "bg-(--black-normal)"}
         `}

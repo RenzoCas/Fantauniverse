@@ -105,7 +105,7 @@ export default function GenericInput({
 					<button
 						type="button"
 						onClick={togglePasswordVisibility}
-						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal) break-all"
+						className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) focus:outline-(--black-normal) break-all cursor-pointer"
 					>
 						{showPassword ? (
 							<EyeSlashIcon className="h-[24px] w-[24px] flex-shrink-0" />
@@ -116,7 +116,7 @@ export default function GenericInput({
 				)}
 
 				{isSearchType && (
-					<button className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal)">
+					<button className="absolute right-4 top-1/2 -translate-y-1/2 text-(--black-normal) cursor-pointer">
 						<MagnifyingGlassIcon className="h-[20px] w-[20px]" />
 					</button>
 				)}

@@ -136,9 +136,9 @@ function Dashboard() {
 	};
 
 	const handleSubmit = async (e) => {
-		setIsLoading(true);
 		e.preventDefault();
 		if (formData.leagueName.trim() != "") {
+			setIsLoading(true);
 			const res = await findLeague(formData.leagueName);
 			if (res.length == 0) {
 				showPopup(
@@ -151,6 +151,12 @@ function Dashboard() {
 			}
 			setIsLoading(false);
 			setIsModalSearchOpen(true);
+		} else {
+			showPopup(
+				"error",
+				"Valore non valido!",
+				"Inserisci un valore valido per la ricerca."
+			);
 		}
 	};
 
@@ -258,7 +264,7 @@ function Dashboard() {
 						{myLeagues.length > 0 && (
 							<button
 								onClick={() => setIsModalOpen(true)}
-								className="flex gap-[8px] items-center"
+								className="flex gap-[8px] items-center cursor-pointer"
 							>
 								<p className="body-small whitespace-nowrap">
 									Crea lega
@@ -294,7 +300,7 @@ function Dashboard() {
 												filterLeagueState.length ===
 													0 && !enabledSwitch
 											}
-											className={`text-[#F87171] font-semibold disabled:text-(--black-light)`}
+											className={`text-[#F87171] font-semibold disabled:text-(--black-light) cursor-pointer`}
 											onClick={() => {
 												setFilterState([]);
 												setEnabledSwitch(false);
@@ -370,7 +376,7 @@ function Dashboard() {
 													: "Terminate"}
 											</p>
 											<button
-												className="flex"
+												className="flex cursor-pointer"
 												onClick={() =>
 													handleRemoveSelect(state)
 												}
@@ -388,7 +394,7 @@ function Dashboard() {
 												Admin
 											</p>
 											<button
-												className="flex"
+												className="flex cursor-pointer"
 												onClick={() =>
 													setEnabledSwitch(false)
 												}
@@ -401,7 +407,7 @@ function Dashboard() {
 							)}
 							<button
 								ref={buttonDeskRef}
-								className="items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit filterBtn hidden lg:flex lg:h-[30px]"
+								className="items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit filterBtn hidden lg:flex lg:h-[30px] cursor-pointer"
 							>
 								<FunnelIcon className="h-[20px] w-[20px] filterBtn" />
 							</button>
@@ -431,7 +437,7 @@ function Dashboard() {
 																: "Terminate"}
 														</p>
 														<button
-															className="flex"
+															className="flex cursor-pointer"
 															onClick={() =>
 																handleRemoveSelect(
 																	state
@@ -452,7 +458,7 @@ function Dashboard() {
 														Admin
 													</p>
 													<button
-														className="flex"
+														className="flex cursor-pointer"
 														onClick={() =>
 															setEnabledSwitch(
 																false
@@ -468,7 +474,7 @@ function Dashboard() {
 
 									<button
 										ref={buttonRef}
-										className="flex items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit filterBtn"
+										className="flex items-center gap-[4px] px-[8px] py-[4px] border border-solid border-(--black-normal) rounded-[5px] w-fit filterBtn cursor-pointer"
 									>
 										<FunnelIcon className="h-[20px] w-[20px] filterBtn" />
 									</button>
@@ -488,7 +494,7 @@ function Dashboard() {
 													filterLeagueState.length ===
 														0 && !enabledSwitch
 												}
-												className={`text-[#F87171] font-semibold disabled:text-(--black-light)`}
+												className={`text-[#F87171] font-semibold disabled:text-(--black-light) cursor-pointer`}
 												onClick={() => {
 													setFilterState([]);
 													setEnabledSwitch(false);
@@ -585,7 +591,7 @@ function Dashboard() {
 				{myLeagues.length === 0 && (
 					<button
 						onClick={() => setIsModalOpen(true)}
-						className="group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white bg-(--accent-normal)"
+						className="group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white bg-(--accent-normal) lg:w-1/2 lg:mx-auto cursor-pointer"
 					>
 						<span>Crea una nuova lega</span>
 						<PlusIcon className="h-[24px] w-[24px] text-(--black-normal) bg-white p-[4px] rounded-full flex-shrink-0" />

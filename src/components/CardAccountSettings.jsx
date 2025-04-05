@@ -44,13 +44,13 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 							</div>
 							<div className="flex flex-col gap-[8px]">
 								<button
-									className="body-small font-light h-fit px-[32px] py-[4px] border rounded-full"
+									className="body-small font-light h-fit px-[32px] py-[4px] border rounded-full cursor-pointer"
 									onClick={onUpdate}
 								>
 									Modifica
 								</button>
 								<button
-									className="body-small font-light h-fit px-[32px] py-[4px] border rounded-full"
+									className="body-small font-light h-fit px-[32px] py-[4px] border rounded-full cursor-pointer"
 									onClick={viewImage}
 								>
 									Visualizza immagine
@@ -63,7 +63,7 @@ function CardAccountSettings({ setting, value, onUpdate, viewImage }) {
 								{setting}
 							</h5>
 							<button
-								className="body-small font-light h-fit px-[32px] py-[4px] border rounded-full"
+								className="body-small font-light h-fit px-[32px] py-[4px] border rounded-full cursor-pointer"
 								onClick={onUpdate}
 							>
 								Modifica

@@ -31,7 +31,10 @@ function Rule({
 			}`}
 		>
 			{canEdit && (
-				<button className="flex" onClick={() => onEdit(ruleObj)}>
+				<button
+					className="flex cursor-pointer"
+					onClick={() => onEdit(ruleObj)}
+				>
 					<PencilSquareIcon className="h-[20px] w-[20px]" />
 				</button>
 			)}
@@ -47,7 +50,7 @@ function Rule({
 					</p>
 					{rule.length > 80 && (
 						<button
-							className="flex"
+							className="flex cursor-pointer"
 							onClick={() => setExpanded(!expanded)}
 						>
 							{expanded ? (
@@ -65,7 +68,7 @@ function Rule({
 				</p>
 				{isAddPoints && (
 					<button
-						className="flex self-center"
+						className="flex self-center cursor-pointer"
 						onClick={toggleRuleSelection}
 					>
 						{isSelected ? (
