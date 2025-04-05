@@ -260,11 +260,11 @@ export default function SidebarDesktop() {
 							<li>
 								<button
 									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
-									onClick={() => handleClickLink("rules")}
+									onClick={() => handleClickLink("account")}
 								>
-									<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
-									<span className="body-normal font-medium text-(--black-normal) self-center">
-										Come funziona?
+									<Cog6ToothIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+									<span className="body-normal font-medium text-(--black-normal) self-center flex-shrink-0">
+										Modifica il tuo profilo
 									</span>
 									<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 								</button>
@@ -272,11 +272,11 @@ export default function SidebarDesktop() {
 							<li>
 								<button
 									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
-									onClick={() => handleClickLink("account")}
+									onClick={() => handleClickLink("rules")}
 								>
-									<Cog6ToothIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
-									<span className="body-normal font-medium text-(--black-normal) self-center flex-shrink-0">
-										Modifica il tuo profilo
+									<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+									<span className="body-normal font-medium text-(--black-normal) self-center">
+										Come funziona?
 									</span>
 									<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 								</button>

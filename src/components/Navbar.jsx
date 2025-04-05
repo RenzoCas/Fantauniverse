@@ -294,18 +294,6 @@ export default function Navbar() {
 								<li>
 									<button
 										className="flex gap-[20px] text-(--black-normal) w-full text-left"
-										onClick={() => handleClickLink("rules")}
-									>
-										<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
-										<span className="body-normal font-medium text-(--black-normal) self-center">
-											Come funziona?
-										</span>
-										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
-									</button>
-								</li>
-								<li>
-									<button
-										className="flex gap-[20px] text-(--black-normal) w-full text-left"
 										onClick={() =>
 											handleClickLink("account")
 										}
@@ -313,6 +301,18 @@ export default function Navbar() {
 										<Cog6ToothIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 										<span className="body-normal font-medium text-(--black-normal) self-center flex-shrink-0">
 											Modifica il tuo profilo
+										</span>
+										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
+									</button>
+								</li>
+								<li>
+									<button
+										className="flex gap-[20px] text-(--black-normal) w-full text-left"
+										onClick={() => handleClickLink("rules")}
+									>
+										<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+										<span className="body-normal font-medium text-(--black-normal) self-center">
+											Come funziona?
 										</span>
 										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 									</button>

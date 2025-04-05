@@ -1,8 +1,8 @@
 import { useState } from "react";
 import faqsData from "../assets/faq.json";
-import Navbar from "../components/Navbar";
 import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router";
+import Logo from "../atoms/Logo";
 
 export default function FAQPage() {
 	const navigate = useNavigate();
@@ -14,19 +14,21 @@ export default function FAQPage() {
 
 	return (
 		<>
-			<Navbar />
 			<button
-				className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal"
+				className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1"
 				onClick={() => navigate("/app")}
 			>
 				<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
 				Torna alla dashboard
 			</button>
-			<main className="max-w-3xl mx-auto py-8 px-4 lg:py-16 lg:px-6 flex flex-col gap-4 min-h-[calc(100dvh-64px)]">
+			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+				<Logo />
+			</div>
+			<section className="pt-8 lg:p-0 flex flex-col gap-4">
 				<h1 className="title-h4 font-medium text-(--black-normal)">
 					Domande frequenti
 				</h1>
-				<section className="max-w-[840px]">
+				<div className="max-w-[840px]">
 					<ul className="flex flex-col gap-4">
 						{faqsData.faqs.map((faq, index) => (
 							<li
@@ -59,8 +61,8 @@ export default function FAQPage() {
 							</li>
 						))}
 					</ul>
-				</section>
-			</main>
+				</div>
+			</section>
 		</>
 	);
 }

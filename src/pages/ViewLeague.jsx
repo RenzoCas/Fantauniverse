@@ -17,6 +17,7 @@ import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import BottomNavbar from "../components/BottomNavbar";
 import MyTeam from "./MyTeam";
 import Logo from "../atoms/Logo";
+import { ChevronLeft } from "lucide-react";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -185,7 +186,14 @@ function ViewLega() {
 							/>
 						)}
 					</div>
-					<section className="flex flex-col gap-[16px] flex-1">
+					<button
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1"
+						onClick={() => navigate("/app")}
+					>
+						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
+						Torna alla dashboard
+					</button>
+					<section className="flex flex-col gap-[16px] h-full pt-[44px] lg:pt-0">
 						<div className="top flex flex-col gap-[16px] flex-1">
 							<div className="flex justify-center lg:items-center lg:gap-[20px]">
 								{status === "PENDING" && (

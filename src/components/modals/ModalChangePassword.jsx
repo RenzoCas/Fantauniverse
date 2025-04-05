@@ -1,7 +1,8 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import GenericInput from "../../atoms/Inputs/GenericInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useModal } from "../../contexts/ModalContext";
 
 function ModalChangePassword({ isOpen, onClose }) {
 	const [formData, setFormData] = useState({
@@ -11,6 +12,15 @@ function ModalChangePassword({ isOpen, onClose }) {
 	});
 
 	const [errors, setErrors] = useState({});
+	const { openBackdrop, closeBackdrop } = useModal();
+
+	useEffect(() => {
+		if (isOpen) {
+			openBackdrop();
+		} else {
+			closeBackdrop();
+		}
+	}, [isOpen]);
 
 	const isFormValid = () => {
 		return (
@@ -62,26 +72,21 @@ function ModalChangePassword({ isOpen, onClose }) {
 	return (
 		<>
 			<div
-				id="ModalChangePassword"
-				tabIndex="-1"
-				aria-hidden={!isOpen}
-				className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end transition-opacity duration-500 ease z-1000 ${
-					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-				}`}
-				onClick={onClose}
-			></div>
-			<div
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-4 w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 max-h-[calc(100dvh-100px)] overflow-y-auto ${
-					isOpen ? "translate-y-0" : "translate-y-full"
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] lg:p-[24px] w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:rounded-[12px] lg:max-w-[500px] ${
+					isOpen
+						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"
+						: "scale-80 opacity-30 translate-y-full lg:translate-y-0 invisible"
 				}`}
 			>
-				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
-				</button>
-				<div className="flex flex-col gap-[16px] relative">
-					<h5 className="body-normal font-semibold">
+				<div className="flex items-center justify-between gap-[8px]">
+					<h4 className="body-normal font-semibold">
 						Modifica password
-					</h5>
+					</h4>
+					<button onClick={onClose}>
+						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
+					</button>
+				</div>
+				<form className="flex flex-col gap-[16px] relative">
 					<GenericInput
 						type="password"
 						required
@@ -124,7 +129,7 @@ function ModalChangePassword({ isOpen, onClose }) {
 						disabled={!isFormValid()}
 						action={handleSubmit}
 					/>
-				</div>
+				</form>
 			</div>
 		</>
 	);

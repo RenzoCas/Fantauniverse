@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
@@ -11,6 +10,7 @@ import NormalButton from "../atoms/Buttons/NormalButton";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import ModalChangePassword from "../components/modals/ModalChangePassword";
 import ModalConfirmAction from "../components/modals/ModalConfirmAction";
+import Logo from "../atoms/Logo";
 
 function Account() {
 	const { user, updateUser, unregister } = useUser();
@@ -235,11 +235,12 @@ function Account() {
 	return (
 		<>
 			{isLoading && <Loader />}
-
-			<Navbar />
-			<main className="flex flex-col gap-[16px] max-w-xl mx-auto py-[24px] px-[16px] lg:py-16 lg:px-6 min-h-[calc(100dvh-64px)]">
+			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+				<Logo />
+			</div>
+			<section className="flex flex-col gap-[16px] h-full">
 				<h1 className="title-h4 font-medium">Impostazioni Account</h1>
-				<section className="flex flex-col gap-[12px]">
+				<div className="flex flex-col gap-[12px]">
 					<div className="flex flex-col gap-[8px] w-full items-center">
 						<input
 							type="file"
@@ -250,7 +251,7 @@ function Account() {
 							ref={fileInputRef}
 							className="hidden"
 						/>
-						<picture className="rounded-[32px] min-w-[90px] max-w-[90px] h-[90px] overflow-hidden outline outline-solid">
+						<picture className="rounded-[32px] w-[90px] h-[90px] flex-shrink-0 overflow-hidden outline outline-solid lg:w-[371px] lg:h-auto lg:outline-none">
 							{user?.icon == null ? (
 								<div
 									className={`h-full object-cover`}
@@ -339,22 +340,23 @@ function Account() {
 							text="Clicca per cambiare password"
 							icon={false}
 							roundedFull={false}
-							classOpt="rounded-[16px]"
+							classOpt="rounded-[16px] lg:w-1/2"
 							action={() => setIsModalPasswordVisible(true)}
 						/>
 					</div>
-				</section>
+				</div>
 				<section className="flex flex-col gap-[8px] mt-auto">
 					<NormalButton
 						text="Salva impostazioni"
 						icon={false}
 						action={handleSubmit}
 						disabled={!isFormValid() || isEditingAnyField}
+						classOpt="lg:w-1/2 lg:mx-auto"
 					/>
 					<GhostButton
 						text="Elimina Account"
 						customIcon={true}
-						classOpt="text-(--error-normal)"
+						classOpt="text-(--error-normal) lg:w-1/2 lg:mx-auto"
 						action={showModalConfirmUnregister}
 					>
 						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] flex-shrink-0" />
@@ -378,7 +380,7 @@ function Account() {
 					title={popupData.title}
 					message={popupData.message}
 				/>
-			</main>
+			</section>
 		</>
 	);
 }

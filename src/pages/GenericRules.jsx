@@ -11,9 +11,8 @@ export default function GenericRules() {
 		<>
 			{user.id != "" ? (
 				<>
-					{/* <Navbar /> */}
 					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-[100]"
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1"
 						onClick={() => navigate("/app")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
@@ -40,7 +39,7 @@ export default function GenericRules() {
 				</>
 			)}
 
-			<section className="max-w-3xl mx-auto py-8 px-4 lg:py-0 lg:px-0 flex flex-col gap-4">
+			<section className="pt-8 lg:p-0 flex flex-col gap-4">
 				<h1 className="title-h4 font-medium text-(--black-normal)">
 					Regolamento
 				</h1>
