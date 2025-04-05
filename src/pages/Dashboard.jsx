@@ -17,6 +17,7 @@ import { useLocation } from "react-router";
 import ModalSearchLeague from "../components/modals/ModalSearchLeague";
 import Switch from "../atoms/Inputs/Switch";
 import { useParticipant } from "../contexts/ParticipantContext";
+import Logo from "../atoms/Logo";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -242,6 +243,9 @@ function Dashboard() {
 	return (
 		<>
 			{isLoading && <Loader />}
+			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+				<Logo />
+			</div>
 			<div className="flex flex-col gap-[16px]">
 				<h1 className="title-h4 text-(--primary) break-all">
 					Bentornato {user.username}

@@ -48,18 +48,7 @@ function App() {
 													path="login"
 													element={<Login />}
 												/>
-												<Route
-													path="rules"
-													element={<GenericRules />}
-												/>
-												<Route
-													path="faq"
-													element={<FAQPage />}
-												/>
-												<Route
-													path="account"
-													element={<Account />}
-												/>
+
 												<Route
 													path="*"
 													element={<NotFound />}
@@ -79,6 +68,20 @@ function App() {
 													<Route
 														path="league/:id"
 														element={<ViewLeague />}
+													/>
+													<Route
+														path="rules"
+														element={
+															<GenericRules />
+														}
+													/>
+													<Route
+														path="faq"
+														element={<FAQPage />}
+													/>
+													<Route
+														path="account"
+														element={<Account />}
 													/>
 												</Route>
 											</Routes>

@@ -260,7 +260,7 @@ export default function SidebarDesktop() {
 							<li>
 								<button
 									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
-									onClick={() => handleClickLink("/rules")}
+									onClick={() => handleClickLink("rules")}
 								>
 									<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 									<span className="body-normal font-medium text-(--black-normal) self-center">
@@ -272,7 +272,7 @@ export default function SidebarDesktop() {
 							<li>
 								<button
 									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
-									onClick={() => handleClickLink("/account")}
+									onClick={() => handleClickLink("account")}
 								>
 									<Cog6ToothIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 									<span className="body-normal font-medium text-(--black-normal) self-center flex-shrink-0">
@@ -284,7 +284,7 @@ export default function SidebarDesktop() {
 							<li>
 								<button
 									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
-									onClick={() => handleClickLink("/faq")}
+									onClick={() => handleClickLink("faq")}
 								>
 									<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 									<span className="body-normal font-medium text-(--black-normal) self-center">

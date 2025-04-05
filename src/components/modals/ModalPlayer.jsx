@@ -113,10 +113,10 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	return (
 		<>
 			<div
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] lg:p-[24px] w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-1/2 lg:rounded-[12px] lg:max-w-[500px] ${
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] lg:p-[24px] w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:rounded-[12px] lg:max-w-[500px] ${
 					isOpen
-						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 visible"
-						: "scale-80 opacity-30 translate-y-full lg:bottom-[100px] invisible"
+						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"
+						: "scale-80 opacity-30 translate-y-full lg:translate-y-0 invisible"
 				}`}
 			>
 				<div className="flex items-center justify-between gap-[8px]">

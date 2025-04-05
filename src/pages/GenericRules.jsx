@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import { useUser } from "../contexts/UserContext";
 import Logo from "../atoms/Logo";
 import { Book, ChevronLeft } from "lucide-react";
@@ -11,14 +11,17 @@ export default function GenericRules() {
 		<>
 			{user.id != "" ? (
 				<>
-					<Navbar />
+					{/* <Navbar /> */}
 					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal"
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-[100]"
 						onClick={() => navigate("/app")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
 						Torna alla dashboard
 					</button>
+					<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+						<Logo />
+					</div>
 				</>
 			) : (
 				<>
@@ -37,11 +40,11 @@ export default function GenericRules() {
 				</>
 			)}
 
-			<main className="max-w-3xl mx-auto py-8 px-4 lg:py-16 lg:px-6 flex flex-col gap-4 min-h-[calc(100dvh-64px)]">
+			<section className="max-w-3xl mx-auto py-8 px-4 lg:py-0 lg:px-0 flex flex-col gap-4">
 				<h1 className="title-h4 font-medium text-(--black-normal)">
 					Regolamento
 				</h1>
-				<section className="max-w-[840px]">
+				<div className="max-w-[840px]">
 					<ul className="flex flex-col gap-[12px]">
 						<li className="flex flex-col gap-[8px]">
 							<h4 className="body-regular text-[#B0B0B0]">
@@ -251,8 +254,8 @@ export default function GenericRules() {
 							</ul>
 						</li>
 					</ul>
-				</section>
-			</main>
+				</div>
+			</section>
 		</>
 	);
 }
