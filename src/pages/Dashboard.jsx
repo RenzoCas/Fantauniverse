@@ -416,8 +416,8 @@ function Dashboard() {
 
 					{myLeagues.length !== 0 ? (
 						<>
-							<div className="relative z-3 flex flex-col gap-[10px]">
-								<div className="flex justify-end gap-[12px] lg:hidden">
+							<div className="relative z-3 flex flex-col gap-[10px] lg:hidden">
+								<div className="flex justify-end gap-[12px]">
 									{(filterLeagueState.length > 0 ||
 										enabledSwitch) && (
 										<ul className="flex items-center gap-[8px] overflow-x-auto hide-scrollbar">
