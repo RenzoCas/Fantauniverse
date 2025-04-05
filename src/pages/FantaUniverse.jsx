@@ -8,7 +8,7 @@ export default function FantaUniverse() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isLeaguePage = location.pathname.startsWith("/app/league/");
-	const { isOpen } = useModal();
+	const { isOpenBackdrop } = useModal();
 
 	return (
 		<>
@@ -16,9 +16,9 @@ export default function FantaUniverse() {
 			<div
 				id={`ModalBackdrop`}
 				tabIndex="-1"
-				aria-hidden={!isOpen}
-				className={`fixed bottom-0 left-0 w-screen h-screen px-[16px] bg-(--black-normal)/50 transition-all duration-300 ease z-1000 ${
-					isOpen
+				aria-hidden={!isOpenBackdrop}
+				className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 transition-all duration-300 ease z-100 ${
+					isOpenBackdrop
 						? "opacity-100 visible"
 						: "opacity-0 invisible delay-150"
 				}`}
@@ -35,8 +35,8 @@ export default function FantaUniverse() {
 
 			<main className="flex max-w-xl mx-auto py-[24px] px-[16px] bg-white lg:bg-(--black-light) lg:max-w-full lg:py-[8px] lg:px-0 lg:max-h-screen lg:h-screen">
 				<SidebarDesktop />
-				<section className="w-full lg:bg-white lg:rounded-l-[24px] lg:pb-[20px] lg:pt-[88px] lg:flex lg:flex-col">
-					<div className="w-full lg:max-w-[840px] lg:max-h-full lg:mx-auto lg:py-[55px] lg:px-[24px] lg:overflow-x-auto relative">
+				<section className="w-full lg:bg-white lg:rounded-l-[24px] lg:pb-[20px] lg:pt-[88px] lg:flex lg:flex-col relative">
+					<div className="w-full lg:max-w-[840px] lg:max-h-full lg:mx-auto lg:py-[55px] lg:px-[24px] lg:overflow-x-auto">
 						<Outlet />
 					</div>
 				</section>

@@ -271,11 +271,12 @@ function Points() {
 									></Player>
 								))}
 							</ul>
-							<div className="flex flex-col gap-[8px] sticky bottom-[32px]">
+							<div className="flex flex-col gap-[8px]">
 								<NormalButton
 									text="Conferma punteggi"
 									icon={false}
 									action={handleSubmit}
+									classOpt={"lg:w-1/2 lg:mx-auto"}
 								/>
 							</div>
 							<ModalAddPoints

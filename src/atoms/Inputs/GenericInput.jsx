@@ -60,7 +60,7 @@ export default function GenericInput({
 						onChange={handleChange}
 						onBlur={handleBlur}
 						autoComplete={autocomplete}
-						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-all ${
+						className={`w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl outline-2 focus:outline-none placeholder-(--black-normal) break-all max-h-[200px] ${
 							messageError
 								? "outline-(--error-normal) bg-(--error-light) text-(--error-normal)"
 								: "bg-[#FAF8F8] outline-transparent focus:outline-solid focus:outline-[2px] focus:outline-(--black-normal)"

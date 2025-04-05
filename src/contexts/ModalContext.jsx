@@ -3,18 +3,20 @@ import { createContext, useContext, useState } from "react";
 const ModalContext = createContext();
 
 function ModalProvider({ children }) {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpenBackdrop, setIsOpen] = useState(false);
 
-	const openModal = () => {
+	const openBackdrop = () => {
 		setIsOpen(true);
 	};
 
-	const closeModal = () => {
+	const closeBackdrop = () => {
 		setIsOpen(false);
 	};
 
 	return (
-		<ModalContext.Provider value={{ isOpen, openModal, closeModal }}>
+		<ModalContext.Provider
+			value={{ isOpenBackdrop, openBackdrop, closeBackdrop }}
+		>
 			{children}
 		</ModalContext.Provider>
 	);

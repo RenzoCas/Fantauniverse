@@ -187,7 +187,7 @@ function ViewLega() {
 					</div>
 					<section className="flex flex-col gap-[16px] flex-1">
 						<div className="top flex flex-col gap-[16px] flex-1">
-							<div className="flex lg:items-center lg:gap-[20px]">
+							<div className="flex justify-center lg:items-center lg:gap-[20px]">
 								{status === "PENDING" && (
 									<input
 										type="file"

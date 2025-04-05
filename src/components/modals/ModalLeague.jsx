@@ -1,11 +1,12 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLeague } from "../../contexts/LeagueContext";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 // import Radio from "../../atoms/Inputs/Radio";
 import TabButton from "../../atoms/Buttons/TabButton";
 import Switch from "../../atoms/Inputs/Switch";
+import { useModal } from "../../contexts/ModalContext";
 
 function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 	const [formData, setFormData] = useState(
@@ -24,6 +25,15 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 	const [isEnableCaptain, setIsEnableCaptain] = useState(
 		formData.enableCaptain
 	);
+	const { openBackdrop, closeBackdrop } = useModal();
+
+	useEffect(() => {
+		if (isOpen) {
+			openBackdrop();
+		} else {
+			closeBackdrop();
+		}
+	}, [isOpen]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -149,157 +159,148 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 	return (
 		<>
 			<div
-				id="modalLeague"
-				tabIndex="-1"
-				aria-hidden={!isOpen}
-				className={`fixed bottom-0 left-0 w-screen h-screen bg-(--black-normal)/50 flex justify-center items-end md:items-center transition-opacity duration-500 ease z-1000 ${
-					isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-				}`}
-				onClick={onClose}
-			></div>
-			<div
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] p-[16px] md:py-[24px] w-full transition-transform duration-500 ease flex flex-col gap-[4px] z-1001 max-h-[calc(100dvh-80px)] overflow-y-auto ${
-					isOpen ? "translate-y-0" : "translate-y-full"
-				} md:max-w-[600px] md:items-center md:justify-center`}
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 max-h-[calc(100dvh-80px)] overflow-y-auto ${
+					isOpen
+						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 visible"
+						: "scale-80 opacity-30 translate-y-full lg:bottom-[100px] invisible"
+				} lg:max-w-[600px] lg:max-h-[600px] lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:translate-y-1/2 lg:rounded-[12px]`}
 			>
-				<button onClick={onClose} className="flex self-end">
-					<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
-				</button>
-				<div className="flex flex-col gap-[16px]">
+				<div className="flex items-center justify-between gap-[8px] w-full sticky top-0 bg-white p-[16px] lg:pt-[24px] z-2">
 					<h4 className="font-semibold text-(--black-normal)">
 						{initialState ? "Aggiorna lega" : "Crea lega"}
 					</h4>
-					<form
-						onSubmit={handleSubmit}
-						className="flex flex-col gap-[16px] w-full"
-					>
-						<div className="flex flex-col gap-[8px]">
-							<label
-								htmlFor="name"
-								className="body-small text-(--black-light-active) font-medium"
-							>
-								Nome lega*:
-							</label>
-							<GenericInput
-								type="text"
-								required
-								name="name"
-								id="name"
-								messageError={errors.name}
-								value={formData.name}
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-							/>
-						</div>
-						<div className="flex flex-col gap-[8px]">
-							<label
-								htmlFor="description"
-								className="body-small text-(--black-light-active) font-medium"
-							>
-								Descrizione:
-							</label>
-							<GenericInput
-								type="textarea"
-								name="description"
-								id="description"
-								messageError={errors.description}
-								value={formData.description}
-								handleChange={handleChange}
-							/>
-						</div>
-
-						<div className="flex flex-col gap-[16px] md:flex-row">
-							<div className="flex flex-col gap-[8px]">
-								<label
-									htmlFor="coinName"
-									className="body-small text-(--black-light-active) font-medium"
-								>
-									Nome della moneta*:
-								</label>
-								<GenericInput
-									type="text"
-									required
-									name="coinName"
-									id="coinName"
-									messageError={errors.coinName}
-									value={formData.coinName}
-									handleChange={handleChange}
-									handleBlur={handleBlur}
-								/>
-							</div>
-							<div className="flex flex-col gap-[8px]">
-								<label
-									htmlFor="maxCoins"
-									className="body-small text-(--black-light-active) font-medium"
-								>
-									Budget*:
-								</label>
-								<GenericInput
-									type="text"
-									required
-									name="maxCoins"
-									id="maxCoins"
-									messageError={errors.maxCoins}
-									value={formData.maxCoins}
-									handleChange={handleChange}
-									handleBlur={handleBlur}
-								/>
-							</div>
-						</div>
-						<div className="flex flex-col gap-[8px]">
-							<label
-								htmlFor="teamMaxPlayers"
-								className="body-normal text-(--black-light-active) font-medium"
-							>
-								Numero di player del team*:
-							</label>
-							<GenericInput
-								type="text"
-								required
-								name="teamMaxPlayers"
-								id="teamMaxPlayers"
-								messageError={errors.teamMaxPlayers}
-								value={formData.teamMaxPlayers}
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-							/>
-						</div>
-						<div className="flex flex-col gap-[8px]">
-							<p className="body-normal text-(--black-light-active) font-medium">
-								Capitano:
-							</p>
-							<Switch
-								text="Attiva la scelta del capitano alla
-                                                                creazione della squadra."
-								enabled={isEnableCaptain}
-								onChange={handleChangeSwitch}
-							/>
-						</div>
-						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
-							<TabButton
-								handleClick={() =>
-									handleChangeVisibility("PUBLIC")
-								}
-								active={formData.visibility === "PUBLIC"}
-							>
-								<p className="body-normal">Pubblica</p>
-							</TabButton>
-							<TabButton
-								handleClick={() =>
-									handleChangeVisibility("PRIVATE")
-								}
-								active={formData.visibility === "PRIVATE"}
-							>
-								<p className="body-normal">Privata</p>
-							</TabButton>
-						</div>
-						<NormalButton
-							text={initialState ? "Aggiorna lega" : "Crea lega"}
-							action={handleSubmit}
-							disabled={!isFormValid()}
-						/>
-					</form>
+					<button onClick={onClose}>
+						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0" />
+					</button>
 				</div>
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-[16px] w-full px-[16px] pb-[16px] lg:pb-[24px]"
+				>
+					<div className="flex flex-col gap-[8px]">
+						<label
+							htmlFor="name"
+							className="body-small text-(--black-light-active) font-medium"
+						>
+							Nome lega*:
+						</label>
+						<GenericInput
+							type="text"
+							required
+							name="name"
+							id="name"
+							messageError={errors.name}
+							value={formData.name}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+					</div>
+					<div className="flex flex-col gap-[8px]">
+						<label
+							htmlFor="description"
+							className="body-small text-(--black-light-active) font-medium"
+						>
+							Descrizione:
+						</label>
+						<GenericInput
+							type="textarea"
+							name="description"
+							id="description"
+							messageError={errors.description}
+							value={formData.description}
+							handleChange={handleChange}
+						/>
+					</div>
+
+					<div className="flex flex-col gap-[16px] md:flex-row">
+						<div className="flex flex-col gap-[8px]">
+							<label
+								htmlFor="coinName"
+								className="body-small text-(--black-light-active) font-medium"
+							>
+								Nome della moneta*:
+							</label>
+							<GenericInput
+								type="text"
+								required
+								name="coinName"
+								id="coinName"
+								messageError={errors.coinName}
+								value={formData.coinName}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+							/>
+						</div>
+						<div className="flex flex-col gap-[8px]">
+							<label
+								htmlFor="maxCoins"
+								className="body-small text-(--black-light-active) font-medium"
+							>
+								Budget*:
+							</label>
+							<GenericInput
+								type="text"
+								required
+								name="maxCoins"
+								id="maxCoins"
+								messageError={errors.maxCoins}
+								value={formData.maxCoins}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+							/>
+						</div>
+					</div>
+					<div className="flex flex-col gap-[8px]">
+						<label
+							htmlFor="teamMaxPlayers"
+							className="body-normal text-(--black-light-active) font-medium"
+						>
+							Numero di player del team*:
+						</label>
+						<GenericInput
+							type="text"
+							required
+							name="teamMaxPlayers"
+							id="teamMaxPlayers"
+							messageError={errors.teamMaxPlayers}
+							value={formData.teamMaxPlayers}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+					</div>
+					<div className="flex flex-col gap-[8px]">
+						<p className="body-normal text-(--black-light-active) font-medium">
+							Capitano:
+						</p>
+						<Switch
+							text="Attiva la scelta del capitano alla
+                                                                creazione della squadra."
+							enabled={isEnableCaptain}
+							onChange={handleChangeSwitch}
+						/>
+					</div>
+					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
+						<TabButton
+							handleClick={() => handleChangeVisibility("PUBLIC")}
+							active={formData.visibility === "PUBLIC"}
+						>
+							<p className="body-normal">Pubblica</p>
+						</TabButton>
+						<TabButton
+							handleClick={() =>
+								handleChangeVisibility("PRIVATE")
+							}
+							active={formData.visibility === "PRIVATE"}
+						>
+							<p className="body-normal">Privata</p>
+						</TabButton>
+					</div>
+					<NormalButton
+						text={initialState ? "Aggiorna lega" : "Crea lega"}
+						action={handleSubmit}
+						disabled={!isFormValid()}
+					/>
+				</form>
 			</div>
 		</>
 	);
