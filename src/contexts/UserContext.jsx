@@ -145,6 +145,34 @@ function UserProvider({ children }) {
 		}
 	};
 
+	const updatePassword = async (updatedPassord) => {
+		try {
+			const response = await fetch(`${urlServer}/updatePassword`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(updatedPassord),
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nell'aggiornamento della password",
+				};
+			}
+
+			const newUser = await response.json();
+			localStorage.setItem("authToken", newUser.token);
+			dispatch({ type: "updateUser", payload: newUser });
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	const unregister = async () => {
 		try {
 			const response = await fetch(`${urlServer}/unregister`, {
@@ -206,6 +234,7 @@ function UserProvider({ children }) {
 				login,
 				logout,
 				updateUser,
+				updatePassword,
 				unregister,
 				tokenInfo,
 			}}

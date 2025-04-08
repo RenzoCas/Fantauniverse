@@ -3,11 +3,14 @@ import NormalButton from "../../atoms/Buttons/NormalButton";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 import { useEffect, useState } from "react";
 import { useModal } from "../../contexts/ModalContext";
+import { useUser } from "../../contexts/UserContext";
 
-function ModalChangePassword({ isOpen, onClose }) {
+function ModalChangePassword({ isOpen, onClose, handleChangePassword }) {
+	const { user } = useUser();
 	const [formData, setFormData] = useState({
+		username: user.username,
 		oldPassword: "",
-		newPassword: "",
+		password: "",
 		confermaPassword: "",
 	});
 
@@ -38,9 +41,10 @@ function ModalChangePassword({ isOpen, onClose }) {
 	const isFormValid = () => {
 		return (
 			validatePassword(formData.oldPassword) &&
-			validatePassword(formData.newPassword) &&
+			validatePassword(formData.password) &&
 			validatePassword(formData.confermaPassword) &&
-			formData.newPassword === formData.confermaPassword
+			formData.password === formData.confermaPassword &&
+			formData.oldPassword !== formData.password
 		);
 	};
 
@@ -63,10 +67,11 @@ function ModalChangePassword({ isOpen, onClose }) {
 		if (!validatePassword(value)) {
 			error =
 				"La password deve contenere almeno 8 caratteri, una maiuscola, un numero e un carattere speciale.";
-		} else if (
-			name === "confermaPassword" &&
-			value !== formData.newPassword
-		) {
+		} else if (name === "password" && value === formData.oldPassword) {
+			error =
+				"La nuova password inserita é uguale a quella inserita nel campo vecchia password.";
+		}
+		if (name === "confermaPassword" && value !== formData.password) {
 			error = "Le password non coincidono.";
 		}
 
@@ -74,12 +79,14 @@ function ModalChangePassword({ isOpen, onClose }) {
 	};
 
 	const handleSubmit = () => {
-		const filteredData = Object.fromEntries(
-			Object.entries(formData).filter(
-				([key]) => key !== "confermaPassword"
-			)
-		);
-		console.log("Dati inviati:", filteredData);
+		handleChangePassword(formData);
+		onClose();
+		setFormData({
+			username: user.username,
+			oldPassword: "",
+			password: "",
+			confermaPassword: "",
+		});
 	};
 
 	return (
@@ -115,11 +122,11 @@ function ModalChangePassword({ isOpen, onClose }) {
 					<GenericInput
 						type="password"
 						required
-						name="newPassword"
-						id="newPassword"
+						name="password"
+						id="password"
 						placeholder="Nuova password"
-						messageError={errors.newPassword}
-						value={formData.newPassword}
+						messageError={errors.password}
+						value={formData.password}
 						handleChange={handleChange}
 						handleBlur={handleBlur}
 						autocomplete="new-password"

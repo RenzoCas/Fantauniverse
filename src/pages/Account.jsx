@@ -13,7 +13,7 @@ import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import Logo from "../atoms/Logo";
 
 function Account() {
-	const { user, updateUser, unregister } = useUser();
+	const { user, updateUser, unregister, updatePassword } = useUser();
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [formData, setFormData] = useState({
@@ -232,6 +232,32 @@ function Account() {
 		}));
 	};
 
+	const handleChangePassword = async (formData) => {
+		const filteredData = Object.fromEntries(
+			Object.entries(formData).filter(
+				([key]) => key !== "confermaPassword"
+			)
+		);
+
+		setIsLoading(true);
+		const result = await updatePassword(filteredData);
+		if (!result) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Password non modificata!",
+				"La vecchia password inserita non é corretta."
+			);
+			return;
+		}
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Password modificata!",
+			"La modifica della password é andata a buon fine."
+		);
+	};
+
 	return (
 		<>
 			{isLoading && <Loader />}
@@ -365,6 +391,7 @@ function Account() {
 				<ModalChangePassword
 					isOpen={isModalPasswordVisible}
 					onClose={() => setIsModalPasswordVisible(false)}
+					handleChangePassword={handleChangePassword}
 				/>
 				<ModalConfirmAction
 					isOpen={isModalConfirmOpen.value}
