@@ -24,6 +24,19 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	}, [isOpen]);
 
 	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [onClose]);
+
+	useEffect(() => {
 		if (isEdit && playerObj) {
 			setFormData(playerObj);
 		} else {

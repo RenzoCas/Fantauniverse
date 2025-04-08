@@ -35,6 +35,19 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 		}
 	}, [isOpen]);
 
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [onClose]);
+
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		if (name === "maxCoins" || name === "teamMaxPlayers") {

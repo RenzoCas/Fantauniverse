@@ -63,6 +63,19 @@ function ModalAddPoints({
 		}
 	}, [players]);
 
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [onClose]);
+
 	const filterPlayers = (e) => {
 		const value = e.target.value.toLowerCase();
 		setSearchTerm(value);
@@ -88,7 +101,7 @@ function ModalAddPoints({
 	return (
 		<>
 			<div
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] px-[16px] pb-[16px] lg:px-[24px] lg:pb-[24px] w-full transition-all duration-300 ease flex flex-col z-1001 max-h-[calc(100dvh-80px)] lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:rounded-[12px] lg:max-w-[600px] lg:max-h-[600px] lg:overflow-y-auto ${
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] px-[16px] pb-[16px] lg:px-[24px] lg:pb-[24px] w-full transition-all duration-300 ease flex flex-col z-1001 max-h-[calc(100dvh-80px)] lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:rounded-[12px] lg:max-w-[600px] lg:max-h-[600px] overflow-y-auto ${
 					isOpen
 						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"
 						: "scale-80 opacity-30 translate-y-full lg:translate-y-0 invisible"

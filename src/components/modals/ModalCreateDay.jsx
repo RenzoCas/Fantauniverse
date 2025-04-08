@@ -20,6 +20,19 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 		}
 	}, [isOpen]);
 
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [onClose]);
+
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({

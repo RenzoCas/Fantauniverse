@@ -21,21 +21,11 @@ export default function FantaUniverse() {
 			></div>
 
 			<main
-				className={`flex min-h-[calc(100dvh-64px)] mx-auto py-[24px] px-[16px] bg-white lg:bg-(--black-light) lg:max-w-full lg:py-[8px] lg:px-0 lg:max-h-screen lg:h-screen ${
-					isOpenBackdrop && "overflow-hidden"
-				}`}
+				className={`flex min-h-[calc(100dvh-64px)] mx-auto py-[24px] px-[16px] bg-white lg:bg-(--black-light) lg:max-w-full lg:py-[8px] lg:px-0 lg:max-h-screen lg:h-screen`}
 			>
 				<SidebarDesktop />
-				<section
-					className={`w-full lg:bg-white lg:rounded-l-[24px] lg:pb-[20px] lg:pt-[88px] lg:flex lg:flex-col relative ${
-						isOpenBackdrop && "overflow-hidden"
-					}`}
-				>
-					<div
-						className={`w-full lg:max-w-[840px] lg:max-h-full lg:mx-auto lg:py-[55px] lg:px-[24px] lg:overflow-x-auto h-full ${
-							isOpenBackdrop && "overflow-hidden"
-						}`}
-					>
+				<section className="w-full lg:bg-white lg:rounded-l-[24px] lg:pb-[20px] lg:pt-[88px] lg:flex lg:flex-col relative">
+					<div className="w-full lg:max-w-[840px] lg:max-h-full lg:mx-auto lg:py-[55px] lg:px-[24px] lg:overflow-x-auto h-full">
 						<Outlet />
 					</div>
 				</section>
