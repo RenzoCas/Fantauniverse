@@ -187,7 +187,7 @@ function ViewLega() {
 						)}
 					</div>
 					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1 cursor-pointer"
+						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-10 cursor-pointer"
 						onClick={() => navigate("/app")}
 					>
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />

@@ -16,16 +16,21 @@ import Loader from "../components/Loader";
 import GenericPopup from "../components/popups/GenericPopup";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import { useDay } from "../contexts/DayContext";
-import Player from "../components/Player";
 import ModalAddPoints from "../components/modals/ModalAddPoints";
+import { ChevronLeft } from "lucide-react";
+import TabButton from "../atoms/Buttons/TabButton";
+import Rule from "../components/Rule";
 
 function Points() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isModalAddPointsOpen, setIsModalAddPointsOpen] = useState(false);
+	const [isModalAddPointsOpen, setIsModalAddPointsOpen] = useState({
+		rule: null,
+		value: false,
+	});
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [swiperInstance, setSwiperInstance] = useState(null);
 	const { league } = useLeague();
-	const { days, status, isAdmin, players, rules } = league;
+	const { days, status, isAdmin, rules } = league;
 	const { getDay, createDay, deleteDay, updateDay } = useDay();
 	const [isloading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
@@ -36,6 +41,7 @@ function Points() {
 
 	const [activeDay, setActiveDay] = useState();
 	const [tempDay, setTempDay] = useState({
+		leagueId: league.id,
 		id: days[activeIndex]?.id || null,
 		name: days[activeIndex]?.name || "",
 		date: days[activeIndex]?.date || Date.now(),
@@ -43,6 +49,7 @@ function Points() {
 	});
 	const [infoDay, setInfoDay] = useState();
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
+	const [tabActive, setTabActive] = useState("Bonus");
 
 	useEffect(() => {
 		const newActiveDay = days[activeIndex];
@@ -58,6 +65,7 @@ function Points() {
 			const response = await getDay(dayId);
 			setInfoDay(response);
 			setTempDay(response);
+			setTempDay((prev) => ({ ...prev, leagueId: league.id }));
 		} catch (error) {
 			console.error("Errore nel recupero di infoDay:", error);
 		}
@@ -160,58 +168,67 @@ function Points() {
 		});
 	};
 
-	const [playerObj, setPlayeObj] = useState(players[0]);
-	const handleAddPoints = (player) => {
-		setPlayeObj(player);
-		setIsModalAddPointsOpen(true);
-	};
-
 	const handleCancelUpdate = async () => {
 		setTempDay(infoDay);
 		setIsUpdateDay(false);
 	};
 
-	const confirmPlayerRules = async (player, selectedRules) => {
+	const confirmRuleForPlayers = async (ruleObj, selectedPlayers) => {
 		await setTempDay((prev) => {
-			const playerExists = prev.players.some(
-				(p) => p.player.id === player.id
+			// Costruiamo un nuovo array di players aggiornato
+			const updatedPlayers = [...prev.players];
+
+			selectedPlayers.forEach((player) => {
+				const existing = updatedPlayers.find(
+					(p) => p.player.id === player.id
+				);
+
+				if (existing) {
+					// Rimuoviamo la regola se già esiste
+					const newRules = existing.rules.filter(
+						(r) => r.id !== ruleObj.id
+					);
+					// La ri-aggiungiamo
+					newRules.push(ruleObj);
+
+					const updatedPoints = newRules.reduce((acc, rule) => {
+						return rule.malus ? acc - rule.value : acc + rule.value;
+					}, 0);
+
+					existing.rules = newRules;
+					existing.points = updatedPoints;
+				} else {
+					// Se non esiste, lo creiamo ex novo
+					updatedPlayers.push({
+						player,
+						rules: [ruleObj],
+						points: ruleObj.malus ? -ruleObj.value : ruleObj.value,
+					});
+				}
+			});
+
+			return {
+				...prev,
+				players: updatedPlayers,
+			};
+		});
+	};
+
+	const handleRemovePlayer = async (player) => {
+		await setTempDay((prev) => {
+			const updatedPlayers = prev.players.filter(
+				(p) => p.player.id !== player.player.id
 			);
 
-			const points = selectedRules.reduce((total, rule) => {
-				const matchingRule = rules.find((r) => r.id === rule);
-				if (matchingRule) {
-					return matchingRule.malus
-						? total - matchingRule.value
-						: total + matchingRule.value;
-				}
-				return total;
-			}, 0);
-
-			const updatedPlayers = playerExists
-				? prev.players.map((p) =>
-						p.player.id === player.id
-							? {
-									...p,
-									rules: selectedRules.map((ruleId) => ({
-										id: ruleId,
-									})),
-									points: points,
-							  }
-							: p
-				  )
-				: [
-						...prev.players,
-						{
-							player: { id: player.id },
-							rules: selectedRules.map((ruleId) => ({
-								id: ruleId,
-							})),
-							points: points,
-						},
-				  ];
-
-			return { ...prev, players: updatedPlayers };
+			return {
+				...prev,
+				players: updatedPlayers,
+			};
 		});
+	};
+
+	const handleTabChange = (tab) => {
+		setTabActive(tab);
 	};
 
 	return (
@@ -244,98 +261,125 @@ function Points() {
 				)
 			) : (
 				<>
-					{isUpdateDay ? (
-						<div className="flex flex-col gap-[16px]">
-							<div className="flex items-center justify-between">
-								<h2 className="body-regular break-all">
-									<span className="font-semibold">
-										{tempDay.name}
-									</span>
-								</h2>
+					<div className="flex flex-col gap-[16px] flex-1">
+						<div className="flex items-center justify-between lg:justify-end">
+							<h2 className="title-h4 font-medium break-all lg:hidden">
+								{league.name}
+							</h2>
+							{isAdmin && status != "FINISHED" && (
+								<button
+									className="flex gap-[4px] body-small font-semibold whitespace-nowrap cursor-pointer"
+									onClick={() => setIsModalOpen(true)}
+								>
+									Aggiungi giornata
+								</button>
+							)}
+						</div>
+						<div className="flex flex-col gap-[12px]">
+							<Swiper
+								slidesPerView={3}
+								spaceBetween={10}
+								centeredSlides
+								initialSlide={activeIndex}
+								onSlideChange={(swiper) =>
+									setActiveIndex(swiper.realIndex)
+								}
+								onSwiper={setSwiperInstance}
+								speed={500}
+								className="w-full"
+							>
+								{days.map((el, idx) => (
+									<SwiperSlide key={el.id}>
+										<DayTab
+											day={el}
+											isActive={idx === activeIndex}
+											handleClick={() =>
+												handleTabClick(idx)
+											}
+										/>
+									</SwiperSlide>
+								))}
+							</Swiper>
+							<p className="body-normal text-(--black-light-active) text-center">
+								Giocata il {formatDate(days[activeIndex].date)}
+							</p>
+						</div>
+						{isUpdateDay ? (
+							<div className="flex flex-col gap-[16px]">
 								<button
 									onClick={handleCancelUpdate}
-									className="flex items-center gap-[4px] text-(--accent-normal) cursor-pointer"
+									className="flex items-center self-center gap-[4px] text-(--black-light-active) cursor-pointer"
 								>
-									<p className="body-normal">Annulla</p>
+									<ChevronLeft className="h-[16px] w-[16px] stroke-(--black-light-active)" />
+									<p className="body-normal">
+										Annulla le modifiche e torna indietro
+									</p>
 								</button>
-							</div>
-
-							<ul className="flex flex-col gap-[12px]">
-								{players.map((p) => (
-									<Player
-										key={p.id}
-										playerObj={p}
-										addPoints={true}
-										dataDay={tempDay}
-										handleAddPoints={handleAddPoints}
-									></Player>
-								))}
-							</ul>
-							<div className="flex flex-col gap-[8px]">
-								<NormalButton
-									text="Conferma punteggi"
-									icon={false}
-									action={handleSubmit}
-									classOpt={"lg:w-1/2 lg:mx-auto"}
+								<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-dark) lg:w-1/2 lg:self-center">
+									<TabButton
+										handleClick={() =>
+											handleTabChange("Bonus")
+										}
+										active={tabActive === "Bonus"}
+									>
+										<p className="body-normal">Bonus</p>
+									</TabButton>
+									<TabButton
+										handleClick={() =>
+											handleTabChange("Malus")
+										}
+										active={tabActive === "Malus"}
+									>
+										<p className="body-normal">Malus</p>
+									</TabButton>
+								</div>
+								<ul className="flex flex-col gap-[12px]">
+									{rules
+										.filter(
+											(el) =>
+												el.malus ===
+												(tabActive === "Malus")
+										)
+										.map((el, idx) => (
+											<Rule
+												key={idx}
+												ruleObj={el}
+												isAddPoints={true}
+												playersRule={tempDay.players}
+												onRemovePlayer={
+													handleRemovePlayer
+												}
+												openModalAddPoints={
+													setIsModalAddPointsOpen
+												}
+											/>
+										))}
+								</ul>
+								<div className="flex flex-col gap-[8px]">
+									<NormalButton
+										text="Salva punteggi"
+										icon={false}
+										action={() => {
+											handleSubmit();
+										}}
+										classOpt={"lg:w-1/2 lg:mx-auto"}
+									/>
+								</div>
+								<ModalAddPoints
+									isOpen={isModalAddPointsOpen.value}
+									ruleObj={isModalAddPointsOpen.rule}
+									onClose={() =>
+										setIsModalAddPointsOpen({
+											rule: null,
+											value: false,
+										})
+									}
+									playersSelected={tempDay.players}
+									onConfirm={confirmRuleForPlayers}
 								/>
 							</div>
-							<ModalAddPoints
-								isOpen={isModalAddPointsOpen}
-								onClose={() => setIsModalAddPointsOpen(false)}
-								playerObj={playerObj}
-								dataDay={infoDay}
-								onConfirm={confirmPlayerRules}
-								startTabActive="Bonus"
-							/>
-						</div>
-					) : (
-						<>
-							<div className="flex flex-col gap-[16px] flex-1">
-								<div className="flex items-center justify-between lg:justify-end">
-									<h2 className="title-h4 font-medium break-all lg:hidden">
-										{league.name}
-									</h2>
-									{isAdmin && status != "FINISHED" && (
-										<button
-											className="flex gap-[4px] body-small font-semibold whitespace-nowrap cursor-pointer"
-											onClick={() => setIsModalOpen(true)}
-										>
-											Aggiungi giornata
-										</button>
-									)}
-								</div>
-								<div className="flex flex-col gap-[12px]">
-									<Swiper
-										slidesPerView={3}
-										spaceBetween={10}
-										centeredSlides
-										initialSlide={activeIndex}
-										onSlideChange={(swiper) =>
-											setActiveIndex(swiper.realIndex)
-										}
-										onSwiper={setSwiperInstance}
-										speed={500}
-										className="w-full"
-									>
-										{days.map((el, idx) => (
-											<SwiperSlide key={el.id}>
-												<DayTab
-													day={el}
-													isActive={
-														idx === activeIndex
-													}
-													handleClick={() =>
-														handleTabClick(idx)
-													}
-												/>
-											</SwiperSlide>
-										))}
-									</Swiper>
-									<p className="body-normal text-black text-center">
-										Giocata il{" "}
-										{formatDate(days[activeIndex].date)}
-									</p>
-								</div>
+						) : (
+							<>
 								{infoDay?.players.length > 0 ? (
 									<>
 										{isAdmin && status != "FINISHED" && (
@@ -393,9 +437,9 @@ function Points() {
 										)}
 									</div>
 								)}
-							</div>
-						</>
-					)}
+							</>
+						)}
+					</div>
 				</>
 			)}
 

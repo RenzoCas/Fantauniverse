@@ -1,84 +1,162 @@
 import {
 	ChevronDownIcon,
 	ChevronUpIcon,
-	MinusCircleIcon,
 	PencilSquareIcon,
-	PlusCircleIcon,
+	TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { SquarePlus } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function Rule({
 	ruleObj,
 	canEdit,
 	onEdit,
 	isAddPoints,
-	selectedRules,
-	setSelectedRules,
+	playersRule,
+	onRemovePlayer,
+	openModalAddPoints,
 }) {
-	const { name, rule, value, id } = ruleObj;
+	const { name, rule, value } = ruleObj;
 	const [expanded, setExpanded] = useState(false);
-	const isSelected = selectedRules?.includes(id);
+	const [randomColors, setRandomColors] = useState([]);
+	const [players, setPlayers] = useState([]);
 
-	const toggleRuleSelection = () => {
-		setSelectedRules((prev) =>
-			prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]
-		);
+	const randomLightColor = () => {
+		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
+		const r = getRandomValue();
+		const g = getRandomValue();
+		const b = getRandomValue();
+		return `#${r.toString(16).padStart(2, "0")}${g
+			.toString(16)
+			.padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 	};
+
+	useEffect(() => {
+		const players = playersRule?.filter((player) =>
+			player.rules.some((rule) => rule.id === ruleObj.id)
+		);
+		setPlayers(players);
+		if (playersRule && playersRule.length > 0) {
+			const colors = players.map(() => randomLightColor());
+			setRandomColors(colors);
+		}
+	}, [playersRule]);
+
 	return (
 		<li
-			className={`flex border-b border-(--black-light) pb-[8px] gap-[16px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
-				isSelected && "shadow-lg border p-[8px] rounded-[8px]"
+			className={`flex flex-col border-b border-(--black-light) pb-[8px] gap-[8px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
+				isAddPoints ? "cursor-pointer" : ""
 			}`}
+			onClick={isAddPoints ? () => setExpanded(!expanded) : undefined}
 		>
-			{canEdit && (
-				<button
-					className="flex cursor-pointer"
-					onClick={() => onEdit(ruleObj)}
-				>
-					<PencilSquareIcon className="h-[20px] w-[20px]" />
-				</button>
-			)}
-			<div className={`flex flex-col gap-[4px]`}>
-				<p className="body-small font-semibold">{name}</p>
-				<div className="flex gap-[4px] items-end">
-					<p
-						className={`body-small text-(--black-normal)/70 transition-all ${
-							expanded ? "line-clamp-none" : "line-clamp-2"
-						}`}
+			<div
+				className={`flex items-start ${
+					isAddPoints ? "gap-[10px]" : "gap-[20px]"
+				}`}
+			>
+				{canEdit && (
+					<button
+						className="flex cursor-pointer"
+						onClick={() => onEdit(ruleObj)}
 					>
-						{rule}
-					</p>
-					{rule.length > 80 && (
-						<button
-							className="flex cursor-pointer"
-							onClick={() => setExpanded(!expanded)}
-						>
-							{expanded ? (
-								<ChevronUpIcon className="h-[16px] w-[16px] stroke-2 flex-shrink-0" />
-							) : (
-								<ChevronDownIcon className="h-[16px] w-[16px] stroke-2 flex-shrink-0" />
+						<PencilSquareIcon className="h-[20px] w-[20px]" />
+					</button>
+				)}
+				<div className="flex flex-col gap-[4px]">
+					<p className="body-small font-semibold">{name}</p>
+					{!isAddPoints && (
+						<div className="flex items-end gap-[8px]">
+							<p
+								className={`body-small text-(--black-normal)/70 transition-all ${
+									expanded
+										? "line-clamp-none"
+										: "line-clamp-2"
+								}`}
+							>
+								{rule}
+							</p>
+							{rule.length > 80 && (
+								<button
+									className="flex cursor-pointer"
+									onClick={() => setExpanded(!expanded)}
+								>
+									{expanded ? (
+										<ChevronUpIcon className="h-[16px] w-[16px] stroke-2 flex-shrink-0" />
+									) : (
+										<ChevronDownIcon className="h-[16px] w-[16px] stroke-2 flex-shrink-0" />
+									)}
+								</button>
 							)}
-						</button>
+						</div>
 					)}
 				</div>
-			</div>
-			<div className="flex gap-[8px] ml-auto">
-				<p className="body-small font-semibold whitespace-nowrap">
+				<p className="body-small font-semibold whitespace-nowrap ml-auto">
 					{value} pnt.
 				</p>
 				{isAddPoints && (
 					<button
-						className="flex self-center cursor-pointer"
-						onClick={toggleRuleSelection}
+						className="flex cursor-pointer"
+						onClick={() => setExpanded(!expanded)}
 					>
-						{isSelected ? (
-							<MinusCircleIcon className="h-[20px] w-[20px]" />
+						{expanded ? (
+							<ChevronUpIcon className="h-[20px] w-[20px]" />
 						) : (
-							<PlusCircleIcon className="h-[20px] w-[20px]" />
+							<ChevronDownIcon className="h-[20px] w-[20px]" />
 						)}
 					</button>
 				)}
 			</div>
+			{isAddPoints && expanded && (
+				<>
+					{players.length > 0 && (
+						<ul className="flex flex-col gap-[8px]">
+							{players.map((player, idx) => (
+								<li
+									key={idx}
+									className="flex gap-[20px] items-center w-full"
+								>
+									<picture className="rounded-[3px] min-w-[32px] max-w-[32px] h-[32px] overflow-hidden">
+										{player.player.icon == null ? (
+											<div
+												className={`h-full object-cover`}
+												style={{
+													backgroundColor:
+														randomColors[idx],
+												}}
+											></div>
+										) : (
+											<img
+												src={`data:image/png;base64,${player.player.icon}`}
+												alt={`Icona utente`}
+												className="h-full object-cover"
+												loading="lazy"
+											/>
+										)}
+									</picture>
+									<p className="body-normal font-semibold flex-1">
+										{player.player.name}
+									</p>
+									<button
+										onClick={() => onRemovePlayer(player)}
+									>
+										<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) ml-auto" />
+									</button>
+								</li>
+							))}
+						</ul>
+					)}
+
+					<button
+						className="flex items-center gap-[10px] mt-[12px] self-center body-normal font-semibold"
+						onClick={() =>
+							openModalAddPoints({ value: true, rule: ruleObj })
+						}
+					>
+						<SquarePlus className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+						Assegna ai players
+					</button>
+				</>
+			)}
 		</li>
 	);
 }
