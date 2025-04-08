@@ -366,7 +366,7 @@ function Account() {
 							text="Clicca per cambiare password"
 							icon={false}
 							roundedFull={false}
-							classOpt="rounded-[16px] lg:w-1/2"
+							classOpt="rounded-[16px] md:w-1/2"
 							action={() => setIsModalPasswordVisible(true)}
 						/>
 					</div>
@@ -377,12 +377,12 @@ function Account() {
 						icon={false}
 						action={handleSubmit}
 						disabled={!isFormValid() || isEditingAnyField}
-						classOpt="lg:w-1/2 lg:mx-auto"
+						classOpt="md:w-1/2 md:mx-auto"
 					/>
 					<GhostButton
 						text="Elimina Account"
 						customIcon={true}
-						classOpt="text-(--error-normal) lg:w-1/2 lg:mx-auto"
+						classOpt="text-(--error-normal) md:w-1/2 md:mx-auto"
 						action={showModalConfirmUnregister}
 					>
 						<TrashIcon className="stroke-(--error-normal) w-[24px] h-[24px] flex-shrink-0" />

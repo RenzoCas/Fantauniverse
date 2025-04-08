@@ -224,27 +224,26 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 							handleChange={handleChange}
 						/>
 					</div>
-
+					<div className="flex flex-col gap-[8px]">
+						<label
+							htmlFor="coinName"
+							className="body-small text-(--black-light-active) font-medium"
+						>
+							Nome della moneta*:
+						</label>
+						<GenericInput
+							type="text"
+							required
+							name="coinName"
+							id="coinName"
+							messageError={errors.coinName}
+							value={formData.coinName}
+							handleChange={handleChange}
+							handleBlur={handleBlur}
+						/>
+					</div>
 					<div className="flex flex-col gap-[16px] md:flex-row">
-						<div className="flex flex-col gap-[8px]">
-							<label
-								htmlFor="coinName"
-								className="body-small text-(--black-light-active) font-medium"
-							>
-								Nome della moneta*:
-							</label>
-							<GenericInput
-								type="text"
-								required
-								name="coinName"
-								id="coinName"
-								messageError={errors.coinName}
-								value={formData.coinName}
-								handleChange={handleChange}
-								handleBlur={handleBlur}
-							/>
-						</div>
-						<div className="flex flex-col gap-[8px]">
+						<div className="flex flex-col gap-[8px] md:w-full">
 							<label
 								htmlFor="maxCoins"
 								className="body-small text-(--black-light-active) font-medium"
@@ -262,25 +261,26 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								handleBlur={handleBlur}
 							/>
 						</div>
+						<div className="flex flex-col gap-[8px] md:w-full">
+							<label
+								htmlFor="teamMaxPlayers"
+								className="body-small text-(--black-light-active) font-medium"
+							>
+								Numero di player del team*:
+							</label>
+							<GenericInput
+								type="text"
+								required
+								name="teamMaxPlayers"
+								id="teamMaxPlayers"
+								messageError={errors.teamMaxPlayers}
+								value={formData.teamMaxPlayers}
+								handleChange={handleChange}
+								handleBlur={handleBlur}
+							/>
+						</div>
 					</div>
-					<div className="flex flex-col gap-[8px]">
-						<label
-							htmlFor="teamMaxPlayers"
-							className="body-normal text-(--black-light-active) font-medium"
-						>
-							Numero di player del team*:
-						</label>
-						<GenericInput
-							type="text"
-							required
-							name="teamMaxPlayers"
-							id="teamMaxPlayers"
-							messageError={errors.teamMaxPlayers}
-							value={formData.teamMaxPlayers}
-							handleChange={handleChange}
-							handleBlur={handleBlur}
-						/>
-					</div>
+
 					<div className="flex flex-col gap-[8px]">
 						<p className="body-normal text-(--black-light-active) font-medium">
 							Capitano:
@@ -292,7 +292,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 							onChange={handleChangeSwitch}
 						/>
 					</div>
-					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal)">
+					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
 						<TabButton
 							handleClick={() => handleChangeVisibility("PUBLIC")}
 							active={formData.visibility === "PUBLIC"}
@@ -312,6 +312,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						text={initialState ? "Aggiorna lega" : "Crea lega"}
 						action={handleSubmit}
 						disabled={!isFormValid()}
+						classOpt={`md:w-1/2 md:mx-auto`}
 					/>
 				</form>
 			</div>

@@ -114,7 +114,7 @@ function Rules() {
 			{isLoading && <Loader />}
 			{rules.length > 0 ? (
 				<>
-					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-dark) lg:max-w-1/2 lg:mx-auto">
+					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-dark) lg:max-w-1/2 md:mx-auto">
 						<TabButton
 							handleClick={() => handleTabChange("Bonus")}
 							active={tabActive === "Bonus"}

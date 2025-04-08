@@ -40,19 +40,17 @@ function Rule({
 			const colors = players.map(() => randomLightColor());
 			setRandomColors(colors);
 		}
-	}, [playersRule]);
+	}, [playersRule, ruleObj]);
 
 	return (
 		<li
-			className={`flex flex-col border-b border-(--black-light) pb-[8px] gap-[8px] transform transition-all duration-300 has-disabled:opacity-[0.5] ${
-				isAddPoints ? "cursor-pointer" : ""
-			}`}
-			onClick={isAddPoints ? () => setExpanded(!expanded) : undefined}
+			className={`flex flex-col border-b border-(--black-light) pb-[8px] gap-[8px] transform transition-all duration-300 has-disabled:opacity-[0.5]`}
 		>
 			<div
 				className={`flex items-start ${
 					isAddPoints ? "gap-[10px]" : "gap-[20px]"
-				}`}
+				} ${isAddPoints ? "cursor-pointer" : ""}`}
+				onClick={isAddPoints ? () => setExpanded(!expanded) : undefined}
 			>
 				{canEdit && (
 					<button
@@ -137,7 +135,9 @@ function Rule({
 										{player.player.name}
 									</p>
 									<button
-										onClick={() => onRemovePlayer(player)}
+										onClick={() =>
+											onRemovePlayer(player, ruleObj)
+										}
 									>
 										<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) ml-auto" />
 									</button>

@@ -468,7 +468,7 @@ function GeneralSettings() {
 							<p className="body-normal text-(--black-light-active) font-medium">
 								Tipologia della lega:
 							</p>
-							<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) lg:w-1/2 lg:mx-auto">
+							<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
 								<TabButton
 									handleClick={() =>
 										handleTabChange("PUBLIC")
@@ -590,14 +590,14 @@ function GeneralSettings() {
 								action={() => handleUpdateLeague()}
 								disabled={!isFormValid() || isEditingAnyField}
 								customIcon={true}
-								classOpt={`lg:w-1/2 lg:mx-auto`}
+								classOpt={`md:w-1/2 md:mx-auto`}
 							>
 								<Save className="h-[24px] w-[24px] flex-shrink-0" />
 							</NormalButton>
 							<GhostButton
 								text="Elimina lega"
 								action={showModalConfirmDelete}
-								classOpt={`lg:w-1/2 lg:mx-auto text-(--error-normal)`}
+								classOpt={`md:w-1/2 md:mx-auto text-(--error-normal)`}
 								disabled={isEditingAnyField}
 								customIcon={true}
 							>
@@ -607,7 +607,7 @@ function GeneralSettings() {
 					</>
 				) : (
 					<>
-						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover) lg:max-w-1/2 lg:min-w-fit lg:mx-auto">
+						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover) lg:max-w-1/2 lg:min-w-fit md:mx-auto">
 							<TabButton
 								handleClick={() => setTabActive("Info")}
 								active={tabActive === "Info"}
@@ -737,7 +737,7 @@ function GeneralSettings() {
 										text="Unisciti alla lega"
 										action={handleAddParticipant}
 										icon={false}
-										classOpt="lg:w-1/2 lg:mx-auto"
+										classOpt="md:w-1/2 md:mx-auto"
 									/>
 								)}
 							</>

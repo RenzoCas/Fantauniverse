@@ -20,9 +20,10 @@ import { useUser } from "../contexts/UserContext";
 
 function MyTeam() {
 	const { user } = useUser();
-	const { team, createTeam, updateTeam, deleteTeam } = useTeam();
+	const { team, createTeam, updateTeam, deleteTeam, getMyTeam } = useTeam();
 	const { league } = useLeague();
 	const {
+		id,
 		coinName,
 		maxCoins,
 		status,
@@ -68,6 +69,16 @@ function MyTeam() {
 	const isEditingAnyField = Object.values(isEditing).some(
 		(isEditing) => isEditing
 	);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setIsLoading(true);
+			await getMyTeam(id);
+			setIsLoading(false);
+		};
+
+		fetchData();
+	}, []);
 
 	useEffect(() => {
 		setIsMaxPlayersReached(tempTeam.players.length >= teamMaxPlayers);
@@ -488,6 +499,7 @@ function MyTeam() {
 							action={handleSubmitTeam}
 							disabled={!isFormValid() || isEditingAnyField}
 							icon={false}
+							classOpt={`md:w-1/2 md:mx-auto`}
 						/>
 					</div>
 					<ModalConfirmAction

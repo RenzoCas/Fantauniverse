@@ -50,24 +50,36 @@ function Points() {
 		name: days[activeIndex]?.name || "",
 		date: days[activeIndex]?.date || Date.now(),
 		players: days[activeIndex]?.players || [],
+		rules: days[activeIndex]?.rules || [],
 	});
 	const [infoDay, setInfoDay] = useState();
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
 	const [tabActive, setTabActive] = useState("Bonus");
 
 	useEffect(() => {
-		const newActiveDay = days[activeIndex];
-		setActiveDay(newActiveDay);
-		fetchInfoDay(newActiveDay.id);
+		const changeIndex = async () => {
+			setIsLoading(true);
+			const newActiveDay = days[activeIndex];
+			await setActiveDay(newActiveDay);
+			if (newActiveDay) {
+				await fetchInfoDay(newActiveDay.id);
+			}
+			setIsLoading(false);
+		};
+
+		changeIndex();
 	}, [activeIndex]);
 
 	const fetchInfoDay = async (dayId) => {
 		try {
+			setIsLoading(true);
 			const response = await getDay(dayId);
-			setInfoDay(response);
-			setTempDay(response);
-			setTempDay((prev) => ({ ...prev, leagueId: league.id }));
+			await setInfoDay(response);
+			await setTempDay(response);
+			await setTempDay((prev) => ({ ...prev, leagueId: league.id }));
+			setIsLoading(false);
 		} catch (error) {
+			setIsLoading(false);
 			console.error("Errore nel recupero di infoDay:", error);
 		}
 	};
@@ -101,7 +113,10 @@ function Points() {
 		setIsModalOpen(false);
 		let result = null;
 		if (isUpdateDay) {
-			result = await updateDay(tempDay);
+			const filteredData = Object.fromEntries(
+				Object.entries(tempDay).filter(([key]) => key !== "players")
+			);
+			result = await updateDay(filteredData);
 		} else {
 			result = await createDay(formData);
 		}
@@ -174,58 +189,92 @@ function Points() {
 		setIsUpdateDay(false);
 	};
 
-	const confirmRuleForPlayers = async (ruleObj, selectedPlayers) => {
+	const confirmRuleForPlayers = async (
+		ruleObj,
+		selectedPlayers,
+		isDelete = false
+	) => {
 		await setTempDay((prev) => {
-			// Costruiamo un nuovo array di players aggiornato
-			const updatedPlayers = [...prev.players];
+			let updatedPlayers = [...prev.players];
+			const updatedRules = [...prev.rules]; // array come da nuovo formato
 
-			selectedPlayers.forEach((player) => {
-				const existing = updatedPlayers.find(
-					(p) => p.player.id === player.id
+			// Aggiorna o aggiungi la regola nel nuovo formato
+			const ruleIndex = updatedRules.findIndex(
+				(r) => r.rule.id === ruleObj.id
+			);
+
+			if (ruleIndex !== -1) {
+				// Se la regola esiste già, aggiorna i giocatori
+				updatedRules[ruleIndex].players = selectedPlayers.map(
+					(player) => ({
+						id: player.id,
+					})
 				);
+			} else {
+				// Altrimenti aggiungila
+				updatedRules.push({
+					rule: { id: ruleObj.id },
+					players: selectedPlayers.map((player) => ({
+						id: isDelete ? player.player.id : player.id,
+					})),
+				});
+			}
 
-				if (existing) {
-					// Rimuoviamo la regola se già esiste
-					const newRules = existing.rules.filter(
-						(r) => r.id !== ruleObj.id
-					);
-					// La ri-aggiungiamo
-					newRules.push(ruleObj);
-
-					const updatedPoints = newRules.reduce((acc, rule) => {
-						return rule.malus ? acc - rule.value : acc + rule.value;
-					}, 0);
-
-					existing.rules = newRules;
-					existing.points = updatedPoints;
-				} else {
-					// Se non esiste, lo creiamo ex novo
+			if (isDelete) {
+				updatedPlayers = [];
+				selectedPlayers.forEach((el) => {
 					updatedPlayers.push({
-						player,
+						player: el.player,
 						rules: [ruleObj],
-						points: ruleObj.malus ? -ruleObj.value : ruleObj.value,
 					});
-				}
-			});
+				});
+			} else {
+				// Aggiorna i dati dei giocatori
+				selectedPlayers.forEach((player) => {
+					const existing = updatedPlayers.find(
+						(p) => p.player.id === player.id
+					);
+
+					if (existing) {
+						// Rimuovi eventuali vecchie istanze della stessa regola
+						const filteredRules = existing.rules.filter(
+							(r) => r.id !== ruleObj.id
+						);
+						filteredRules.push(ruleObj);
+						existing.rules = filteredRules;
+
+						existing.points = filteredRules.reduce((acc, rule) => {
+							return rule.malus
+								? acc - rule.value
+								: acc + rule.value;
+						}, 0);
+					} else {
+						// Nuovo giocatore
+						updatedPlayers.push({
+							player,
+							rules: [ruleObj],
+							points: ruleObj.malus
+								? -ruleObj.value
+								: ruleObj.value,
+						});
+					}
+				});
+			}
 
 			return {
 				...prev,
 				players: updatedPlayers,
+				rules: updatedRules,
 			};
 		});
 	};
 
-	const handleRemovePlayer = async (player) => {
-		await setTempDay((prev) => {
-			const updatedPlayers = prev.players.filter(
-				(p) => p.player.id !== player.player.id
-			);
+	const handleRemovePlayer = async (player, rule) => {
+		const updatedPlayers = tempDay.players.filter(
+			(p) => p.player.id !== player.player.id
+		);
 
-			return {
-				...prev,
-				players: updatedPlayers,
-			};
-		});
+		confirmRuleForPlayers(rule, updatedPlayers, true);
 	};
 
 	const handleTabChange = (tab) => {
@@ -245,7 +294,8 @@ function Points() {
 						<NormalButton
 							text="Crea una nuova giornata"
 							action={() => setIsModalOpen(true)}
-							customIcon
+							customIcon={true}
+							classOpt={`md:w-1/2 md:mx-auto`}
 						>
 							<PlusIcon className="h-6 w-6 text-black bg-white p-1 rounded-full" />
 						</NormalButton>
@@ -278,7 +328,9 @@ function Points() {
 						</div>
 						<div className="flex flex-col gap-[12px] relative">
 							<button
-								className={`hidden lg:block swiper-button-prev absolute top-[20px] left-0 transform -translate-y-1/2 z-10`}
+								className={`hidden lg:block swiper-button-prev absolute top-[20px] left-0 transform -translate-y-1/2 z-10 cursor-pointer ${
+									activeIndex == 0 ? "lg:hidden" : ""
+								}`}
 								onClick={() => swiperInstance?.slidePrev()}
 							>
 								<CircleChevronLeft className="h-[24px] w-[24px]" />
@@ -309,7 +361,11 @@ function Points() {
 								))}
 							</Swiper>
 							<button
-								className="hidden lg:block swiper-button-next absolute top-[20px] right-0 transform -translate-y-1/2 z-10"
+								className={`hidden lg:block swiper-button-next absolute top-[20px] right-0 transform -translate-y-1/2 z-10 cursor-pointer ${
+									activeIndex == days.length - 1
+										? "lg:hidden"
+										: ""
+								}`}
 								onClick={() => swiperInstance?.slideNext()}
 							>
 								<CircleChevronRight className="h-[24px] w-[24px]" />
@@ -329,7 +385,7 @@ function Points() {
 										Annulla le modifiche e torna indietro
 									</p>
 								</button>
-								<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-dark) lg:w-1/2 lg:self-center">
+								<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-dark) md:w-1/2 lg:self-center">
 									<TabButton
 										handleClick={() =>
 											handleTabChange("Bonus")
@@ -376,7 +432,7 @@ function Points() {
 										action={() => {
 											handleSubmit();
 										}}
-										classOpt={"lg:w-1/2 lg:mx-auto"}
+										classOpt={"md:w-1/2 md:mx-auto"}
 									/>
 								</div>
 								<ModalAddPoints

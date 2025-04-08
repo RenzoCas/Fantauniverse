@@ -182,7 +182,7 @@ function ViewLega() {
 								handleTabChange={handleTabChange}
 								isAdmin={isAdmin}
 								status={status}
-								classOpt="hidden lg:flex lg:mx-auto lg:static lg:mt-0 lg:gap-[22px]"
+								classOpt="hidden lg:flex md:mx-auto lg:static lg:mt-0 lg:gap-[22px]"
 							/>
 						)}
 					</div>

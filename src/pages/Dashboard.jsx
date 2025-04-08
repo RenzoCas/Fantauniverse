@@ -591,7 +591,7 @@ function Dashboard() {
 				{myLeagues.length === 0 && (
 					<button
 						onClick={() => setIsModalOpen(true)}
-						className="group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white bg-(--accent-normal) lg:w-1/2 lg:mx-auto cursor-pointer"
+						className="group flex items-center justify-center gap-[24px] rounded-full px-[24px] py-[12px] text-white bg-(--accent-normal) md:w-1/2 md:mx-auto cursor-pointer"
 					>
 						<span>Crea una nuova lega</span>
 						<PlusIcon className="h-[24px] w-[24px] text-(--black-normal) bg-white p-[4px] rounded-full flex-shrink-0" />
