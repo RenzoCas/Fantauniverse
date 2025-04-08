@@ -17,7 +17,11 @@ import GenericPopup from "../components/popups/GenericPopup";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import { useDay } from "../contexts/DayContext";
 import ModalAddPoints from "../components/modals/ModalAddPoints";
-import { ChevronLeft } from "lucide-react";
+import {
+	ChevronLeft,
+	CircleChevronLeft,
+	CircleChevronRight,
+} from "lucide-react";
 import TabButton from "../atoms/Buttons/TabButton";
 import Rule from "../components/Rule";
 
@@ -54,10 +58,7 @@ function Points() {
 	useEffect(() => {
 		const newActiveDay = days[activeIndex];
 		setActiveDay(newActiveDay);
-
-		if (newActiveDay?.id) {
-			fetchInfoDay(newActiveDay.id);
-		}
+		fetchInfoDay(newActiveDay.id);
 	}, [activeIndex]);
 
 	const fetchInfoDay = async (dayId) => {
@@ -275,7 +276,13 @@ function Points() {
 								</button>
 							)}
 						</div>
-						<div className="flex flex-col gap-[12px]">
+						<div className="flex flex-col gap-[12px] relative">
+							<button
+								className={`hidden lg:block swiper-button-prev absolute top-[20px] left-0 transform -translate-y-1/2 z-10`}
+								onClick={() => swiperInstance?.slidePrev()}
+							>
+								<CircleChevronLeft className="h-[24px] w-[24px]" />
+							</button>
 							<Swiper
 								slidesPerView={3}
 								spaceBetween={10}
@@ -286,7 +293,8 @@ function Points() {
 								}
 								onSwiper={setSwiperInstance}
 								speed={500}
-								className="w-full"
+								className="w-full lg:max-w-[550px] lg:px-[40px]"
+								navigation={true}
 							>
 								{days.map((el, idx) => (
 									<SwiperSlide key={el.id}>
@@ -300,6 +308,12 @@ function Points() {
 									</SwiperSlide>
 								))}
 							</Swiper>
+							<button
+								className="hidden lg:block swiper-button-next absolute top-[20px] right-0 transform -translate-y-1/2 z-10"
+								onClick={() => swiperInstance?.slideNext()}
+							>
+								<CircleChevronRight className="h-[24px] w-[24px]" />
+							</button>
 							<p className="body-normal text-(--black-light-active) text-center">
 								Giocata il {formatDate(days[activeIndex].date)}
 							</p>
@@ -419,7 +433,7 @@ function Points() {
 											text="Elimina"
 											customIcon={true}
 											action={handleDeleteDay}
-											classOpt={`self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white`}
+											classOpt={`self-center border border-solid text-(--error-normal) active:bg-(--error-normal) active:text-white hover:bg-(--error-light-hover)`}
 										>
 											<TrashIcon className="h-[20px] w-[20px] stroke-(--error-normal) group-active:stroke-white" />
 										</GhostButton>
