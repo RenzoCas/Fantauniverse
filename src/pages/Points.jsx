@@ -248,18 +248,37 @@ function Points() {
 		isDelete = false
 	) => {
 		setTempDay((prev) => {
-			// Cloni
 			const updatedRules = [...prev.rules];
 			let updatedPlayers = [...prev.players];
-
 			const ruleIndex = updatedRules.findIndex(
 				(r) => r.rule.id === ruleObj.id
 			);
 
-			if (isDelete) {
+			// Se selectedPlayers è vuoto e non è delete, si intende come "rimuovi tutti i player da questa regola"
+			if (!isDelete && selectedPlayers.length === 0 && ruleIndex !== -1) {
+				// Rimuove la regola del tutto
+				const ruleToRemove = updatedRules[ruleIndex];
+				updatedRules.splice(ruleIndex, 1);
+
+				// Rimuove la regola da tutti i player coinvolti
+				const playerIdsToUpdate = ruleToRemove.players.map((p) => p.id);
+				updatedPlayers = updatedPlayers.filter((p) => {
+					if (playerIdsToUpdate.includes(p.player.id)) {
+						const newRules = p.rules.filter(
+							(r) => r.id !== ruleObj.id
+						);
+						if (newRules.length === 0) return false;
+						p.rules = newRules;
+						p.points = newRules.reduce(
+							(acc, r) => acc + (r.malus ? -r.value : r.value),
+							0
+						);
+					}
+					return true;
+				});
+			} else if (isDelete) {
 				// Rimuove i player passati dalla regola
 				if (ruleIndex !== -1) {
-					// Rimuove solo i player specificati
 					updatedRules[ruleIndex].players = updatedRules[
 						ruleIndex
 					].players.filter(
@@ -269,13 +288,11 @@ function Points() {
 							)
 					);
 
-					// Se la regola non ha più player associati, rimuovila del tutto
 					if (updatedRules[ruleIndex].players.length === 0) {
 						updatedRules.splice(ruleIndex, 1);
 					}
 				}
 
-				// Rimuove la regola anche da ogni giocatore
 				selectedPlayers.forEach((playerWrapper) => {
 					const playerId =
 						playerWrapper.player?.id || playerWrapper.id;
@@ -289,7 +306,6 @@ function Points() {
 						);
 
 						if (existing.rules.length === 0) {
-							// Se non ha più regole, lo rimuoviamo del tutto
 							updatedPlayers = updatedPlayers.filter(
 								(p) => p.player.id !== playerId
 							);
@@ -303,28 +319,26 @@ function Points() {
 					}
 				});
 			} else {
-				// Aggiunge o aggiorna la regola
+				// Aggiunta o aggiornamento della regola con nuovi player
 				if (ruleIndex !== -1) {
-					// Aggiorna la lista dei player associati a questa regola
 					updatedRules[ruleIndex].players = selectedPlayers.map(
-						(p) => ({ id: p.id })
+						(p) => ({
+							id: p.id,
+						})
 					);
 				} else {
-					// Nuova regola
 					updatedRules.push({
 						rule: ruleObj,
 						players: selectedPlayers.map((p) => ({ id: p.id })),
 					});
 				}
 
-				// Aggiunge la regola nei player selezionati
 				selectedPlayers.forEach((player) => {
 					const existing = updatedPlayers.find(
 						(p) => p.player.id === player.id
 					);
 
 					if (existing) {
-						// Evita duplicati della stessa regola
 						existing.rules = existing.rules.filter(
 							(r) => r.id !== ruleObj.id
 						);
@@ -334,7 +348,6 @@ function Points() {
 							0
 						);
 					} else {
-						// Nuovo giocatore
 						updatedPlayers.push({
 							player,
 							rules: [ruleObj],
