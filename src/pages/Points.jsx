@@ -60,7 +60,6 @@ function Points() {
 		const changeIndex = async () => {
 			setIsLoading(true);
 			const newActiveDay = days[activeIndex];
-			await setActiveDay(newActiveDay);
 			if (newActiveDay) {
 				await fetchInfoDay(newActiveDay.id);
 			}
@@ -112,7 +111,7 @@ function Points() {
 			await setInfoDay(response);
 			await setTempDay(response);
 			await setTempDay((prev) => ({ ...prev, leagueId: league.id }));
-
+			await setActiveDay(response);
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
@@ -155,6 +154,7 @@ function Points() {
 			result = await updateDay(filteredData);
 		} else {
 			result = await createDay(formData);
+			setActiveDay(result.days[result.days.length - 1]);
 		}
 
 		await setInfoDay(tempDay);
@@ -210,6 +210,7 @@ function Points() {
 		setIsLoading(true);
 		const result = await deleteDay(activeDay.id);
 		setIsLoading(false);
+
 		if (!result) {
 			showPopup(
 				"error",
@@ -218,12 +219,15 @@ function Points() {
 			);
 			return;
 		}
+
 		showPopup(
 			"success",
 			"Giornata eliminata!",
 			"La giornata é stata eliminata correttamente."
 		);
-		setActiveIndex((prevIndex) => {
+
+		await setActiveIndex((prevIndex) => {
+			if (prevIndex === 0) setActiveDay(days[1]);
 			const newIndex =
 				days.length - 1 > 0 ? Math.max(0, prevIndex - 1) : 0;
 

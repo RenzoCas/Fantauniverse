@@ -118,7 +118,10 @@ export default function Registrazione() {
 					</h2>
 					<form
 						className="flex flex-col gap-[32px]"
-						onSubmit={handleSubmit}
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleSubmit();
+						}}
 					>
 						<div className="flex flex-col gap-[10px]">
 							{serverError && (

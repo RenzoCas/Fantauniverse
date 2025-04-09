@@ -143,6 +143,8 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();
+						onSubmit(formData);
+						setFileKey(Date.now());
 					}}
 					className="flex flex-col gap-4"
 				>

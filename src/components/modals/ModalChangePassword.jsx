@@ -106,7 +106,13 @@ function ModalChangePassword({ isOpen, onClose, handleChangePassword }) {
 						<XMarkIcon className="h-[24px] w-[24px] flex-shrink-0 cursor-pointer" />
 					</button>
 				</div>
-				<form className="flex flex-col gap-[16px] relative">
+				<form
+					className="flex flex-col gap-[16px] relative"
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSubmit();
+					}}
+				>
 					<GenericInput
 						type="password"
 						required

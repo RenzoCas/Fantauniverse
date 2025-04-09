@@ -44,6 +44,19 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 
 	const isFormValid = () => formData.days[0].name.trim() !== "";
 
+	const handleSubmitData = () => {
+		setFormData({
+			leagueId: league.id,
+			days: [
+				{
+					name: "",
+					date: new Date().toISOString().split("T")[0],
+				},
+			],
+		});
+		handleSubmit(formData);
+	};
+
 	return (
 		<>
 			<div
@@ -60,7 +73,13 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 					</button>
 				</div>
 
-				<form className="flex flex-col gap-[16px] w-full">
+				<form
+					className="flex flex-col gap-[16px] w-full"
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSubmitData();
+					}}
+				>
 					<input
 						type="date"
 						name="date"
@@ -78,21 +97,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 					/>
 					<NormalButton
 						text="Conferma"
-						action={(e) => {
-							e.preventDefault();
-							setFormData({
-								leagueId: league.id,
-								days: [
-									{
-										name: "",
-										date: new Date()
-											.toISOString()
-											.split("T")[0],
-									},
-								],
-							});
-							handleSubmit(formData);
-						}}
+						action={handleSubmitData}
 						disabled={!isFormValid()}
 					/>
 				</form>

@@ -187,7 +187,10 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 					</button>
 				</div>
 				<form
-					onSubmit={handleSubmit}
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSubmit();
+					}}
 					className="flex flex-col gap-[16px] w-full px-[16px] pb-[16px] lg:pb-[24px]"
 				>
 					<div className="flex flex-col gap-[8px]">

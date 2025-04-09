@@ -275,7 +275,10 @@ function Dashboard() {
 					</div>
 					<div className="w-full lg:flex lg:gap-[8px]">
 						<form
-							onSubmit={handleSubmit}
+							onSubmit={(e) => {
+								e.preventDefault();
+								handleSubmit();
+							}}
 							className="w-full lg:max-w-[350px]"
 						>
 							<GenericInput

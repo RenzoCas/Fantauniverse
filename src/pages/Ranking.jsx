@@ -3,11 +3,24 @@ import { useLeague } from "../contexts/LeagueContext";
 import { useTeam } from "../contexts/TeamContext";
 import { Award } from "lucide-react";
 import Player from "../components/Player";
+import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
 
 function Ranking({ handleTabChange }) {
-	const { league } = useLeague();
+	const { league, getRanking } = useLeague();
 	const { getTeam, teamParticipant, resetTeamPartecipant } = useTeam();
-	const { participants } = league;
+	const { id, participants } = league;
+	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setIsLoading(true);
+			await getRanking(id);
+			setIsLoading(false);
+		};
+
+		fetchData();
+	}, []);
 
 	const handleClick = async (participantId) => {
 		await getTeam(participantId);
@@ -19,6 +32,7 @@ function Ranking({ handleTabChange }) {
 
 	return (
 		<>
+			{isLoading && <Loader />}
 			{teamParticipant ? (
 				<>
 					<div className="flex flex-col gap-[24px]">

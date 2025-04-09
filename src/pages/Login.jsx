@@ -78,7 +78,10 @@ export default function Login() {
 						Login utente
 					</h2>
 					<form
-						onSubmit={handleSubmit}
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleSubmit();
+						}}
 						className="flex flex-col gap-[16px]"
 					>
 						<div className="flex flex-col gap-[10px]">

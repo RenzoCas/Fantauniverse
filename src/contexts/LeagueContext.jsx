@@ -145,6 +145,12 @@ function leagueReducer(state, action) {
 				days: state.days.filter((day) => day.id !== action.payload),
 			};
 
+		case "updateParticipants":
+			return {
+				...state,
+				participants: action.payload,
+			};
+
 		default:
 			return state;
 	}
@@ -335,6 +341,36 @@ function LeagueProvider({ children }) {
 		}
 	};
 
+	const getRanking = async (leagueId) => {
+		try {
+			const response = await fetch(
+				`${urlServer}/league/ranking/${leagueId}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Errore nel caricamento della classifica.");
+			}
+
+			const participants = await response.json();
+
+			dispatchLeague({
+				type: "updateParticipants",
+				payload: participants,
+			});
+
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	const changeStatus = async (newStatus) => {
 		try {
 			const response = await fetch(
@@ -402,6 +438,7 @@ function LeagueProvider({ children }) {
 				getLeague,
 				createLeague,
 				updateLeague,
+				getRanking,
 				changeStatus,
 				deleteLeague,
 				resetMyLeague,

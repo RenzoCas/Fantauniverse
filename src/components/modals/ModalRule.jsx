@@ -163,6 +163,13 @@ function ModalRule({
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();
+							onSubmit(formData);
+							setFormData({
+								name: "",
+								rule: "",
+								value: "",
+								malus: false,
+							});
 						}}
 						className="flex flex-col gap-4"
 					>
