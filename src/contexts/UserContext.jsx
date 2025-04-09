@@ -226,13 +226,17 @@ function UserProvider({ children }) {
 
 	const googleLogin = async (token) => {
 		try {
-			const response = await fetch(`${urlServer}/login`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ googleToken: token }),
-			});
+			const response = await fetch(
+				`${urlServer}/oauth2/google
+`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ authToken: token.credential }),
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Errore nella login con google");

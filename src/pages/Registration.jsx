@@ -7,12 +7,12 @@ import GenericInput from "../atoms/Inputs/GenericInput";
 import Logo from "../atoms/Logo";
 // import Checkbox from "../atoms/Inputs/Checkbox";
 import Loader from "../components/Loader";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Registrazione() {
 	const messageError = "Campo obbligatorio";
 	const navigate = useNavigate();
-	const { register } = useUser();
+	const { register, googleLogin } = useUser();
 
 	const [formData, setFormData] = useState({
 		username: "",
@@ -96,10 +96,9 @@ export default function Registrazione() {
 		}
 	};
 
-	const handleGoogleLogin = useGoogleLogin({
-		onSuccess: (tokenResponse) => console.log(tokenResponse),
-		flow: "auth-code",
-	});
+	// const handleGoogleLogin = useGoogleLogin({
+	// 	onSuccess: (tokenResponse) => googleLogin(tokenResponse),
+	// });
 
 	return (
 		<>
@@ -205,10 +204,15 @@ export default function Registrazione() {
 								icon={false}
 							/>
 							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
-							<GhostButton
+							{/* <GhostButton
 								text="Oppure accedi con google."
 								action={() => handleGoogleLogin()}
 								icon={false}
+							/> */}
+							<GoogleLogin
+								onSuccess={(credentialResponse) => {
+									googleLogin(credentialResponse);
+								}}
 							/>
 						</div>
 					</form>
