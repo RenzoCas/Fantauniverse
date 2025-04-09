@@ -27,7 +27,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 function App() {
 	return (
 		<UserProvider>
-			<GoogleOAuthProvider clientId="<http://86863646183-thn42d79m9qsppdfqaihmn8d5drkoill.apps.googleusercontent.com>">
+			<GoogleOAuthProvider clientId="86863646183-thn42d79m9qsppdfqaihmn8d5drkoill.apps.googleusercontent.com">
 				<ModalProvider>
 					<LeagueProvider>
 						<RuleProvider>
