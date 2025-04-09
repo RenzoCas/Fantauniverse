@@ -80,12 +80,16 @@ function Participant({
 						<p className="body-normal font-black">{idx + 1}&deg;</p>
 					</div>
 				)}
-				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px] cursor-pointer">
+				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px] cursor-pointer relative">
 					{icon == null ? (
 						<div
 							className={`rounded-[3px] h-[48px] w-[48px] object-cover`}
 							style={{ backgroundColor: randomColor }}
-						></div>
+						>
+							<div className="body-regular font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
+								{username.slice(0, 2).toUpperCase()}
+							</div>
+						</div>
 					) : (
 						<img
 							src={`data:image/png;base64,${icon}`}

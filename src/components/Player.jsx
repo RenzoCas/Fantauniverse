@@ -74,7 +74,7 @@ function Player({
 				>
 					<div className="flex gap-[20px]">
 						<picture
-							className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] ${
+							className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] relative ${
 								!createTeam
 									? "opacity-100"
 									: canAdd || isActive

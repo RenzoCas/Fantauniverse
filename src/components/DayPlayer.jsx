@@ -27,12 +27,16 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 			onClick={() => setExpanded(!expanded)}
 		>
 			<div className="flex items-center gap-[20px]">
-				<picture className="rounded-[3px] h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1">
+				<picture className="rounded-[3px] h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1 relative">
 					{icon == null ? (
 						<div
 							className={`rounded-[3px] h-[40px] w-[40px] object-cover`}
 							style={{ backgroundColor: randomColor }}
-						></div>
+						>
+							<div className="body-regular font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
+								{name.slice(0, 2).toUpperCase()}
+							</div>
+						</div>
 					) : (
 						<img
 							src={`data:image/png;base64,${icon}`}

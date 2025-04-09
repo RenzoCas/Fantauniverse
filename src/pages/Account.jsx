@@ -277,14 +277,20 @@ function Account() {
 							ref={fileInputRef}
 							className="hidden"
 						/>
-						<picture className="rounded-[32px] w-[90px] h-[90px] flex-shrink-0 overflow-hidden outline outline-solid lg:w-[371px] lg:h-auto lg:outline-none">
+						<picture className="rounded-[32px] w-[90px] h-[90px] flex-shrink-0 overflow-hidden outline outline-solid lg:w-[371px] lg:h-full lg:aspect-video lg:outline-none relative">
 							{user?.icon == null ? (
 								<div
 									className={`h-full object-cover`}
 									style={{
 										backgroundColor: randomColor,
 									}}
-								></div>
+								>
+									<div className="title-h1 font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
+										{user?.username
+											.slice(0, 2)
+											.toUpperCase()}
+									</div>
+								</div>
 							) : (
 								<img
 									src={`data:image/png;base64,${user?.icon}`}

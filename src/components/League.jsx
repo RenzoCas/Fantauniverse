@@ -60,7 +60,7 @@ export default function League({ league, onAddParticipant }) {
 			onClick={isRegistered ? handleClick : undefined}
 			tabIndex={isRegistered ? 0 : undefined}
 		>
-			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden">
+			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative">
 				{isAdmin && (
 					<span className="absolute top-[8px] left-[8px] p-[2px] bg-white rounded-[4px]">
 						<Cog6ToothIcon className="w-[20px] h-[20px]" />
