@@ -70,6 +70,41 @@ function Points() {
 		changeIndex();
 	}, [activeIndex]);
 
+	useEffect(() => {
+		groupRules();
+	}, [tempDay.players]);
+
+	const groupRules = async () => {
+		// Raggruppa per regola
+		const groupedRules = tempDay.players.reduce((acc, item) => {
+			item.rules.forEach((rule) => {
+				// Se non esiste ancora la regola, la aggiungiamo
+				if (!acc[rule.id]) {
+					acc[rule.id] = {
+						rule: rule,
+						players: [],
+					};
+				}
+
+				// Aggiungiamo il giocatore alla lista di quella regola
+				acc[rule.id].players.push({ id: item.player.id });
+			});
+			return acc;
+		}, {});
+
+		// Creiamo l'array delle regole finali
+		const updatedRules = Object.values(groupedRules).map((group) => ({
+			rule: group.rule,
+			players: group.players,
+		}));
+
+		// Aggiorniamo lo stato con le nuove regole
+		await setTempDay((prevState) => ({
+			...prevState,
+			rules: updatedRules,
+		}));
+	};
+
 	const fetchInfoDay = async (dayId) => {
 		try {
 			setIsLoading(true);
@@ -77,6 +112,7 @@ function Points() {
 			await setInfoDay(response);
 			await setTempDay(response);
 			await setTempDay((prev) => ({ ...prev, leagueId: league.id }));
+
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
@@ -121,21 +157,38 @@ function Points() {
 			result = await createDay(formData);
 		}
 
-		setInfoDay(tempDay);
+		await setInfoDay(tempDay);
 		setIsLoading(false);
 		if (!result) {
-			showPopup(
-				"error",
-				"Errore nella creazione della giornata!",
-				"La giornata non é stata aggiunta correttamente. Riprova."
-			);
+			if (isUpdateDay) {
+				showPopup(
+					"error",
+					"Errore nell'aggiornamento della giornata!",
+					"La giornata non é stata aggiornata correttamente. Riprova."
+				);
+			} else {
+				showPopup(
+					"error",
+					"Errore nella creazione della giornata!",
+					"La giornata non é stata aggiunta correttamente. Riprova."
+				);
+			}
 			return;
 		}
-		showPopup(
-			"success",
-			"Giornata aggiunta!",
-			"La giornata é stata creata correttamente."
-		);
+
+		if (isUpdateDay) {
+			showPopup(
+				"success",
+				"Giornata aggiornata!",
+				"La giornata é stata aggiornata correttamente."
+			);
+		} else {
+			showPopup(
+				"success",
+				"Giornata aggiunta!",
+				"La giornata é stata creata correttamente."
+			);
+		}
 
 		if (!isUpdateDay) {
 			setActiveIndex(() => {
@@ -194,60 +247,92 @@ function Points() {
 		selectedPlayers,
 		isDelete = false
 	) => {
-		await setTempDay((prev) => {
+		setTempDay((prev) => {
+			// Cloni
+			const updatedRules = [...prev.rules];
 			let updatedPlayers = [...prev.players];
-			const updatedRules = [...prev.rules]; // array come da nuovo formato
 
-			// Aggiorna o aggiungi la regola nel nuovo formato
 			const ruleIndex = updatedRules.findIndex(
 				(r) => r.rule.id === ruleObj.id
 			);
 
-			if (ruleIndex !== -1) {
-				// Se la regola esiste già, aggiorna i giocatori
-				updatedRules[ruleIndex].players = selectedPlayers.map(
-					(player) => ({
-						id: player.id,
-					})
-				);
-			} else {
-				// Altrimenti aggiungila
-				updatedRules.push({
-					rule: { id: ruleObj.id },
-					players: selectedPlayers.map((player) => ({
-						id: isDelete ? player.player.id : player.id,
-					})),
-				});
-			}
-
 			if (isDelete) {
-				updatedPlayers = [];
-				selectedPlayers.forEach((el) => {
-					updatedPlayers.push({
-						player: el.player,
-						rules: [ruleObj],
-					});
+				// Rimuove i player passati dalla regola
+				if (ruleIndex !== -1) {
+					// Rimuove solo i player specificati
+					updatedRules[ruleIndex].players = updatedRules[
+						ruleIndex
+					].players.filter(
+						(p) =>
+							!selectedPlayers.some(
+								(sp) => sp.id === p.id || sp.player?.id === p.id
+							)
+					);
+
+					// Se la regola non ha più player associati, rimuovila del tutto
+					if (updatedRules[ruleIndex].players.length === 0) {
+						updatedRules.splice(ruleIndex, 1);
+					}
+				}
+
+				// Rimuove la regola anche da ogni giocatore
+				selectedPlayers.forEach((playerWrapper) => {
+					const playerId =
+						playerWrapper.player?.id || playerWrapper.id;
+					const existing = updatedPlayers.find(
+						(p) => p.player.id === playerId
+					);
+
+					if (existing) {
+						existing.rules = existing.rules.filter(
+							(r) => r.id !== ruleObj.id
+						);
+
+						if (existing.rules.length === 0) {
+							// Se non ha più regole, lo rimuoviamo del tutto
+							updatedPlayers = updatedPlayers.filter(
+								(p) => p.player.id !== playerId
+							);
+						} else {
+							existing.points = existing.rules.reduce(
+								(acc, r) =>
+									acc + (r.malus ? -r.value : r.value),
+								0
+							);
+						}
+					}
 				});
 			} else {
-				// Aggiorna i dati dei giocatori
+				// Aggiunge o aggiorna la regola
+				if (ruleIndex !== -1) {
+					// Aggiorna la lista dei player associati a questa regola
+					updatedRules[ruleIndex].players = selectedPlayers.map(
+						(p) => ({ id: p.id })
+					);
+				} else {
+					// Nuova regola
+					updatedRules.push({
+						rule: ruleObj,
+						players: selectedPlayers.map((p) => ({ id: p.id })),
+					});
+				}
+
+				// Aggiunge la regola nei player selezionati
 				selectedPlayers.forEach((player) => {
 					const existing = updatedPlayers.find(
 						(p) => p.player.id === player.id
 					);
 
 					if (existing) {
-						// Rimuovi eventuali vecchie istanze della stessa regola
-						const filteredRules = existing.rules.filter(
+						// Evita duplicati della stessa regola
+						existing.rules = existing.rules.filter(
 							(r) => r.id !== ruleObj.id
 						);
-						filteredRules.push(ruleObj);
-						existing.rules = filteredRules;
-
-						existing.points = filteredRules.reduce((acc, rule) => {
-							return rule.malus
-								? acc - rule.value
-								: acc + rule.value;
-						}, 0);
+						existing.rules.push(ruleObj);
+						existing.points = existing.rules.reduce(
+							(acc, r) => acc + (r.malus ? -r.value : r.value),
+							0
+						);
 					} else {
 						// Nuovo giocatore
 						updatedPlayers.push({
@@ -270,11 +355,7 @@ function Points() {
 	};
 
 	const handleRemovePlayer = async (player, rule) => {
-		const updatedPlayers = tempDay.players.filter(
-			(p) => p.player.id !== player.player.id
-		);
-
-		confirmRuleForPlayers(rule, updatedPlayers, true);
+		confirmRuleForPlayers(rule, [player], true);
 	};
 
 	const handleTabChange = (tab) => {

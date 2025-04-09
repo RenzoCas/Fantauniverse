@@ -57,7 +57,7 @@ function GeneralSettings() {
 	const [formData, setFormData] = useState({
 		id: id,
 		name: name || "",
-		description: description || "",
+		description: description || null,
 		coinName: coinName || "",
 		maxCoins: maxCoins || 0,
 		visibility: visibility || "PUBLIC",
@@ -321,7 +321,7 @@ function GeneralSettings() {
 		return (
 			!Object.values(errors).some((error) => error !== "") &&
 			(formData.name.trim() !== name ||
-				formData.description.trim() !== description ||
+				(formData.description != null && formData.description.trim() !== description) ||
 				formData.coinName.trim() !== coinName ||
 				formData.maxCoins !== maxCoins ||
 				formData.visibility != visibility ||
