@@ -22,77 +22,90 @@ import { DayProvider } from "./contexts/DayContext";
 import GenericPopup from "./components/popups/GenericPopup";
 import Loader from "./components/Loader";
 import { ModalProvider } from "./contexts/ModalContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
 	return (
 		<UserProvider>
-			<ModalProvider>
-				<LeagueProvider>
-					<RuleProvider>
-						<PlayerProvider>
-							<ParticipantProvider>
-								<TeamProvider>
-									<DayProvider>
-										<BrowserRouter>
-											<AuthInitializer />
-											<Routes>
-												<Route
-													path="/"
-													element={<Homepage />}
-												/>
-												<Route
-													path="registration"
-													element={<Registration />}
-												/>
-												<Route
-													path="login"
-													element={<Login />}
-												/>
-
-												<Route
-													path="*"
-													element={<NotFound />}
-												/>
-												<Route
-													path="app"
-													element={
-														<ProtectedRoute>
-															<FantaUniverse />
-														</ProtectedRoute>
-													}
-												>
+			<GoogleOAuthProvider clientId="<http://86863646183-thn42d79m9qsppdfqaihmn8d5drkoill.apps.googleusercontent.com>">
+				<ModalProvider>
+					<LeagueProvider>
+						<RuleProvider>
+							<PlayerProvider>
+								<ParticipantProvider>
+									<TeamProvider>
+										<DayProvider>
+											<BrowserRouter>
+												<AuthInitializer />
+												<Routes>
 													<Route
-														index
-														element={<Dashboard />}
+														path="/"
+														element={<Homepage />}
 													/>
 													<Route
-														path="league/:id"
-														element={<ViewLeague />}
-													/>
-													<Route
-														path="rules"
+														path="registration"
 														element={
-															<GenericRules />
+															<Registration />
 														}
 													/>
 													<Route
-														path="faq"
-														element={<FAQPage />}
+														path="login"
+														element={<Login />}
+													/>
+
+													<Route
+														path="*"
+														element={<NotFound />}
 													/>
 													<Route
-														path="account"
-														element={<Account />}
-													/>
-												</Route>
-											</Routes>
-										</BrowserRouter>
-									</DayProvider>
-								</TeamProvider>
-							</ParticipantProvider>
-						</PlayerProvider>
-					</RuleProvider>
-				</LeagueProvider>
-			</ModalProvider>
+														path="app"
+														element={
+															<ProtectedRoute>
+																<FantaUniverse />
+															</ProtectedRoute>
+														}
+													>
+														<Route
+															index
+															element={
+																<Dashboard />
+															}
+														/>
+														<Route
+															path="league/:id"
+															element={
+																<ViewLeague />
+															}
+														/>
+														<Route
+															path="rules"
+															element={
+																<GenericRules />
+															}
+														/>
+														<Route
+															path="faq"
+															element={
+																<FAQPage />
+															}
+														/>
+														<Route
+															path="account"
+															element={
+																<Account />
+															}
+														/>
+													</Route>
+												</Routes>
+											</BrowserRouter>
+										</DayProvider>
+									</TeamProvider>
+								</ParticipantProvider>
+							</PlayerProvider>
+						</RuleProvider>
+					</LeagueProvider>
+				</ModalProvider>
+			</GoogleOAuthProvider>
 		</UserProvider>
 	);
 }

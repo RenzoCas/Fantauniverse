@@ -224,6 +224,31 @@ function UserProvider({ children }) {
 		}
 	};
 
+	const googleLogin = async (token) => {
+		try {
+			const response = await fetch(`${urlServer}/login`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ googleToken: token }),
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nella login con google");
+			}
+
+			const user = await response.json();
+			localStorage.setItem("authToken", user.token);
+			dispatch({ type: "login", payload: user });
+
+			return user;
+		} catch (error) {
+			console.error("Login error:", error.message);
+			throw error;
+		}
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
@@ -232,6 +257,7 @@ function UserProvider({ children }) {
 				urlServer,
 				register,
 				login,
+				googleLogin,
 				logout,
 				updateUser,
 				updatePassword,

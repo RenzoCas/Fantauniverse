@@ -10,7 +10,7 @@ function BottomNavbar({ tabActive, handleTabChange, classOpt }) {
 			className={`sticky bottom-[24px] mt-auto px-[20px] bg-white border border-solid border-(--black-light-hover) shadow-lg rounded-[12px] flex gap-[12px]
                 ${
 					classOpt ? classOpt : ""
-				} lg:border-0 lg:shadow-none lg:rounded-none`}
+				} lg:border-0 lg:shadow-none lg:rounded-none w-full md:max-w-[350px] mx-auto`}
 		>
 			<TabBottomNav
 				text="Info"

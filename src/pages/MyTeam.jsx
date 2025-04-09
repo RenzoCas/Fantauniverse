@@ -417,7 +417,7 @@ function MyTeam() {
 							))}
 						</ul>
 						<div
-							className={`flex gap-[12px] bg-white rounded-[12px] p-[24px] border border-(--black-light-hover)`}
+							className={`flex gap-[12px] bg-white rounded-[12px] p-[24px] border border-(--black-light-hover) md:w-2/3 md:mx-auto`}
 						>
 							{isFormValid() && !isEditingAnyField ? (
 								<CircleCheckBig className="h-[24px] w-[24px] stroke-[#35C950] flex-shrink-0" />
