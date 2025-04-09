@@ -6,6 +6,7 @@ import Logo from "../atoms/Logo";
 import GenericInput from "../atoms/Inputs/GenericInput";
 import GhostButton from "../atoms/Buttons/GhostButton";
 import Loader from "../components/Loader";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
 	const [formData, setFormData] = useState({ username: "", password: "" });
@@ -59,6 +60,11 @@ export default function Login() {
 			setIsLoading(false);
 		}
 	};
+
+	const handleGoogleLogin = useGoogleLogin({
+		onSuccess: (tokenResponse) => console.log(tokenResponse),
+		flow: "auth-code",
+	});
 
 	return (
 		<>
@@ -130,7 +136,7 @@ export default function Login() {
 							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
 							<GhostButton
 								text="Oppure accedi con google."
-								action={() => alert("login google")}
+								action={() => handleGoogleLogin()}
 								icon={false}
 							/>
 						</div>
