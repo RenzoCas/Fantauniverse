@@ -132,6 +132,7 @@ export default function Login() {
 							<GhostButton
 								text="Non sei registrato? Registrati"
 								action={() => navigate("/registration")}
+								icon={false}
 							/>
 							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
 							<GhostButton
