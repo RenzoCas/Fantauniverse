@@ -285,7 +285,7 @@ function Account() {
 										backgroundColor: randomColor,
 									}}
 								>
-									<div className="title-h1 font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
+									<div className="title-h3 font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
 										{user?.username
 											.slice(0, 2)
 											.toUpperCase()}
@@ -364,18 +364,20 @@ function Account() {
 						</div>
 					))}
 
-					<div className="flex flex-col gap-[8px]">
-						<p className="body-small text-(--black-light-active) font-medium capitalize">
-							Password:
-						</p>
-						<NormalButton
-							text="Clicca per cambiare password"
-							icon={false}
-							roundedFull={false}
-							classOpt="rounded-[16px] md:w-1/2"
-							action={() => setIsModalPasswordVisible(true)}
-						/>
-					</div>
+					{!user.provider && (
+						<div className="flex flex-col gap-[8px]">
+							<p className="body-small text-(--black-light-active) font-medium capitalize">
+								Password:
+							</p>
+							<NormalButton
+								text="Clicca per cambiare password"
+								icon={false}
+								roundedFull={false}
+								classOpt="rounded-[16px] md:w-1/2"
+								action={() => setIsModalPasswordVisible(true)}
+							/>
+						</div>
+					)}
 				</div>
 				<section className="flex flex-col gap-[8px] mt-auto">
 					<NormalButton

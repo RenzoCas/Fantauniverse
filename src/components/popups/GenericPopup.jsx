@@ -26,11 +26,6 @@ function GenericPopup({ isOpen, type, title, message, classOpt }) {
                 ${isOpen ? "translate-y-0" : "translate-y-full"} ${
 				classOpt ? classOpt : ""
 			}`}
-			// className={`fixed left-[16px] bg-white shadow-lg rounded-[24px] w-full transition-all duration-300 ease flex flex-col gap-[24px] max-w-[calc(100vw-32px)] sm:max-w-[600px] p-[20px] z-1001 ${
-			//     isOpen
-			//         ? "scale-100 opacity-100 bottom-1/2 translate-y-1/2 visible delay-150"
-			//         : "scale-80 opacity-30 bottom-[100px] invisible"
-			// }`}
 			style={{ bottom: isOpen ? `${fixedPopupHeight}px` : "0px" }}
 		>
 			<div className="flex gap-[4px]">

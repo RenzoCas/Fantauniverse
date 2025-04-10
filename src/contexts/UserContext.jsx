@@ -10,6 +10,7 @@ const initialState = {
 		password: "",
 		icon: null,
 		token: "",
+		provider: "",
 	},
 	isAuthenticated: false,
 };
@@ -193,8 +194,7 @@ function UserProvider({ children }) {
 			localStorage.removeItem("authToken");
 			return true;
 		} catch (error) {
-			console.error(error.message);
-			return false;
+			return error;
 		}
 	};
 

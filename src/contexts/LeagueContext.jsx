@@ -32,9 +32,6 @@ const initialStateLeague = {
 
 function allLeaguesReducer(state, action) {
 	switch (action.type) {
-		case "getAllLeague":
-			return { ...state, allLeagues: action.payload };
-
 		case "findLeague":
 			return { ...state, allLeagues: action.payload };
 
@@ -174,32 +171,8 @@ function LeagueProvider({ children }) {
 
 	const { user, urlServer } = useUser();
 
-	const getAllLeagues = useCallback(async () => {
-		try {
-			if (!user || !user.token) return;
-
-			const response = await fetch(`${urlServer}/league`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error("Errore nel caricamento delle leghe.");
-			}
-
-			const data = await response.json();
-			dispatchAllLeagues({ type: "getAllLeagues", payload: data });
-
-			return data;
-		} catch (error) {
-			console.error(error.message);
-		}
-	}, [user, urlServer]);
-
 	const findLeague = useCallback(
-		async (name) => {
+		async (dataBody) => {
 			try {
 				if (!user || !user.token) return;
 
@@ -209,10 +182,7 @@ function LeagueProvider({ children }) {
 						Authorization: `Bearer ${user.token}`,
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({
-						nameOrCode: name,
-						status: ["NOT_STARTED", "STARTED", "FINISHED"],
-					}),
+					body: JSON.stringify(dataBody),
 				});
 
 				if (!response.ok) {
@@ -432,7 +402,6 @@ function LeagueProvider({ children }) {
 				allLeagues: allLeagues.allLeagues,
 				myLeagues: myLeagues.myLeagues,
 				league,
-				getAllLeagues,
 				findLeague,
 				getMyLeagues,
 				getLeague,

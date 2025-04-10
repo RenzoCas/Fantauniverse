@@ -76,8 +76,16 @@ export default function SidebarDesktop() {
 		setIsModalConfirmOpen({ action: null, value: false });
 		setIsLoading(true);
 		const res = await unregister();
-		if (!res) {
+		if (!res.ok) {
 			setIsLoading(false);
+			if (res?.status === 400) {
+				showPopup(
+					"error",
+					"Account non eliminato!",
+					"Hai delle leghe in corso per cui sei attualmente amministratore. Devi prima terminarle."
+				);
+				return;
+			}
 			showPopup(
 				"error",
 				"Account non eliminato!",
