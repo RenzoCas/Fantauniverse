@@ -234,7 +234,7 @@ function Points() {
 		);
 
 		await setActiveIndex((prevIndex) => {
-			if (prevIndex === 0) fetchInfoDay(days[1]?.id);
+			if (prevIndex === 0 && days.length == 2) fetchInfoDay(days[1]?.id);
 			const newIndex =
 				days.length - 1 > 0 ? Math.max(0, prevIndex - 1) : 0;
 
