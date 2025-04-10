@@ -94,8 +94,8 @@ export default function Navbar() {
 		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
-	const handleUnregister = async (e) => {
-		e.preventDefault();
+	const handleUnregister = async () => {
+		setIsModalConfirmOpen({ action: null, value: false });
 		setIsLoading(true);
 		const res = await unregister();
 		if (!res) {
@@ -377,14 +377,6 @@ export default function Navbar() {
 						</ul>
 					</div>
 				</div>
-				<ModalConfirmAction
-					isOpen={isModalConfirmOpen.value}
-					onClose={() =>
-						setIsModalConfirmOpen({ action: null, value: false })
-					}
-					onConfirmAction={handleUnregister}
-					dataModal={dataModalConfirm}
-				/>
 				<GenericPopup
 					isOpen={popupData.isOpen}
 					type={popupData.type}
@@ -392,6 +384,14 @@ export default function Navbar() {
 					message={popupData.message}
 				/>
 			</nav>
+			<ModalConfirmAction
+				isOpen={isModalConfirmOpen.value}
+				onClose={() =>
+					setIsModalConfirmOpen({ action: null, value: false })
+				}
+				onConfirmAction={handleUnregister}
+				dataModal={dataModalConfirm}
+			/>
 		</>
 	);
 }

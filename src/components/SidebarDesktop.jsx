@@ -72,8 +72,8 @@ export default function SidebarDesktop() {
 		setIsModalConfirmOpen({ action: "delete", value: true });
 	};
 
-	const handleUnregister = async (e) => {
-		e.preventDefault();
+	const handleUnregister = async () => {
+		setIsModalConfirmOpen({ action: null, value: false });
 		setIsLoading(true);
 		const res = await unregister();
 		if (!res) {
@@ -332,13 +332,14 @@ export default function SidebarDesktop() {
 					onConfirmAction={handleUnregister}
 					dataModal={dataModalConfirm}
 				/>
-				<GenericPopup
-					isOpen={popupData.isOpen}
-					type={popupData.type}
-					title={popupData.title}
-					message={popupData.message}
-				/>
 			</nav>
+			<GenericPopup
+				isOpen={popupData.isOpen}
+				type={popupData.type}
+				title={popupData.title}
+				message={popupData.message}
+				classOpt={`lg:left-1/2 lg:-translate-x-1/2`}
+			/>
 		</>
 	);
 }
