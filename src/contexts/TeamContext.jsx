@@ -69,11 +69,9 @@ function TeamProvider({ children }) {
 				}
 			);
 
-			if (!response.ok)
-				throw new Error("Errore nell'aggiunta del partecipante.");
+			if (!response.ok) throw new Error("Errore nel recupero del team.");
 
-			const teamText = (await response.text()).trim();
-			const team = teamText ? JSON.parse(teamText) : null;
+			const team = await response.json();
 
 			dispatch({
 				type: "getMyTeam",

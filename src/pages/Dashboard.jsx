@@ -135,8 +135,7 @@ function Dashboard() {
 		});
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async () => {
 		if (formData.leagueName.trim() != "") {
 			setIsLoading(true);
 			const res = await findLeague(formData.leagueName);

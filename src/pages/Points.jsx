@@ -193,6 +193,13 @@ function Points() {
 		if (!isUpdateDay) {
 			setActiveIndex(() => {
 				const newIndex = result.days.length - 1;
+				setTempDay(result.days[newIndex]);
+				setTempDay((prev) => ({
+					...prev,
+					leagueId: league.id,
+					players: [],
+					rules: [],
+				}));
 
 				setTimeout(() => {
 					if (swiperInstance) {
@@ -242,7 +249,7 @@ function Points() {
 	};
 
 	const handleCancelUpdate = async () => {
-		setTempDay(infoDay);
+		await fetchInfoDay(days[activeIndex]?.id);
 		setIsUpdateDay(false);
 	};
 
@@ -251,7 +258,7 @@ function Points() {
 		selectedPlayers,
 		isDelete = false
 	) => {
-		setTempDay((prev) => {
+		await setTempDay((prev) => {
 			const updatedRules = [...prev.rules];
 			let updatedPlayers = [...prev.players];
 			const ruleIndex = updatedRules.findIndex(

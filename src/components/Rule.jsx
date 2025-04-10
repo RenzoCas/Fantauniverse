@@ -32,6 +32,10 @@ function Rule({
 	};
 
 	useEffect(() => {
+		setExpanded(false);
+	}, [ruleObj]);
+
+	useEffect(() => {
 		const players = playersRule?.filter((player) =>
 			player.rules.some((rule) => rule.id === ruleObj.id)
 		);
