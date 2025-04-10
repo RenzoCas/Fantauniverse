@@ -77,7 +77,7 @@ function TeamProvider({ children }) {
 				type: "getMyTeam",
 				payload: team,
 			});
-			return true;
+			return team;
 		} catch (error) {
 			console.error(error.message);
 			return false;

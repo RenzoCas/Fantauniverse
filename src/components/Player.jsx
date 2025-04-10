@@ -101,9 +101,37 @@ function Player({
 						>
 							{name}
 						</p>
-						<div className="flex items-center gap-[8px] ml-auto">
+						<div className="flex items-center gap-[20px] ml-auto">
+							{isCaptain && (
+								<svg
+									width="20"
+									height="20"
+									viewBox="0 0 20 20"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<rect
+										x="0.83"
+										y="0.89"
+										width="18.33"
+										height="18.23"
+										fill="white"
+									/>
+									<rect
+										x="0.83"
+										y="0.89"
+										width="18.33"
+										height="18.23"
+										stroke="#202020"
+									/>
+									<path
+										d="M10 15.63C9.298 15.63 8.76017 15.42 8.3865 15C8.02083 14.58 7.838 13.93 7.838 13.05V6.95C7.838 6.07 8.02083 5.42 8.3865 5C8.76017 4.58 9.298 4.37 10 4.37C10.702 4.37 11.2352 4.58 11.6012 5C11.9752 5.42 12.1622 6.07 12.1622 6.95V7.78H10.7733V6.8C10.7733 6.36267 10.529 6.14 10.0405 6.14C9.55183 6.14 9.3075 6.36267 9.3075 6.8V13.2C9.3075 13.636 9.55183 13.86 10.0405 13.86C10.529 13.86 10.7733 13.636 10.7733 13.2V11.92H12.1622V13.05C12.1622 13.93 11.9752 14.58 11.6012 15C11.2352 15.42 10.702 15.63 10 15.63Z"
+										fill="black"
+									/>
+								</svg>
+							)}
 							<p className="body-normal font-semibold text-(--black-darker) whitespace-nowrap">
-								{points} pnt.
+								{isCaptain ? points * 2 : points} pnt.
 							</p>
 							{playerDay?.dayPoints.length > 0 && (
 								<>
@@ -127,7 +155,12 @@ function Player({
 										{pd.day?.name}
 									</p>
 									<p className="body-normal font-semibold whitespace-nowrap">
-										{pd.points} pnt.
+										{pd.points} pnt.{" "}
+										{isCaptain && (
+											<span className="text-(--black-light-active)">
+												x2
+											</span>
+										)}
 									</p>
 								</li>
 							))}

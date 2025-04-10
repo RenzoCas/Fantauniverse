@@ -73,7 +73,14 @@ function MyTeam() {
 	useEffect(() => {
 		const fetchData = async () => {
 			setIsLoading(true);
-			await getMyTeam(id);
+			const result = await getMyTeam(id);
+			setTempTeam((prevTeam) => ({
+				...prevTeam,
+				id: result?.id || null,
+				name: result?.name || "",
+				players: result?.players || [],
+				playerDay: result?.playerDay || [],
+			}));
 			setIsLoading(false);
 		};
 
