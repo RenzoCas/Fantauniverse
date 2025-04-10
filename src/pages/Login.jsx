@@ -138,14 +138,15 @@ export default function Login() {
 								action={() => handleGoogleLogin()}
 								icon={false}
 							/> */}
-							<GoogleLogin
-								onSuccess={(credentialResponse) => {
-									googleLogin(credentialResponse);
-								}}
-								theme="filled_blue"
-								shape="circle"
-								width={"100%"}
-							/>
+							<div className="flex justify-center">
+								<GoogleLogin
+									onSuccess={(credentialResponse) => {
+										googleLogin(credentialResponse);
+									}}
+									shape="circle"
+									width="300"
+								/>
+							</div>
 						</div>
 					</form>
 				</section>
