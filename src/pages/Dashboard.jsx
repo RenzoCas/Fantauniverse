@@ -270,6 +270,20 @@ function Dashboard() {
 					Bentornato {user.username}
 				</h1>
 				<section className="flex flex-col gap-[16px]">
+					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
+						<TabButton
+							handleClick={() => handleChangeTab(false)}
+							active={!searchLeague}
+						>
+							<p className="body-normal">Mie leghe</p>
+						</TabButton>
+						<TabButton
+							handleClick={() => handleChangeTab(true)}
+							active={searchLeague}
+						>
+							<p className="body-normal">Leghe pubbliche</p>
+						</TabButton>
+					</div>
 					<div className="flex justify-between items-center gap-[8px]">
 						<p className="body-regular font-semibold">
 							{searchLeague ? "Leghe pubbliche" : "Le tue leghe"}
@@ -285,20 +299,6 @@ function Dashboard() {
 								<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />
 							</button>
 						)}
-					</div>
-					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
-						<TabButton
-							handleClick={() => handleChangeTab(false)}
-							active={!searchLeague}
-						>
-							<p className="body-normal">Mie leghe</p>
-						</TabButton>
-						<TabButton
-							handleClick={() => handleChangeTab(true)}
-							active={searchLeague}
-						>
-							<p className="body-normal">Leghe pubbliche</p>
-						</TabButton>
 					</div>
 					<div
 						className={`w-full lg:flex lg:gap-[8px] ${
