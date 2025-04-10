@@ -53,6 +53,19 @@ export default function Navbar() {
 		setRandomColors(colors);
 	}, [myLeagues]);
 
+	useEffect(() => {
+		if (isMenuOpen) {
+			document.body.style.overflow = "hidden";
+		} else {
+			document.body.style.overflow = "auto";
+		}
+
+		// Cleanup per ripristinare l'overflow quando il componente viene smontato
+		return () => {
+			document.body.style.overflow = "auto";
+		};
+	}, [isMenuOpen]);
+
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 		setVisibleCount(3);
