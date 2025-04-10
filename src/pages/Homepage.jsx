@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import Logo from "../atoms/Logo";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import GhostButton from "../atoms/Buttons/GhostButton";
+import { ArrowRight } from "lucide-react";
 
 export default function Homepage() {
 	const navigate = useNavigate();
@@ -28,12 +29,14 @@ export default function Homepage() {
 					action={() => {
 						navigate("/login");
 					}}
+					icon={false}
 				/>
 				<GhostButton
 					text="Non sei registrato? Registrati"
 					action={() => {
 						navigate("/registration");
 					}}
+					icon={false}
 				/>
 			</div>
 			<div className="flex flex-col gap-[16px] px-[32px] md:px-0">
@@ -42,11 +45,14 @@ export default function Homepage() {
 				</p>
 				<GhostButton
 					text="Scopri come creare il tuo universo"
-					icon={false}
 					action={() => {
 						navigate("/rules");
 					}}
-				/>
+					customIcon={true}
+					classOpt={`border border-(--black-light)`}
+				>
+					<ArrowRight className="h-[24px] w-[24px] stroke-(--black-normal) stroke-1" />
+				</GhostButton>
 			</div>
 		</main>
 	);

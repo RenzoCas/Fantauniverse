@@ -212,11 +212,16 @@ export default function Registrazione() {
 								action={() => handleGoogleLogin()}
 								icon={false}
 							/> */}
-							<GoogleLogin
-								onSuccess={(credentialResponse) => {
-									googleLogin(credentialResponse);
-								}}
-							/>
+							<div className="flex justify-center">
+								<GoogleLogin
+									onSuccess={(credentialResponse) => {
+										googleLogin(credentialResponse);
+									}}
+									theme="filled_blue"
+									shape="circle"
+									width="300"
+								/>
+							</div>
 						</div>
 					</form>
 				</section>

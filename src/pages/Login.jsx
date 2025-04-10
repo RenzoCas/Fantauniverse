@@ -143,6 +143,7 @@ export default function Login() {
 									onSuccess={(credentialResponse) => {
 										googleLogin(credentialResponse);
 									}}
+									theme="filled_blue"
 									shape="circle"
 									width="300"
 								/>

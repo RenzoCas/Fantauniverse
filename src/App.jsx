@@ -23,6 +23,7 @@ import GenericPopup from "./components/popups/GenericPopup";
 import Loader from "./components/Loader";
 import { ModalProvider } from "./contexts/ModalContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import GenericRulesNoAuth from "./pages/GenericRulesNoAuth";
 
 function App() {
 	return (
@@ -46,6 +47,12 @@ function App() {
 														path="registration"
 														element={
 															<Registration />
+														}
+													/>
+													<Route
+														path="rules"
+														element={
+															<GenericRulesNoAuth />
 														}
 													/>
 													<Route
