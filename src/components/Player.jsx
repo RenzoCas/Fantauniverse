@@ -131,7 +131,7 @@ function Player({
 								</svg>
 							)}
 							<p className="body-normal font-semibold text-(--black-darker) whitespace-nowrap">
-								{isCaptain ? points * 2 : points} pnt.
+								{points} pnt.
 							</p>
 							{playerDay?.dayPoints.length > 0 && (
 								<>
