@@ -311,6 +311,22 @@ function Dashboard() {
 				<h1 className="title-h4 text-(--primary) break-all">
 					Bentornato {user.username}
 				</h1>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSubmit();
+					}}
+					className="w-full lg:max-w-[350px]"
+				>
+					<GenericInput
+						type="text"
+						name="leagueName"
+						id="searchLeaga"
+						placeholder="Cerca una lega a cui iscriverti"
+						value={formData.leagueName}
+						handleChange={handleChange}
+					/>
+				</form>
 				<section className="flex flex-col gap-[16px]">
 					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
 						<TabButton
@@ -323,12 +339,12 @@ function Dashboard() {
 							handleClick={() => handleChangeTab(true)}
 							active={searchLeague}
 						>
-							<p className="body-normal">Leghe pubblicate</p>
+							<p className="body-normal">Leghe pubbliche</p>
 						</TabButton>
 					</div>
 					<div className="flex justify-between items-center gap-[8px]">
 						<p className="body-regular font-semibold">
-							{searchLeague ? "Leghe pubblicate" : "Le tue leghe"}
+							{searchLeague ? "Leghe pubbliche" : "Le tue leghe"}
 						</p>
 						{myLeagues.length > 0 && !searchLeague && (
 							<button
@@ -347,28 +363,6 @@ function Dashboard() {
 							!searchLeague ? "hidden lg:flex" : ""
 						}`}
 					>
-						{searchLeague ? (
-							<>
-								<form
-									onSubmit={(e) => {
-										e.preventDefault();
-										handleSubmit();
-									}}
-									className="w-full lg:max-w-[350px]"
-								>
-									<GenericInput
-										type="text"
-										name="leagueName"
-										id="searchLeaga"
-										placeholder="Cerca una lega a cui iscriverti"
-										value={formData.leagueName}
-										handleChange={handleChange}
-									/>
-								</form>
-							</>
-						) : (
-							<></>
-						)}
 						{!searchLeague && (
 							<div className="relative hidden lg:flex lg:gap-[8px] lg:ml-auto lg:items-center lg:justify-end">
 								{showFilters && (
@@ -720,16 +714,10 @@ function Dashboard() {
 								))}
 							</ul>
 						) : (
-							<>
-								<p className="body-normal font-semibold text-(--black-darker) text-center">
-									Sembra che non ci siano leghe pubbliche a
-									cui puoi iscriverti.
-								</p>
-								<p className="body-normal font-semibold text-(--black-darker) text-center">
-									Cerca una lega inserendo il nome o il
-									codice.
-								</p>
-							</>
+							<p className="body-normal font-semibold text-(--black-darker) text-center">
+								Sembra che non ci siano leghe pubbliche a cui
+								puoi iscriverti.
+							</p>
 						)}
 					</>
 				)}

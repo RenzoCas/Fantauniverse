@@ -147,7 +147,8 @@ function ModalAddPoints({
 						return (
 							<li
 								key={idx}
-								className="flex items-center gap-[20px]"
+								className="flex items-center gap-[20px] cursor-pointer"
+								onClick={() => togglePlayerSelection(player)}
 							>
 								<button
 									className={`h-[20px] w-[20px] border-[1.5px] border-solid rounded-[4px] ${
@@ -155,9 +156,6 @@ function ModalAddPoints({
 											? "bg-(--black-light-active)"
 											: "bg-white"
 									}`}
-									onClick={() =>
-										togglePlayerSelection(player)
-									}
 								></button>
 								<picture className="rounded-lg min-w-[32px] max-w-[32px] h-[32px] overflow-hidden">
 									{player.icon == null ? (

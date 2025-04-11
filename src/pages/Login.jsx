@@ -153,7 +153,13 @@ export default function Login() {
 				</section>
 				<section className="relative hidden lg:block max-w-[708px] bg-[url(https://main.djli7xgqeongu.amplifyapp.com/bgHome.jpg)] bg-centre bg-no-repeat bg-cover rounded-[24px]">
 					<div className="flex flex-col gap-[8px] px-[32px] md:px-0 absolute bottom-[30px] left-[30px]">
-						<Logo white={true}></Logo>
+						<div
+							className={`relative rounded-full h-[46px] w-[46px] bg-white`}
+						>
+							<span
+								className={`absolute rounded-full h-[8px] w-[8px] top-1/2 transform -translate-y-1/2 right-[4px] bg-(--black-normal)`}
+							></span>
+						</div>
 						<h1 className="title-h2 font-bold text-white">
 							All.
 							<br />

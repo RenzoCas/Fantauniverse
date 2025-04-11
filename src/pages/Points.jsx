@@ -383,6 +383,7 @@ function Points() {
 	};
 
 	const handleTabChange = (tab) => {
+		setIsUpdateDay(false);
 		setTabActive(tab);
 	};
 

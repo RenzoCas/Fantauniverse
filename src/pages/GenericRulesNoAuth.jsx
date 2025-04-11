@@ -13,7 +13,7 @@ export default function GenericRulesNoAuth() {
 			</header>
 			<button
 				className="flex lg:hidden items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal cursor-pointer"
-				onClick={() => navigate("/registration")}
+				onClick={() => navigate("/")}
 			>
 				<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
 				Vai alla registrazione
@@ -244,7 +244,13 @@ export default function GenericRulesNoAuth() {
 
 				<section className="relative hidden lg:block max-w-[708px] max-h-[calc(100dvh-136px)] bg-[url(https://main.djli7xgqeongu.amplifyapp.com/bgHome.jpg)] bg-centre bg-no-repeat bg-cover rounded-[24px] sticky top-[62px]">
 					<div className="flex flex-col gap-[8px] px-[32px] md:px-0 absolute bottom-[30px] left-[30px]">
-						<Logo white={true}></Logo>
+						<div
+							className={`relative rounded-full h-[46px] w-[46px] bg-white`}
+						>
+							<span
+								className={`absolute rounded-full h-[8px] w-[8px] top-1/2 transform -translate-y-1/2 right-[4px] bg-(--black-normal)`}
+							></span>
+						</div>
 						<h1 className="title-h2 font-bold text-white">
 							All.
 							<br />

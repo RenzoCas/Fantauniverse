@@ -9,6 +9,7 @@ const initialState = {
 		email: "",
 		password: "",
 		icon: null,
+		iconUrl: null,
 		token: "",
 		provider: "",
 	},
@@ -26,6 +27,12 @@ function reducer(state, action) {
 		case "logout":
 		case "deleteUser":
 			return { ...state, user: null, isAuthenticated: false };
+
+		case "updateIcon":
+			return {
+				...state,
+				user: { ...state.user, iconUrl: action.payload },
+			};
 
 		default:
 			return state;
@@ -253,6 +260,59 @@ function UserProvider({ children }) {
 		}
 	};
 
+	const getUrlImage = async (bodyData) => {
+		try {
+			const response = await fetch(`${urlServer}/image/upload`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+				body: JSON.stringify(bodyData),
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nel recupero dell'url dell'immagine.",
+				};
+			}
+
+			const urls = await response.json();
+			return urls;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
+	const uploadImage = async (file, uploadUrl) => {
+		const { tempUrl, publicUrl } = uploadUrl;
+		try {
+			const response = await fetch(tempUrl, {
+				method: "PUT",
+				headers: {
+					"x-amz-acl": "public-read",
+					"Content-Type": file.type,
+				},
+				body: file,
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nel upload dell'immagine.",
+				};
+			}
+
+			dispatch({ type: "updateIcon", payload: publicUrl });
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
@@ -267,6 +327,8 @@ function UserProvider({ children }) {
 				updatePassword,
 				unregister,
 				tokenInfo,
+				getUrlImage,
+				uploadImage,
 			}}
 		>
 			{children}

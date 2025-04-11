@@ -22,7 +22,7 @@ export default function Navbar() {
 	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, logout, unregister } = useUser();
-	const { icon, username } = user;
+	const { iconUrl, username } = user;
 	const { myLeagues } = useLeague();
 	const [randomColors, setRandomColors] = useState([]);
 	const [visibleCount, setVisibleCount] = useState(3);
@@ -180,7 +180,7 @@ export default function Navbar() {
 					<div className="flex items-center justify-between gap-[8px]">
 						<div className="flex gap-[20px] items-center">
 							<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden relative">
-								{icon == null ? (
+								{iconUrl == null ? (
 									<div
 										className={`h-full object-cover`}
 										style={{
@@ -193,7 +193,7 @@ export default function Navbar() {
 									</div>
 								) : (
 									<img
-										src={`data:image/png;base64,${icon}`}
+										src={`${iconUrl}`}
 										alt={`Icona utente`}
 										className="h-full object-cover"
 										loading="lazy"

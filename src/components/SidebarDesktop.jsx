@@ -18,7 +18,7 @@ import ModalConfirmAction from "./modals/ModalConfirmAction";
 export default function SidebarDesktop() {
 	const navigate = useNavigate();
 	const { user, logout, unregister } = useUser();
-	const { icon, username } = user;
+	const { iconUrl, username } = user;
 	const { myLeagues } = useLeague();
 	const [randomColors, setRandomColors] = useState([]);
 	const [visibleCount, setVisibleCount] = useState(3);
@@ -139,7 +139,7 @@ export default function SidebarDesktop() {
 				<div className="flex items-center justify-between gap-[8px]">
 					<div className="flex gap-[20px] items-center">
 						<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden relative">
-							{icon == null ? (
+							{iconUrl == null ? (
 								<div
 									className={`h-full object-cover`}
 									style={{
@@ -152,7 +152,7 @@ export default function SidebarDesktop() {
 								</div>
 							) : (
 								<img
-									src={`data:image/png;base64,${icon}`}
+									src={`${iconUrl}`}
 									alt={`Icona utente`}
 									className="h-full object-cover"
 									loading="lazy"

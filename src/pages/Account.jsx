@@ -13,13 +13,21 @@ import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import Logo from "../atoms/Logo";
 
 function Account() {
-	const { user, updateUser, unregister, updatePassword } = useUser();
+	const {
+		user,
+		updateUser,
+		unregister,
+		updatePassword,
+		uploadImage,
+		getUrlImage,
+	} = useUser();
+	const { iconUrl, id, username, email } = user;
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const [formData, setFormData] = useState({
-		id: user?.id || "",
-		username: user?.username || "",
-		email: user?.email || "",
+		id: id || "",
+		username: username || "",
+		email: email || "",
 	});
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -109,63 +117,46 @@ function Account() {
 		}
 	};
 
-	const handleDeleteImage = async () => {
-		const updatedUserData = { ...user, icon: null };
-		setIsLoading(true);
-		const res = await updateUser(updatedUserData);
-		if (!res) {
-			setIsLoading(false);
-			showPopup(
-				"error",
-				"Errore nella rimozione dell'immagine!",
-				"Immagine non rimossa. Riprova"
-			);
-			return;
-		}
-		setIsLoading(false);
-		showPopup(
-			"success",
-			"Aggiornamento completato!",
-			"Immagine rimossa correttamente."
-		);
-	};
-
 	const handleFileChange = async (event) => {
 		try {
 			const file = event.target.files[0];
 			if (
-				file &&
-				(file.type === "image/jpeg" || file.type === "image/png")
+				!file ||
+				!(file.type === "image/jpeg" || file.type === "image/png")
 			) {
-				const reader = new FileReader();
-				reader.onloadend = async () => {
-					const base64Image = reader.result.split(",")[1];
-					const updatedUserData = { ...user, icon: base64Image };
-					setIsLoading(true);
-					const res = await updateUser(updatedUserData);
-					if (!res) {
-						setIsLoading(false);
-						showPopup(
-							"error",
-							"Errore nell'aggiornamento dell'immagine!",
-							"Immagine non aggiornata. Riprova"
-						);
-						return;
-					}
-					setIsLoading(false);
-					showPopup(
-						"success",
-						"Aggiornamento completato!",
-						"Immagine modificata correttamente."
-					);
-					setIsLoading(false);
-				};
-				reader.readAsDataURL(file);
-			} else {
 				throw new Error("Per favore seleziona un file JPEG o PNG.");
 			}
+
+			setIsLoading(true);
+
+			const filename = `${user.id}_${Date.now()}_${file.name}`;
+			const response = await getUrlImage({
+				id: user.id,
+				fileName: filename,
+				referredTo: "USER",
+			});
+
+			if (!response) {
+				showPopup(
+					"error",
+					"Errore nell'aggiornamento dell'immagine!",
+					"Immagine non aggiornata. Riprova"
+				);
+				return;
+			}
+
+			await uploadImage(file, response);
+
+			showPopup(
+				"success",
+				"Aggiornamento completato!",
+				"Immagine modificata correttamente."
+			);
 		} catch (error) {
-			alert(error.message);
+			console.error(
+				"Errore durante il caricamento dell'immagine:",
+				error
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -277,10 +268,10 @@ function Account() {
 							ref={fileInputRef}
 							className="hidden"
 						/>
-						<picture className="rounded-[32px] w-[90px] h-[90px] flex-shrink-0 overflow-hidden outline outline-solid lg:w-[371px] lg:h-full lg:aspect-video lg:outline-none relative">
-							{user?.icon == null ? (
+						<picture className="relative rounded-[32px] w-[120px] h-[100px] border-2 border-solid lg:border-none lg:w-full lg:max-w-[371px] lg:h-[217px] lg:aspect-video lg:outline-none overflow-hidden">
+							{iconUrl == null ? (
 								<div
-									className={`h-full object-cover`}
+									className="h-full w-full object-cover"
 									style={{
 										backgroundColor: randomColor,
 									}}
@@ -293,25 +284,20 @@ function Account() {
 								</div>
 							) : (
 								<img
-									src={`data:image/png;base64,${user?.icon}`}
-									alt={`Icona utente`}
-									className="h-full object-cover"
+									src={`${iconUrl}`}
+									alt="Icona utente"
+									className="w-full h-full object-cover"
 									loading="lazy"
 								/>
 							)}
 						</picture>
+
 						<div className="flex items-center gap-[8px]">
 							<button
 								onClick={handleUpdateImage}
 								className="body-normal cursor-pointer"
 							>
 								Cambia avatar
-							</button>
-							<button
-								onClick={handleDeleteImage}
-								className="body-normal text-(--error-normal) cursor-pointer"
-							>
-								Elimina avatar
 							</button>
 						</div>
 					</div>
