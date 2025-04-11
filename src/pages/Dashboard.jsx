@@ -25,6 +25,9 @@ function Dashboard() {
 	const [requestDone, setRequestDone] = useState(false);
 	const { user } = useUser();
 	const { myLeagues, getMyLeagues, findLeague, allLeagues } = useLeague();
+	const { leagues, totalElements } = allLeagues;
+	const pages = Math.ceil(totalElements / 6);
+	const [pageIndex, setPageIndex] = useState(0);
 	const { addParticipant } = useParticipant();
 	const [formData, setFormData] = useState({
 		leagueName: "",
@@ -125,6 +128,21 @@ function Dashboard() {
 		};
 	}, []);
 
+	useEffect(() => {
+		const fetchNewData = async () => {
+			setIsLoading(true);
+			await findLeague({
+				nameOrCode: formData.leagueName ? formData.leagueName : null,
+				visibility: ["PUBLIC"],
+				status: ["NOT_STARTED", "STARTED", "FINISHED"],
+				pagination: { offset: pageIndex, limit: 6 },
+			});
+			setIsLoading(false);
+		};
+
+		fetchNewData();
+	}, [pageIndex]);
+
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({
@@ -140,6 +158,7 @@ function Dashboard() {
 			res = await findLeague({
 				nameOrCode: formData.leagueName,
 				status: ["NOT_STARTED", "STARTED", "FINISHED"],
+				pagination: { offset: pageIndex, limit: 6 },
 			});
 			if (res.length == 0) {
 				showPopup(
@@ -154,7 +173,7 @@ function Dashboard() {
 			res = await findLeague({
 				visibility: ["PUBLIC"],
 				status: ["NOT_STARTED", "STARTED", "FINISHED"],
-				pagination: { offset: 0, limit: 6 },
+				pagination: { offset: pageIndex, limit: 6 },
 			});
 		}
 
@@ -248,15 +267,38 @@ function Dashboard() {
 
 	const handleChangeTab = async (value) => {
 		setSearchLeague(value);
-		setIsLoading(true);
 		if (value) {
-			await findLeague({
-				visibility: ["PUBLIC"],
-				status: ["NOT_STARTED", "STARTED", "FINISHED"],
-				pagination: { offset: 0, limit: 6 },
-			});
+			setPageIndex(0);
 		}
-		setIsLoading(false);
+	};
+	const getVisiblePages = (current, total) => {
+		const visible = [];
+
+		if (total <= 5) {
+			return Array.from({ length: total }, (_, i) => i);
+		}
+
+		visible.push(0); // prima pagina
+
+		if (current > 2) visible.push("...");
+
+		// intervallo centrale
+		for (
+			let i = Math.max(1, current - 1);
+			i <= Math.min(total - 2, current + 1);
+			i++
+		) {
+			visible.push(i);
+		}
+
+		if (current < total - 3) visible.push("...");
+
+		// aggiungi ultima pagina solo se non è già nel range
+		if (visible[visible.length - 1] !== total - 1) {
+			visible.push(total - 1);
+		}
+
+		return visible;
 	};
 
 	return (
@@ -281,12 +323,12 @@ function Dashboard() {
 							handleClick={() => handleChangeTab(true)}
 							active={searchLeague}
 						>
-							<p className="body-normal">Leghe pubbliche</p>
+							<p className="body-normal">Leghe pubblicate</p>
 						</TabButton>
 					</div>
 					<div className="flex justify-between items-center gap-[8px]">
 						<p className="body-regular font-semibold">
-							{searchLeague ? "Leghe pubbliche" : "Le tue leghe"}
+							{searchLeague ? "Leghe pubblicate" : "Le tue leghe"}
 						</p>
 						{myLeagues.length > 0 && !searchLeague && (
 							<button
@@ -667,9 +709,9 @@ function Dashboard() {
 
 				{searchLeague && (
 					<>
-						{allLeagues.length > 0 ? (
+						{totalElements > 0 ? (
 							<ul className="flex flex-col gap-[10px] lg:grid lg:grid-cols-2 lg:gap-[20px]">
-								{allLeagues.map((el) => (
+								{leagues.map((el) => (
 									<League
 										key={el.id}
 										league={el}
@@ -678,12 +720,51 @@ function Dashboard() {
 								))}
 							</ul>
 						) : (
-							<p className="body-normal font-semibold text-(--black-darker) text-center">
-								Sembra che non ci siano leghe pubbliche a cui
-								puoi iscriverti.
-							</p>
+							<>
+								<p className="body-normal font-semibold text-(--black-darker) text-center">
+									Sembra che non ci siano leghe pubbliche a
+									cui puoi iscriverti.
+								</p>
+								<p className="body-normal font-semibold text-(--black-darker) text-center">
+									Cerca una lega inserendo il nome o il
+									codice.
+								</p>
+							</>
 						)}
 					</>
+				)}
+
+				{pages > 1 && searchLeague && (
+					<div className="flex justify-center gap-[8px]">
+						{getVisiblePages(pageIndex, pages).map(
+							(item, index) => {
+								if (item === "...") {
+									return (
+										<span
+											key={index}
+											className="w-[30px] h-[30px] flex items-center justify-center text-(--accent-normal)"
+										>
+											...
+										</span>
+									);
+								}
+
+								return (
+									<button
+										key={index}
+										onClick={() => setPageIndex(item)}
+										className={`${
+											pageIndex === item
+												? "bg-(--accent-normal)"
+												: "bg-(--black-light)"
+										} flex items-center justify-center rounded-[4px] w-[30px] h-[30px] text-white`}
+									>
+										{item + 1}
+									</button>
+								);
+							}
+						)}
+					</div>
 				)}
 
 				<ModalLeague

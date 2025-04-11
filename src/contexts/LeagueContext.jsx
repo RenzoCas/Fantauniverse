@@ -4,7 +4,7 @@ import { useUser } from "./UserContext";
 const LeagueContext = createContext();
 
 const initialStateAllLeagues = {
-	allLeagues: [],
+	allLeagues: { leagues: [], totalElements: 0 },
 };
 
 const initialStateMyLeagues = {
