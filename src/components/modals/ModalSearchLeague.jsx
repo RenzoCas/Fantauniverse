@@ -74,7 +74,7 @@ function ModalSearchLeague({ isOpen, onClose, onAddParticipant }) {
 
 	return (
 		<div
-			className={`fixed h-screen bottom-0 left-0 bg-white shadow-lg w-full transition-all duration-300 ease flex flex-col gap-4 z-1001 overflow-y-auto lg:rounded-none ${
+			className={`fixed h-dvh bottom-0 left-0 bg-white shadow-lg w-full transition-all duration-300 ease flex flex-col gap-4 z-1001 overflow-y-auto lg:rounded-none ${
 				isOpen
 					? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"
 					: "scale-80 opacity-30 translate-y-full lg:translate-y-0 invisible"
