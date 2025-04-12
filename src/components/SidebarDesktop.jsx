@@ -138,23 +138,25 @@ export default function SidebarDesktop() {
 			>
 				<div className="flex items-center justify-between gap-[8px]">
 					<div className="flex gap-[20px] items-center">
-						<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden relative">
+						<picture className="relative rounded-lg w-[50px] h-[50px] overflow-hidden">
 							{iconUrl == null ? (
 								<div
-									className={`h-full object-cover`}
+									className="h-full w-full object-cover"
 									style={{
 										backgroundColor: randomColors[0],
 									}}
 								>
-									<div className="body-regular font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
-										{username.slice(0, 2).toUpperCase()}
+									<div className="title-h3 font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
+										{user?.username
+											.slice(0, 2)
+											.toUpperCase()}
 									</div>
 								</div>
 							) : (
 								<img
 									src={`${iconUrl}`}
-									alt={`Icona utente`}
-									className="h-full object-cover"
+									alt="Icona utente"
+									className="w-full h-full object-cover"
 									loading="lazy"
 								/>
 							)}

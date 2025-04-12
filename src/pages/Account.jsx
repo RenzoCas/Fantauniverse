@@ -272,7 +272,7 @@ function Account() {
 							ref={fileInputRef}
 							className="hidden"
 						/>
-						<picture className="relative rounded-[32px] w-[120px] h-[100px] border-2 border-solid lg:border-none lg:w-full lg:max-w-[371px] lg:h-[217px] lg:aspect-video lg:outline-none overflow-hidden">
+						<picture className="relative rounded-[32px] w-[100px] h-[100px] border-2 border-solid lg:border-none lg:w-full lg:max-w-[371px] lg:h-[217px] lg:aspect-video lg:outline-none overflow-hidden">
 							{iconUrl == null ? (
 								<div
 									className="h-full w-full object-cover"
