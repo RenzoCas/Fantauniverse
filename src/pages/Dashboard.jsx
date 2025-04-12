@@ -2,13 +2,13 @@ import {
 	ChevronDownIcon,
 	ChevronUpIcon,
 	FunnelIcon,
+	MagnifyingGlassIcon,
 	PlusIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useLeague } from "../contexts/LeagueContext";
-import GenericInput from "../atoms/Inputs/GenericInput";
 import League from "../components/League";
 import Loader from "../components/Loader";
 import ModalLeague from "../components/modals/ModalLeague";
@@ -18,9 +18,11 @@ import Switch from "../atoms/Inputs/Switch";
 import { useParticipant } from "../contexts/ParticipantContext";
 import Logo from "../atoms/Logo";
 import TabButton from "../atoms/Buttons/TabButton";
+import ModalSearchLeague from "../components/modals/ModalSearchLeague";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpenSearch, setIsModalOpenSearch] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [requestDone, setRequestDone] = useState(false);
 	const { user } = useUser();
@@ -29,9 +31,6 @@ function Dashboard() {
 	const pages = Math.ceil(totalElements / 6);
 	const [pageIndex, setPageIndex] = useState(0);
 	const { addParticipant } = useParticipant();
-	const [formData, setFormData] = useState({
-		leagueName: "",
-	});
 
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -129,54 +128,16 @@ function Dashboard() {
 	}, []);
 
 	useEffect(() => {
-		const fetchNewData = async () => {
-			setIsLoading(true);
-			await findLeague({
-				nameOrCode: formData.leagueName ? formData.leagueName : null,
-				visibility: ["PUBLIC"],
-				status: ["NOT_STARTED", "STARTED", "FINISHED"],
-				pagination: { offset: pageIndex, limit: 6 },
-			});
-			setIsLoading(false);
-		};
-
 		fetchNewData();
 	}, [pageIndex]);
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-	};
-
-	const handleSubmit = async () => {
+	const fetchNewData = async () => {
 		setIsLoading(true);
-		let res = null;
-		if (formData.leagueName.trim() != "") {
-			res = await findLeague({
-				nameOrCode: formData.leagueName,
-				status: ["NOT_STARTED", "STARTED", "FINISHED"],
-				pagination: { offset: pageIndex, limit: 6 },
-			});
-			if (res.length == 0) {
-				showPopup(
-					"error",
-					"Lega non esistente!",
-					"La lega cercata non esiste. Riprova."
-				);
-				setIsLoading(false);
-				return;
-			}
-		} else {
-			res = await findLeague({
-				visibility: ["PUBLIC"],
-				status: ["NOT_STARTED", "STARTED", "FINISHED"],
-				pagination: { offset: pageIndex, limit: 6 },
-			});
-		}
-
+		await findLeague({
+			visibility: ["PUBLIC"],
+			status: ["NOT_STARTED", "STARTED", "FINISHED"],
+			pagination: { offset: pageIndex, limit: 6 },
+		});
 		setIsLoading(false);
 	};
 
@@ -268,7 +229,7 @@ function Dashboard() {
 	const handleChangeTab = async (value) => {
 		setSearchLeague(value);
 		if (value) {
-			setPageIndex(0);
+			fetchNewData();
 		}
 	};
 	const getVisiblePages = (current, total) => {
@@ -311,22 +272,14 @@ function Dashboard() {
 				<h1 className="title-h4 text-(--primary) break-all">
 					Bentornato {user.username}
 				</h1>
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						handleSubmit();
-					}}
-					className="w-full lg:max-w-[350px]"
+				<button
+					className="w-full px-[24px] py-[10px] text-(--black-normal) rounded-2xl bg-[#FAF8F8] focus:outline-solid focus:outline-[2px] focus:outline-(--black-normal) flex justify-between gap-[8px]"
+					onClick={() => setIsModalOpenSearch(true)}
 				>
-					<GenericInput
-						type="text"
-						name="leagueName"
-						id="searchLeaga"
-						placeholder="Cerca una lega a cui iscriverti"
-						value={formData.leagueName}
-						handleChange={handleChange}
-					/>
-				</form>
+					Cerca una lega a cui iscriverti
+					<MagnifyingGlassIcon className="h-[20px] w-[20px]" />
+				</button>
+
 				<section className="flex flex-col gap-[16px]">
 					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
 						<TabButton
@@ -755,6 +708,11 @@ function Dashboard() {
 					</div>
 				)}
 
+				<ModalSearchLeague
+					isOpen={isModalOpenSearch}
+					onClose={() => setIsModalOpenSearch(false)}
+					onAddParticipant={handleAddParticipant}
+				/>
 				<ModalLeague
 					isOpen={isModalOpen}
 					onClose={() => setIsModalOpen(false)}

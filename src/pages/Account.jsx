@@ -162,6 +162,10 @@ function Account() {
 		}
 	};
 
+	const handleDeleteImage = async () => {
+		setIsLoading(true);
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
@@ -298,6 +302,12 @@ function Account() {
 								className="body-normal cursor-pointer"
 							>
 								Cambia avatar
+							</button>
+							<button
+								onClick={handleDeleteImage}
+								className="body-normal cursor-pointer text-(--error-normal)"
+							>
+								Elimina avatar
 							</button>
 						</div>
 					</div>

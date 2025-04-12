@@ -7,6 +7,10 @@ const initialStateAllLeagues = {
 	allLeagues: { leagues: [], totalElements: 0 },
 };
 
+const initialStateSearchLeagues = {
+	searchLeagues: { leagues: [], totalElements: 0 },
+};
+
 const initialStateMyLeagues = {
 	myLeagues: [],
 };
@@ -34,6 +38,15 @@ function allLeaguesReducer(state, action) {
 	switch (action.type) {
 		case "findLeague":
 			return { ...state, allLeagues: action.payload };
+
+		default:
+			return state;
+	}
+}
+function searchLeaguesReducer(state, action) {
+	switch (action.type) {
+		case "searchLeague":
+			return { ...state, searchLeagues: action.payload };
 
 		default:
 			return state;
@@ -159,6 +172,11 @@ function LeagueProvider({ children }) {
 		initialStateAllLeagues
 	);
 
+	const [searchLeagues, dispatchSearchLeagues] = useReducer(
+		searchLeaguesReducer,
+		initialStateSearchLeagues
+	);
+
 	const [myLeagues, dispatchMyLeagues] = useReducer(
 		myLeaguesReducer,
 		initialStateMyLeagues
@@ -191,6 +209,35 @@ function LeagueProvider({ children }) {
 
 				const data = await response.json();
 				dispatchAllLeagues({ type: "findLeague", payload: data });
+
+				return data;
+			} catch (error) {
+				console.error(error.message);
+			}
+		},
+		[user, urlServer]
+	);
+
+	const searchLeague = useCallback(
+		async (dataBody) => {
+			try {
+				if (!user || !user.token) return;
+
+				const response = await fetch(`${urlServer}/league/filter`, {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(dataBody),
+				});
+
+				if (!response.ok) {
+					throw new Error("Errore nel caricamento della lega.");
+				}
+
+				const data = await response.json();
+				dispatchSearchLeagues({ type: "searchLeague", payload: data });
 
 				return data;
 			} catch (error) {
@@ -401,6 +448,7 @@ function LeagueProvider({ children }) {
 			value={{
 				allLeagues: allLeagues.allLeagues,
 				myLeagues: myLeagues.myLeagues,
+				searchLeagues: searchLeagues.searchLeagues,
 				league,
 				findLeague,
 				getMyLeagues,
@@ -412,6 +460,7 @@ function LeagueProvider({ children }) {
 				deleteLeague,
 				resetMyLeague,
 				dispatchLeague,
+				searchLeague,
 			}}
 		>
 			{children}

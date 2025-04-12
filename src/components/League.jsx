@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Award } from "lucide-react";
 // import { useUser } from "../contexts/UserContext";
 
-export default function League({ league, onAddParticipant }) {
+export default function League({ league, onAddParticipant, classOpt }) {
 	const navigate = useNavigate();
-	// const { user } = useUser();
 	const {
 		id,
 		name,
@@ -23,9 +22,6 @@ export default function League({ league, onAddParticipant }) {
 		: numberParticipants;
 
 	const [randomColors, setRandomColors] = useState([]);
-	// const participantsIcon = participants?.map(
-	// 	(participant) => participant.id != user.id && participant.icon
-	// );
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -55,8 +51,7 @@ export default function League({ league, onAddParticipant }) {
 
 	return (
 		<li
-			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer lg:max-w-[400px]
-                `}
+			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer lg:max-w-[400px] ${classOpt}`}
 			onClick={isRegistered ? handleClick : undefined}
 			tabIndex={isRegistered ? 0 : undefined}
 		>
