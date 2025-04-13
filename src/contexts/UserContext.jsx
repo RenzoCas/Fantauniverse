@@ -313,6 +313,32 @@ function UserProvider({ children }) {
 		}
 	};
 
+	const deleteImage = async (bodyData) => {
+		try {
+			const response = await fetch(`${urlServer}/image/delete`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+				body: JSON.stringify(bodyData),
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nella cancellazione dell'immagine.",
+				};
+			}
+
+			dispatch({ type: "updateIcon", payload: null });
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
@@ -329,6 +355,7 @@ function UserProvider({ children }) {
 				tokenInfo,
 				getUrlImage,
 				uploadImage,
+				deleteImage,
 			}}
 		>
 			{children}

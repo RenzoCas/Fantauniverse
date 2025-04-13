@@ -20,6 +20,7 @@ function Account() {
 		updatePassword,
 		uploadImage,
 		getUrlImage,
+		deleteImage,
 	} = useUser();
 	const { iconUrl, id, username, email } = user;
 	const [isLoading, setIsLoading] = useState(false);
@@ -129,7 +130,7 @@ function Account() {
 
 			setIsLoading(true);
 
-			const filename = `${user.id}_${Date.now()}_${file.name}`;
+			const filename = `${file.name}`;
 			const response = await getUrlImage({
 				id: user.id,
 				fileName: filename,
@@ -164,6 +165,27 @@ function Account() {
 
 	const handleDeleteImage = async () => {
 		setIsLoading(true);
+		const response = await deleteImage({
+			id: user.id,
+			oldImageUrl: iconUrl,
+			referredTo: "USER",
+		});
+		if (!response) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nella cancellazione dell'immagine!",
+				"Immagine non cancellata. Riprova"
+			);
+			return;
+		}
+
+		setIsLoading(false);
+		showPopup(
+			"success",
+			"Elimiazione completata!",
+			"Immagine eliminata correttamente."
+		);
 	};
 
 	const handleSubmit = async (e) => {
@@ -259,7 +281,7 @@ function Account() {
 			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
 				<Logo />
 			</div>
-			<section className="flex flex-col gap-[16px] h-full">
+			<section className="flex flex-col gap-[16px] h-full relative">
 				<h1 className="title-h4 font-medium">Impostazioni Account</h1>
 				<div className="flex flex-col gap-[12px]">
 					<div className="flex flex-col gap-[8px] w-full items-center">

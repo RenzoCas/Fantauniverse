@@ -321,7 +321,8 @@ function GeneralSettings() {
 		return (
 			!Object.values(errors).some((error) => error !== "") &&
 			(formData.name.trim() !== name ||
-				(formData.description != null && formData.description.trim() !== description) ||
+				(formData.description != null &&
+					formData.description.trim() !== description) ||
 				formData.coinName.trim() !== coinName ||
 				formData.maxCoins !== maxCoins ||
 				formData.visibility != visibility ||

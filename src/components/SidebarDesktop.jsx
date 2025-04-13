@@ -146,7 +146,7 @@ export default function SidebarDesktop() {
 										backgroundColor: randomColors[0],
 									}}
 								>
-									<div className="title-h3 font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
+									<div className="body-regular font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
 										{user?.username
 											.slice(0, 2)
 											.toUpperCase()}

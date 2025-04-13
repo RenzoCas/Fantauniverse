@@ -128,7 +128,7 @@ function ViewLega() {
 
 			setIsLoading(true);
 
-			const filename = `${id}_${Date.now()}_${file.name}`;
+			const filename = `${file.name}`;
 			const response = await getUrlImage({
 				id: id,
 				fileName: filename,
