@@ -40,7 +40,6 @@ function MyTeam() {
 		name: team?.name || "",
 		players: team?.players || [],
 		playerDay: team?.playerDay || [],
-		position: team?.position || null,
 	});
 
 	const [errors, setErrors] = useState({});
@@ -72,9 +71,10 @@ function MyTeam() {
 	);
 
 	useEffect(() => {
+		let result = null;
 		const fetchData = async () => {
 			setIsLoading(true);
-			const result = await getMyTeam(id);
+			result = await getMyTeam(id);
 			setTempTeam((prevTeam) => ({
 				...prevTeam,
 				id: result?.id || null,
@@ -82,27 +82,30 @@ function MyTeam() {
 				players: result?.players || [],
 				playerDay: result?.playerDay || [],
 			}));
+
+			if (result) {
+				const initialPlayers = result.players || [];
+				const initialMaxCoins =
+					maxCoins -
+					initialPlayers.reduce((sum, p) => sum + p.price, 0);
+				setTempTeam((prevTeam) => ({
+					...prevTeam,
+					players: initialPlayers,
+				}));
+				setTempMaxCoins(initialMaxCoins);
+				updateCanAddPlayers(initialPlayers, initialMaxCoins);
+			}
 			setIsLoading(false);
 		};
 
 		fetchData();
-	}, []);
+	}, [maxCoins]);
 
 	useEffect(() => {
 		setIsMaxPlayersReached(tempTeam.players.length >= teamMaxPlayers);
 	}, [tempTeam.players, teamMaxPlayers]);
 
-	useEffect(() => {
-		const initialPlayers = tempTeam.players || [];
-		const initialMaxCoins =
-			maxCoins - initialPlayers.reduce((sum, p) => sum + p.price, 0);
-		setTempTeam((prevTeam) => ({
-			...prevTeam,
-			players: initialPlayers,
-		}));
-		setTempMaxCoins(initialMaxCoins);
-		updateCanAddPlayers(initialPlayers, initialMaxCoins);
-	}, [tempTeam, maxCoins]);
+	// useEffect(() => {}, [team, maxCoins]);
 
 	useEffect(() => {
 		updateCanAddPlayers(tempTeam.players, tempMaxCoins);
@@ -287,12 +290,12 @@ function MyTeam() {
 				<div className="flex flex-col gap-[24px]">
 					<div className="flex flex-col gap-[8px]">
 						<h2 className="title-h4 font-medium break-all">
-							{tempTeam.name}
+							{team?.name}
 						</h2>
 						<div className="flex items-center gap-[10px]">
 							<Award className="h-[24px] w-[24px] stroke-[#B01DFF] flex-shrink-0" />
 							<p className="body-regular">
-								{tempTeam.position}o Posto
+								{team?.position}o Posto
 							</p>
 						</div>
 					</div>
