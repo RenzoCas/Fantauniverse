@@ -102,6 +102,12 @@ function leagueReducer(state, action) {
 		case "updateLeague":
 			return { ...state, ...action.payload };
 
+		case "updateIcon":
+			return {
+				...state,
+				iconUrl: action.payload,
+			};
+
 		case "addPlayer":
 			return { ...state, players: action.payload };
 
@@ -418,6 +424,33 @@ function LeagueProvider({ children }) {
 		}
 	};
 
+	const uploadImage = async (file, uploadUrl) => {
+		const { tempUrl, publicUrl } = uploadUrl;
+		try {
+			const response = await fetch(tempUrl, {
+				method: "PUT",
+				headers: {
+					"x-amz-acl": "public-read",
+					"Content-Type": file.type,
+				},
+				body: file,
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nel upload dell'immagine.",
+				};
+			}
+
+			dispatchLeague({ type: "updateIcon", payload: publicUrl });
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	const deleteLeague = async (leagueId) => {
 		try {
 			const response = await fetch(`${urlServer}/league/${leagueId}`, {
@@ -461,6 +494,7 @@ function LeagueProvider({ children }) {
 				resetMyLeague,
 				dispatchLeague,
 				searchLeague,
+				uploadImage,
 			}}
 		>
 			{children}

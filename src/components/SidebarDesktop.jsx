@@ -189,7 +189,8 @@ export default function SidebarDesktop() {
 											>
 												<button className="flex items-center gap-[20px] cursor-pointer w-full">
 													<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden">
-														{league.icon == null ? (
+														{league.iconUrl ==
+														null ? (
 															<div
 																className={`h-full object-cover`}
 																style={{
@@ -201,7 +202,7 @@ export default function SidebarDesktop() {
 															></div>
 														) : (
 															<img
-																src={`data:image/png;base64,${league.icon}`}
+																src={`${league.iconUrl}`}
 																alt={`Icona utente`}
 																className="h-full object-cover"
 																loading="lazy"

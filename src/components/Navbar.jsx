@@ -238,7 +238,8 @@ export default function Navbar() {
 													}
 												>
 													<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden relative">
-														{league.icon == null ? (
+														{league.iconUrl ==
+														null ? (
 															<div
 																className={`h-full object-cover`}
 																style={{
@@ -250,7 +251,7 @@ export default function Navbar() {
 															></div>
 														) : (
 															<img
-																src={`data:image/png;base64,${league.icon}`}
+																src={`${league.iconUrl}`}
 																alt={`Icona utente`}
 																className="h-full object-cover"
 																loading="lazy"

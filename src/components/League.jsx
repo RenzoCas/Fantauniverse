@@ -9,7 +9,7 @@ export default function League({ league, onAddParticipant, classOpt }) {
 	const {
 		id,
 		name,
-		icon,
+		iconUrl,
 		isAdmin,
 		isRegistered,
 		position,
@@ -61,14 +61,14 @@ export default function League({ league, onAddParticipant, classOpt }) {
 						<Cog6ToothIcon className="w-[20px] h-[20px]" />
 					</span>
 				)}
-				{icon == null ? (
+				{iconUrl == null ? (
 					<div
 						className={`h-full object-cover`}
 						style={{ backgroundColor: randomColors[0] }}
 					></div>
 				) : (
 					<img
-						src={`data:image/png;base64,${icon}`}
+						src={`${iconUrl}`}
 						alt={`Logo lega ${name}`}
 						className="h-full object-cover"
 						loading="lazy"

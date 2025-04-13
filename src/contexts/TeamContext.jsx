@@ -52,7 +52,7 @@ function reducer(state, action) {
 }
 
 function TeamProvider({ children }) {
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const [state, dispatchTeam] = useReducer(reducer, initialState);
 	const { user, urlServer } = useUser();
 	const { league, getLeague } = useLeague();
 
@@ -73,7 +73,7 @@ function TeamProvider({ children }) {
 
 			const team = await response.json();
 
-			dispatch({
+			dispatchTeam({
 				type: "getMyTeam",
 				payload: team,
 			});
@@ -101,7 +101,7 @@ function TeamProvider({ children }) {
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
 			const team = await response.json();
-			dispatch({
+			dispatchTeam({
 				type: "getTeam",
 				payload: team,
 			});
@@ -129,7 +129,7 @@ function TeamProvider({ children }) {
 
 			const data = await response.json();
 
-			dispatch({ type: "createTeam", payload: data });
+			dispatchTeam({ type: "createTeam", payload: data });
 			await getLeague(league.id);
 			return data;
 		} catch (error) {
@@ -155,7 +155,7 @@ function TeamProvider({ children }) {
 
 			const data = await response.json();
 
-			dispatch({ type: "updateTeam", payload: data });
+			dispatchTeam({ type: "updateTeam", payload: data });
 			await getLeague(league.id);
 			return data;
 		} catch (error) {
@@ -179,7 +179,7 @@ function TeamProvider({ children }) {
 				throw new Error("Errore nella cancellazione del team.");
 			}
 
-			dispatch({ type: "deleteTeam" });
+			dispatchTeam({ type: "deleteTeam" });
 			await getLeague(league.id);
 			return true;
 		} catch (error) {
@@ -189,7 +189,7 @@ function TeamProvider({ children }) {
 	};
 
 	const resetTeamPartecipant = () => {
-		dispatch({ type: "resetTeamPartecipant" });
+		dispatchTeam({ type: "resetTeamPartecipant" });
 	};
 
 	return (
@@ -203,6 +203,7 @@ function TeamProvider({ children }) {
 				updateTeam,
 				deleteTeam,
 				resetTeamPartecipant,
+				dispatchTeam,
 			}}
 		>
 			{children}

@@ -40,6 +40,7 @@ function MyTeam() {
 		name: team?.name || "",
 		players: team?.players || [],
 		playerDay: team?.playerDay || [],
+		position: team?.position || null,
 	});
 
 	const [errors, setErrors] = useState({});
@@ -92,18 +93,16 @@ function MyTeam() {
 	}, [tempTeam.players, teamMaxPlayers]);
 
 	useEffect(() => {
-		if (team) {
-			const initialPlayers = team.players || [];
-			const initialMaxCoins =
-				maxCoins - initialPlayers.reduce((sum, p) => sum + p.price, 0);
-			setTempTeam((prevTeam) => ({
-				...prevTeam,
-				players: initialPlayers,
-			}));
-			setTempMaxCoins(initialMaxCoins);
-			updateCanAddPlayers(initialPlayers, initialMaxCoins);
-		}
-	}, [team, maxCoins]);
+		const initialPlayers = tempTeam.players || [];
+		const initialMaxCoins =
+			maxCoins - initialPlayers.reduce((sum, p) => sum + p.price, 0);
+		setTempTeam((prevTeam) => ({
+			...prevTeam,
+			players: initialPlayers,
+		}));
+		setTempMaxCoins(initialMaxCoins);
+		updateCanAddPlayers(initialPlayers, initialMaxCoins);
+	}, [tempTeam, maxCoins]);
 
 	useEffect(() => {
 		updateCanAddPlayers(tempTeam.players, tempMaxCoins);
@@ -288,12 +287,12 @@ function MyTeam() {
 				<div className="flex flex-col gap-[24px]">
 					<div className="flex flex-col gap-[8px]">
 						<h2 className="title-h4 font-medium break-all">
-							{team.name}
+							{tempTeam.name}
 						</h2>
 						<div className="flex items-center gap-[10px]">
 							<Award className="h-[24px] w-[24px] stroke-[#B01DFF] flex-shrink-0" />
 							<p className="body-regular">
-								{team.position}o Posto
+								{tempTeam.position}o Posto
 							</p>
 						</div>
 					</div>

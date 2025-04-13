@@ -18,13 +18,15 @@ import BottomNavbar from "../components/BottomNavbar";
 import MyTeam from "./MyTeam";
 import Logo from "../atoms/Logo";
 import { ChevronLeft } from "lucide-react";
+import { useUser } from "../contexts/UserContext";
 
 function ViewLega() {
 	const navigate = useNavigate();
 	const { state } = useLocation();
-	const { league, getLeague, updateLeague } = useLeague();
+	const { getUrlImage } = useUser();
+	const { league, getLeague, uploadImage } = useLeague();
 	const { deleteParticipant } = useParticipant();
-	const { getMyTeam, teamParticipant } = useTeam();
+	const { teamParticipant } = useTeam();
 	const [isLoading, setIsLoading] = useState(false);
 	const [popupData, setPopupData] = useState({
 		isOpen: false,
@@ -35,7 +37,7 @@ function ViewLega() {
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 
-	const { name, description, status, icon, isRegistered } = league;
+	const { name, description, status, iconUrl, isRegistered } = league;
 	const [tabActive, setTabActive] = useState();
 	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
 		action: null,
@@ -52,7 +54,6 @@ function ViewLega() {
 		const fetchData = async () => {
 			setIsLoading(true);
 			await getLeague(id);
-			await getMyTeam(id);
 			setIsLoading(false);
 		};
 
@@ -119,38 +120,44 @@ function ViewLega() {
 		try {
 			const file = event.target.files[0];
 			if (
-				file &&
-				(file.type === "image/jpeg" || file.type === "image/png")
+				!file ||
+				!(file.type === "image/jpeg" || file.type === "image/png")
 			) {
-				const reader = new FileReader();
-				reader.onloadend = async () => {
-					const base64Image = reader.result.split(",")[1];
-					const updatedLeagueData = { id: id, icon: base64Image };
-					setIsLoading(true);
-
-					const res = await updateLeague(updatedLeagueData);
-
-					if (!res) {
-						setIsLoading(false);
-						showPopup(
-							"error",
-							"Errore nell'aggiornamento dell'immagine!",
-							"Immagine non caricata correttamente. Riprova."
-						);
-						return;
-					}
-					setIsLoading(false);
-				};
-				reader.readAsDataURL(file);
-			} else {
 				throw new Error("Per favore seleziona un file JPEG o PNG.");
 			}
-		} catch (error) {
+
+			setIsLoading(true);
+
+			const filename = `${id}_${Date.now()}_${file.name}`;
+			const response = await getUrlImage({
+				id: id,
+				fileName: filename,
+				referredTo: "LEAGUE",
+			});
+
+			if (!response) {
+				showPopup(
+					"error",
+					"Errore nell'aggiornamento dell'immagine!",
+					"Immagine non caricata correttamente. Riprova."
+				);
+				return;
+			}
+
+			await uploadImage(file, response);
+
 			showPopup(
-				"error",
-				"Errore nell'aggiornamento dell'immagine!",
-				`${error.message}`
+				"success",
+				"Aggiornamento completato!",
+				"Immagine modificata correttamente."
 			);
+		} catch (error) {
+			console.error(
+				"Errore durante il caricamento dell'immagine:",
+				error
+			);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -211,7 +218,7 @@ function ViewLega() {
 									className="relative w-full aspect-video rounded-[8px] max-w-[371px]"
 									onClick={handleUpdateImage}
 								>
-									{icon == null ? (
+									{iconUrl == null ? (
 										<div
 											className={`w-full h-full rounded-[8px]`}
 											style={{
@@ -220,7 +227,7 @@ function ViewLega() {
 										></div>
 									) : (
 										<img
-											src={`data:image/png;base64,${icon}`}
+											src={`${iconUrl}`}
 											alt={`Logo lega`}
 											className="w-full rounded-[8px] h-auto object-cover cursor-pointer"
 											loading="lazy"
@@ -297,6 +304,7 @@ function ViewLega() {
 									handleTabChange={handleTabChange}
 								/>
 							)}
+
 							{tabActive === "MyTeam" && <MyTeam />}
 
 							{status != "PENDING" && (
