@@ -12,7 +12,7 @@ function Participant({
 }) {
 	const { id, user: participantUser, team, points } = participantObj;
 	const name = team?.name;
-	const { icon, username } = participantUser;
+	const { iconUrl, username } = participantUser;
 	const { user: currentUser } = useUser();
 	const { league } = useLeague();
 	const { status } = league;
@@ -81,7 +81,7 @@ function Participant({
 					</div>
 				)}
 				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px] cursor-pointer relative">
-					{icon == null ? (
+					{iconUrl == null ? (
 						<div
 							className={`rounded-[3px] h-[48px] w-[48px] object-cover`}
 							style={{ backgroundColor: randomColor }}
@@ -92,7 +92,7 @@ function Participant({
 						</div>
 					) : (
 						<img
-							src={`data:image/png;base64,${icon}`}
+							src={`${iconUrl}`}
 							alt={`immagine giocatore`}
 							className="rounded-[3px] h-[48px] w-[48px] object-cover"
 							loading="lazy"
