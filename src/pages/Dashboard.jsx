@@ -178,6 +178,7 @@ function Dashboard() {
 			return;
 		}
 		await getMyLeagues();
+		setIsModalOpenSearch(false);
 		setIsLoading(false);
 		showPopup(
 			"success",

@@ -100,55 +100,76 @@ export default function League({ league, onAddParticipant, classOpt }) {
 				{isRegistered ? (
 					<div className="flex items-end justify-between">
 						<h6 className="body-small font-semibold">Gioca con:</h6>
-						<ul className="flex items-center">
-							{Array.from({
-								length: Math.min(numParticipants, 2),
-							}).map((_, index) => (
-								<li
-									key={index}
-									className={`w-[37px] h-[37px] rounded-[2px] border border-solid border-white ${
-										index === 0
-											? "rotate-15"
-											: index === 1
-											? "-rotate-10"
-											: index === 2
-											? "rotate-20"
-											: ""
-									}`}
-									style={{
-										backgroundColor: randomColors[index],
-									}}
-								></li>
-							))}
+						<div className="flex items-center">
+							{participants
+								?.slice(0, 2)
+								.map((participant, index) => (
+									<div
+										key={index}
+										className={`w-[37px] h-[37px] rounded-[2px] border border-solid border-white relative ${
+											index === 0
+												? "rotate-15"
+												: index === 1
+												? "-rotate-10"
+												: ""
+										} overflow-hidden flex-shrink-0`}
+										style={{
+											backgroundColor: participant.iconUrl
+												? "transparent"
+												: randomColors[index],
+										}}
+									>
+										{participant.user.iconUrl ? (
+											<img
+												src={participant.user.iconUrl}
+												alt={`Icona di ${participant.user.username}`}
+												className="w-full h-full object-cover"
+											/>
+										) : (
+											<p className="body-small absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+												{participant.user.username
+													.slice(0, 2)
+													.toUpperCase()}
+											</p>
+										)}
+									</div>
+								))}
 
-							{numParticipants == 3 && (
-								<li
-									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-20"
+							{participants?.length === 3 && (
+								<div
+									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-20 overflow-hidden flex-shrink-0 relative"
 									style={{
 										backgroundColor:
-											randomColors[
-												randomColors.length - 1
-											],
-									}}
-								></li>
-							)}
-
-							{numParticipants > 3 && (
-								<li
-									className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15 flex items-center justify-center"
-									style={{
-										backgroundColor:
-											randomColors[
-												randomColors.length - 1
-											],
+											participants[2]?.user.iconUrl ==
+											null
+												? randomColors[2]
+												: "transparent",
 									}}
 								>
-									<p className="body-normal font-semibold">
-										+{numParticipants - 2}
-									</p>
-								</li>
+									{participants[2]?.user.iconUrl ? (
+										<img
+											src={participants[2].user.iconUrl}
+											alt={`Icona di ${participants[2].user.username}`}
+											className="w-full h-full object-cover"
+										/>
+									) : (
+										<p className="body-small absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+											{participants[2]?.user.username
+												.slice(0, 2)
+												.toUpperCase()}
+										</p>
+									)}
+								</div>
 							)}
-						</ul>
+
+							{participants?.length > 3 && (
+								<div className="w-[37px] h-[37px] rounded-[2px] border border-solid border-white rotate-15 flex items-center justify-center bg-gray-200">
+									<p className="body-normal font-semibold">
+										+{participants.length - 2}
+									</p>
+								</div>
+							)}
+						</div>
 					</div>
 				) : (
 					<div className="flex items-center justify-end gap-[8px]">

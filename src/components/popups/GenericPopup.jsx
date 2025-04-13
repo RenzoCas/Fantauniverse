@@ -22,7 +22,7 @@ function GenericPopup({ isOpen, type, title, message, classOpt }) {
 
 	return (
 		<div
-			className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] border border-(--black-light-active) fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px] lg:self-center
+			className={`flex flex-col gap-[8px] bg-white shadow-lg rounded-[16px] p-[16px] border border-(--black-light-active) fixed z-60 transition-transform duration-500 ease w-[calc(100vw-32px)] md:max-w-[528px] lg:self-center lg:left-1/2 lg:-translate-x-1/2
                 ${isOpen ? "translate-y-0" : "translate-y-full"} ${
 				classOpt ? classOpt : ""
 			}`}
