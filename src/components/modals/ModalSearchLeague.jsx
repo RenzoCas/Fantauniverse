@@ -126,7 +126,7 @@ function ModalSearchLeague({ isOpen, onClose, onAddParticipant }) {
 
 				{!hasMore && leagues.length > 0 && (
 					<p className="text-center py-4 text-black font-semibold">
-						Non ci sono più leghe
+						Non sono presenti altre leghe
 					</p>
 				)}
 			</ul>

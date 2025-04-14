@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
@@ -22,7 +22,7 @@ import { useUser } from "../contexts/UserContext";
 
 function ViewLega() {
 	const navigate = useNavigate();
-	const { state } = useLocation();
+	const { id } = useParams();
 	const { getUrlImage } = useUser();
 	const { league, getLeague, uploadImage } = useLeague();
 	const { deleteParticipant } = useParticipant();
@@ -33,11 +33,8 @@ function ViewLega() {
 		type: "",
 		message: "",
 	});
-	const { id, isAdmin } = state.league;
 	const fileInputRef = useRef(null);
 	const [randomColor, setRandomColor] = useState("#ffffff");
-
-	const { name, description, status, iconUrl, isRegistered } = league;
 	const [tabActive, setTabActive] = useState();
 	const [isModalConfirmOpen, setIsModalConfirmOpen] = useState({
 		action: null,
@@ -59,6 +56,9 @@ function ViewLega() {
 
 		fetchData();
 	}, [id]);
+
+	const { name, description, status, iconUrl, isRegistered, isAdmin } =
+		league;
 
 	const showModalConfirmDelete = () => {
 		setDataModalConfirm({

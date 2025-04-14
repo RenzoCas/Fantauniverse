@@ -24,94 +24,101 @@ import Loader from "./components/Loader";
 import { ModalProvider } from "./contexts/ModalContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GenericRulesNoAuth from "./pages/GenericRulesNoAuth";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 function App() {
 	return (
 		<UserProvider>
 			<GoogleOAuthProvider clientId="86863646183-thn42d79m9qsppdfqaihmn8d5drkoill.apps.googleusercontent.com">
-				<ModalProvider>
-					<LeagueProvider>
-						<RuleProvider>
-							<PlayerProvider>
-								<ParticipantProvider>
-									<TeamProvider>
-										<DayProvider>
-											<BrowserRouter>
-												<AuthInitializer />
-												<Routes>
-													<Route
-														path="/"
-														element={<Homepage />}
-													/>
-													<Route
-														path="registration"
-														element={
-															<Registration />
-														}
-													/>
-													<Route
-														path="rules"
-														element={
-															<GenericRulesNoAuth />
-														}
-													/>
-													<Route
-														path="login"
-														element={<Login />}
-													/>
-
-													<Route
-														path="*"
-														element={<NotFound />}
-													/>
-													<Route
-														path="app"
-														element={
-															<ProtectedRoute>
-																<FantaUniverse />
-															</ProtectedRoute>
-														}
-													>
+				<NotificationProvider>
+					<ModalProvider>
+						<LeagueProvider>
+							<RuleProvider>
+								<PlayerProvider>
+									<ParticipantProvider>
+										<TeamProvider>
+											<DayProvider>
+												<BrowserRouter>
+													<AuthInitializer />
+													<Routes>
 														<Route
-															index
+															path="/"
 															element={
-																<Dashboard />
+																<Homepage />
 															}
 														/>
 														<Route
-															path="league/:id"
+															path="registration"
 															element={
-																<ViewLeague />
+																<Registration />
 															}
 														/>
 														<Route
 															path="rules"
 															element={
-																<GenericRules />
+																<GenericRulesNoAuth />
 															}
 														/>
 														<Route
-															path="faq"
+															path="login"
+															element={<Login />}
+														/>
+
+														<Route
+															path="*"
 															element={
-																<FAQPage />
+																<NotFound />
 															}
 														/>
 														<Route
-															path="account"
+															path="app"
 															element={
-																<Account />
+																<ProtectedRoute>
+																	<FantaUniverse />
+																</ProtectedRoute>
 															}
-														/>
-													</Route>
-												</Routes>
-											</BrowserRouter>
-										</DayProvider>
-									</TeamProvider>
-								</ParticipantProvider>
-							</PlayerProvider>
-						</RuleProvider>
-					</LeagueProvider>
-				</ModalProvider>
+														>
+															<Route
+																index
+																element={
+																	<Dashboard />
+																}
+															/>
+															<Route
+																path="league/:id"
+																element={
+																	<ViewLeague />
+																}
+															/>
+															<Route
+																path="rules"
+																element={
+																	<GenericRules />
+																}
+															/>
+															<Route
+																path="faq"
+																element={
+																	<FAQPage />
+																}
+															/>
+															<Route
+																path="account"
+																element={
+																	<Account />
+																}
+															/>
+														</Route>
+													</Routes>
+												</BrowserRouter>
+											</DayProvider>
+										</TeamProvider>
+									</ParticipantProvider>
+								</PlayerProvider>
+							</RuleProvider>
+						</LeagueProvider>
+					</ModalProvider>
+				</NotificationProvider>
 			</GoogleOAuthProvider>
 		</UserProvider>
 	);

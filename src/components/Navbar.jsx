@@ -17,10 +17,14 @@ import { useLeague } from "../contexts/LeagueContext";
 import Loader from "./Loader";
 import GenericPopup from "./popups/GenericPopup";
 import ModalConfirmAction from "./modals/ModalConfirmAction";
+import { Bell } from "lucide-react";
+import NotificationComponent from "./Notification";
+import { useNotification } from "../contexts/NotificationContext";
 
 export default function Navbar() {
 	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isNotifyVisible, setIsNotifyVisible] = useState(false);
 	const { user, logout, unregister } = useUser();
 	const { iconUrl, username } = user;
 	const { myLeagues } = useLeague();
@@ -44,6 +48,8 @@ export default function Navbar() {
 		annulla: "",
 	});
 
+	const { unreadCountNotifications } = useNotification();
+
 	useEffect(() => {
 		const numColors = myLeagues?.length + 1;
 
@@ -54,21 +60,24 @@ export default function Navbar() {
 	}, [myLeagues]);
 
 	useEffect(() => {
-		if (isMenuOpen) {
+		if (isMenuOpen || isNotifyVisible) {
 			document.body.style.overflow = "hidden";
 		} else {
 			document.body.style.overflow = "auto";
 		}
 
-		// Cleanup per ripristinare l'overflow quando il componente viene smontato
 		return () => {
 			document.body.style.overflow = "auto";
 		};
-	}, [isMenuOpen]);
+	}, [isMenuOpen, isNotifyVisible]);
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 		setVisibleCount(3);
+	};
+
+	const toggleNotify = () => {
+		setIsNotifyVisible(!isNotifyVisible);
 	};
 
 	const showPopup = (type, title, message) => {
@@ -160,7 +169,17 @@ export default function Navbar() {
 			{isLoading && <Loader />}
 			<nav className="bg-white py-[8px] px-[16px] sticky top-0 flex lg:hidden justify-between items-center border-b-[2px] border-black relative z-100">
 				<Logo />
-				<div className="flex gap-3 items-center">
+				<div className="flex gap-[16px] items-center">
+					<button
+						onClick={toggleNotify}
+						className="cursor-pointer relative"
+					>
+						<Bell className="h-[24px] w-[24px] flex-shrink-0" />
+						{unreadCountNotifications > 0 && (
+							<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1"></span>
+						)}
+					</button>
+
 					<button onClick={toggleMenu} className="cursor-pointer">
 						<Bars3Icon className="h-[24px] w-[24px] flex-shrink-0" />
 					</button>
@@ -387,13 +406,41 @@ export default function Navbar() {
 							</li>
 						</ul>
 					</div>
+					<GenericPopup
+						isOpen={popupData.isOpen}
+						type={popupData.type}
+						title={popupData.title}
+						message={popupData.message}
+					/>
 				</div>
-				<GenericPopup
-					isOpen={popupData.isOpen}
-					type={popupData.type}
-					title={popupData.title}
-					message={popupData.message}
-				/>
+				<div
+					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 px-[16px] py-[24px] flex flex-col gap-[10px] flex-1 ${
+						isNotifyVisible ? "translate-x-0" : "translate-x-full"
+					}`}
+				>
+					<div className="flex items-center justify-between gap-[8px]">
+						<div className="flex flex-col">
+							<p className="body-small">
+								Gestisci le tue notifiche
+							</p>
+							<h3 className="body-normal font-medium">
+								Centro notifiche
+							</h3>
+						</div>
+						<button
+							onClick={toggleNotify}
+							className="p-[8px] rounded-[4px] border border-solid border-(--black-light) cursor-pointer"
+						>
+							<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+						</button>
+					</div>
+					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
+					<div className="flex flex-col gap-[10px] flex-1">
+						<NotificationComponent
+							onClose={() => setIsNotifyVisible(!isNotifyVisible)}
+						/>
+					</div>
+				</div>
 			</nav>
 			<ModalConfirmAction
 				isOpen={isModalConfirmOpen.value}

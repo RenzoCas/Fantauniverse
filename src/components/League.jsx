@@ -43,10 +43,7 @@ export default function League({ league, onAddParticipant, classOpt }) {
 	}, [numParticipants]);
 
 	const handleClick = () => {
-		navigate(`league/${id}`, {
-			state: { league, deleteLeague: null },
-			replace: true,
-		});
+		navigate(`league/${id}`);
 	};
 
 	return (
