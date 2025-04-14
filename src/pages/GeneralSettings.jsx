@@ -126,8 +126,8 @@ function GeneralSettings() {
 				"Attenzione!",
 				"Prima di cambiare stato della lega devi salvare le modifiche in corso."
 			);
+			return;
 		} else {
-			setTempValue(value);
 			switch (value) {
 				case "NOT_STARTED": {
 					const isDisabled =
@@ -139,6 +139,7 @@ function GeneralSettings() {
 							"Per poter pubblicare la lega deve esserci almeno 1 giocatore ed almeno 1 regola."
 						);
 					} else {
+						setTempValue(value);
 						setDataModalConfirm({
 							title: "Pubblica lega",
 							text: "Confermando non sará piú possibile modificare le impostazioni della lega.",
@@ -162,6 +163,7 @@ function GeneralSettings() {
 							"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
 						);
 					} else {
+						setTempValue(value);
 						setDataModalConfirm({
 							title: "Avvia lega",
 							text: "Confermando non sará piú possibile iscriversi alla lega.",
@@ -184,6 +186,7 @@ function GeneralSettings() {
 							"Per poter terminare la lega deve essere avviata ed esserci almeno 1 giornata."
 						);
 					} else {
+						setTempValue(value);
 						setDataModalConfirm({
 							title: "Termina lega",
 							text: "Confermando la lega terminerá e non sará possibile aggiungere nuove giornate.",

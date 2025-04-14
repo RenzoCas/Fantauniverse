@@ -56,12 +56,16 @@ function NotificationComponent({ onClose }) {
 					</div>
 				) : (
 					<>
-						{notifications.map((noti) => (
+						{notifications.map((noti, idx) => (
 							<div
 								key={noti.id}
 								onClick={() => handleClick(noti)}
 								tabIndex={0}
-								className={`cursor-pointer py-[10px] flex flex-col gap-[10px] border-b border-b-(--black-light)`}
+								className={`cursor-pointer py-[10px] flex flex-col gap-[10px] ${
+									idx != notifications.length - 1
+										? "border-b border-b-(--black-light)"
+										: ""
+								}`}
 							>
 								<div className="flex items-center gap-[10px]">
 									<p className="body-normal font-medium text-left">

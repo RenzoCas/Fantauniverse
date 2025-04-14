@@ -414,28 +414,30 @@ export default function Navbar() {
 					/>
 				</div>
 				<div
-					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 px-[16px] py-[24px] flex flex-col gap-[10px] flex-1 ${
+					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 flex flex-col gap-[10px] flex-1 z-2  overflow-y-auto ${
 						isNotifyVisible ? "translate-x-0" : "translate-x-full"
 					}`}
 				>
-					<div className="flex items-center justify-between gap-[8px]">
-						<div className="flex flex-col">
-							<p className="body-small">
-								Gestisci le tue notifiche
-							</p>
-							<h3 className="body-normal font-medium">
-								Centro notifiche
-							</h3>
+					<div className="flex flex-col gap-[10px] sticky top-0 bg-white z-1 p-[16px]">
+						<div className="flex items-center justify-between gap-[8px]">
+							<div className="flex flex-col">
+								<p className="body-small">
+									Gestisci le tue notifiche
+								</p>
+								<h3 className="body-normal font-medium">
+									Centro notifiche
+								</h3>
+							</div>
+							<button
+								onClick={toggleNotify}
+								className="p-[8px] rounded-[4px] border border-solid border-(--black-light) cursor-pointer"
+							>
+								<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+							</button>
 						</div>
-						<button
-							onClick={toggleNotify}
-							className="p-[8px] rounded-[4px] border border-solid border-(--black-light) cursor-pointer"
-						>
-							<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
-						</button>
+						<div className="h-[1px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
 					</div>
-					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
-					<div className="flex flex-col gap-[10px] flex-1">
+					<div className="flex flex-col gap-[10px] flex-1 py-[10px] px-[16px]">
 						<NotificationComponent
 							onClose={() => setIsNotifyVisible(!isNotifyVisible)}
 						/>
