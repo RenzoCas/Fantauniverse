@@ -55,6 +55,8 @@ function Points() {
 	const [infoDay, setInfoDay] = useState();
 	const [isUpdateDay, setIsUpdateDay] = useState(false);
 	const [tabActive, setTabActive] = useState("Bonus");
+	const hasBonus = rules.some((rule) => rule.malus === false);
+	const hasMalus = rules.some((rule) => rule.malus === true);
 
 	useEffect(() => {
 		const changeIndex = async () => {
@@ -493,22 +495,26 @@ function Points() {
 									</p>
 								</button>
 								<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-dark) md:w-1/2 lg:self-center">
-									<TabButton
-										handleClick={() =>
-											handleTabChange("Bonus")
-										}
-										active={tabActive === "Bonus"}
-									>
-										<p className="body-normal">Bonus</p>
-									</TabButton>
-									<TabButton
-										handleClick={() =>
-											handleTabChange("Malus")
-										}
-										active={tabActive === "Malus"}
-									>
-										<p className="body-normal">Malus</p>
-									</TabButton>
+									{hasBonus && (
+										<TabButton
+											handleClick={() =>
+												handleTabChange("Bonus")
+											}
+											active={tabActive === "Bonus"}
+										>
+											<p className="body-normal">Bonus</p>
+										</TabButton>
+									)}
+									{hasMalus && (
+										<TabButton
+											handleClick={() =>
+												handleTabChange("Malus")
+											}
+											active={tabActive === "Malus"}
+										>
+											<p className="body-normal">Malus</p>
+										</TabButton>
+									)}
 								</div>
 								<ul className="flex flex-col gap-[12px]">
 									{rules
@@ -616,21 +622,21 @@ function Points() {
 								)}
 							</>
 						)}
-						<ModalCreateDay
-							isOpen={isModalOpen}
-							onClose={() => setIsModalOpen(false)}
-							handleSubmit={handleSubmit}
-						/>
-
-						<GenericPopup
-							isOpen={popupData.isOpen}
-							type={popupData.type}
-							title={popupData.title}
-							message={popupData.message}
-						/>
 					</div>
 				</>
 			)}
+			<ModalCreateDay
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				handleSubmit={handleSubmit}
+			/>
+
+			<GenericPopup
+				isOpen={popupData.isOpen}
+				type={popupData.type}
+				title={popupData.title}
+				message={popupData.message}
+			/>
 		</>
 	);
 }
