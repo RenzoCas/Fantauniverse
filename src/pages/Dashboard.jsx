@@ -19,6 +19,10 @@ import { useParticipant } from "../contexts/ParticipantContext";
 import Logo from "../atoms/Logo";
 import TabButton from "../atoms/Buttons/TabButton";
 import ModalSearchLeague from "../components/modals/ModalSearchLeague";
+import { useNotification } from "../contexts/NotificationContext";
+import { Bell } from "lucide-react";
+import NotificationComponent from "../components/Notification";
+import { useModal } from "../contexts/ModalContext";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,6 +57,9 @@ function Dashboard() {
 	const buttonRef = useRef(null);
 	const filterDeskRef = useRef(null);
 	const buttonDeskRef = useRef(null);
+	const { unreadCountNotifications } = useNotification();
+	const [isNotifyVisible, setIsNotifyVisible] = useState(false);
+	const { openBackdrop, closeBackdrop } = useModal();
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -126,6 +133,14 @@ function Dashboard() {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (isNotifyVisible) {
+			openBackdrop();
+		} else {
+			closeBackdrop();
+		}
+	}, [isNotifyVisible]);
 
 	useEffect(() => {
 		fetchNewData();
@@ -233,6 +248,7 @@ function Dashboard() {
 			fetchNewData();
 		}
 	};
+
 	const getVisiblePages = (current, total) => {
 		const visible = [];
 
@@ -240,11 +256,10 @@ function Dashboard() {
 			return Array.from({ length: total }, (_, i) => i);
 		}
 
-		visible.push(0); // prima pagina
+		visible.push(0);
 
 		if (current > 2) visible.push("...");
 
-		// intervallo centrale
 		for (
 			let i = Math.max(1, current - 1);
 			i <= Math.min(total - 2, current + 1);
@@ -255,7 +270,6 @@ function Dashboard() {
 
 		if (current < total - 3) visible.push("...");
 
-		// aggiungi ultima pagina solo se non è già nel range
 		if (visible[visible.length - 1] !== total - 1) {
 			visible.push(total - 1);
 		}
@@ -263,13 +277,71 @@ function Dashboard() {
 		return visible;
 	};
 
+	const toggleNotify = () => {
+		setIsNotifyVisible(!isNotifyVisible);
+	};
+
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				if (isNotifyVisible) {
+					setIsNotifyVisible(false);
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [isNotifyVisible]);
+
 	return (
 		<>
 			{isLoading && <Loader />}
-			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:justify-between lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
 				<Logo />
+				<button
+					onClick={toggleNotify}
+					className="cursor-pointer relative h-fit"
+				>
+					<Bell className="h-[24px] w-[24px] flex-shrink-0" />
+					{unreadCountNotifications > 0 && (
+						<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1"></span>
+					)}
+				</button>
 			</div>
-			<div className="flex flex-col gap-[16px]">
+			<div
+				className={`fixed top-0 right-0 h-full w-[370px] bg-white shadow-lg transform transition-transform duration-500 flex flex-col flex-1 z-100 overflow-y-auto ${
+					isNotifyVisible ? "translate-x-0" : "translate-x-full"
+				}`}
+			>
+				<div className="flex flex-col gap-[10px] sticky top-0 bg-white z-1 p-[16px] lg:p-[24px]">
+					<div className="flex items-center justify-between gap-[8px]">
+						<div className="flex flex-col">
+							<p className="body-small">
+								Gestisci le tue notifiche
+							</p>
+							<h3 className="body-normal font-medium">
+								Centro notifiche
+							</h3>
+						</div>
+						<button
+							onClick={toggleNotify}
+							className="p-[8px] rounded-[4px] border border-solid border-(--black-light) cursor-pointer"
+						>
+							<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+						</button>
+					</div>
+					<div className="h-[1px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
+				</div>
+				<div className="flex flex-col gap-[10px] flex-1 pb-[16px] px-[16px] lg:pb-[24px] lg:px-[24px]">
+					<NotificationComponent
+						onClose={() => setIsNotifyVisible(!isNotifyVisible)}
+					/>
+				</div>
+			</div>
+			<div className="flex flex-col gap-[16px] lg:max-w-[840px] lg:mx-auto">
 				<h1 className="title-h4 text-(--primary) break-all">
 					Bentornato {user.username}
 				</h1>
@@ -401,7 +473,7 @@ function Dashboard() {
 								)}
 								{(filterLeagueState.length > 0 ||
 									enabledSwitch) && (
-									<ul className="flex items-center gap-[8px] overflow-x-auto hide-scrollbar">
+									<ul className="flex items-center gap-[8px] overflow-x-auto">
 										{filterLeagueState.map(
 											(state, index) => (
 												<li
@@ -466,7 +538,7 @@ function Dashboard() {
 										<div className="flex justify-end gap-[12px]">
 											{(filterLeagueState.length > 0 ||
 												enabledSwitch) && (
-												<ul className="flex items-center gap-[8px] overflow-x-auto hide-scrollbar">
+												<ul className="flex items-center gap-[8px] overflow-x-auto">
 													{filterLeagueState.map(
 														(state, index) => (
 															<li

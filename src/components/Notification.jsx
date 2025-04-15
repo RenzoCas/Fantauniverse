@@ -9,6 +9,7 @@ function NotificationComponent({ onClose }) {
 		getNotifications,
 		readNotification,
 		readAllNotifications,
+		unreadCountNotifications,
 	} = useNotification();
 	const navigate = useNavigate();
 
@@ -32,11 +33,22 @@ function NotificationComponent({ onClose }) {
 	return (
 		<>
 			{notifications.length > 0 && (
-				<div className="flex flex gap-[8px] justify-between">
-					<button className="body-small" onClick={readAll}>
-						Segna come lette
-					</button>
-					<button className="body-small text-(--error-normal)">
+				<div
+					className={`flex flex gap-[8px] ${
+						unreadCountNotifications > 0
+							? "justify-between"
+							: "justify-end"
+					}`}
+				>
+					{unreadCountNotifications > 0 && (
+						<button
+							className="body-small cursor-pointer"
+							onClick={readAll}
+						>
+							Segna come lette
+						</button>
+					)}
+					<button className="body-small text-(--error-normal) cursor-pointer self-end">
 						Cancella tutte
 					</button>
 				</div>

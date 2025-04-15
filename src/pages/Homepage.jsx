@@ -10,7 +10,7 @@ export default function Homepage() {
 	return (
 		<main className="md:max-w-sm flex flex-col justify-center gap-[62px] mx-auto py-[40px] min-h-dvh">
 			<div className="flex flex-col gap-[8px] px-[32px] md:px-0">
-				<Logo></Logo>
+				<Logo />
 				<h1 className="title-h2 font-bold">
 					All.
 					<br />

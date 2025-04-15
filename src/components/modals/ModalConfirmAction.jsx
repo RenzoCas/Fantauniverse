@@ -1,10 +1,13 @@
+import { useRef, useEffect } from "react";
 import { XIcon } from "lucide-react";
 import { useModal } from "../../contexts/ModalContext";
-import { useEffect } from "react";
+import FocusModal from "../../hooks/FocusModal";
 
 function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 	const { title, text, conferma, annulla } = dataModal;
 	const { openBackdrop, closeBackdrop } = useModal();
+	const modalRef = useRef(null);
+	FocusModal(modalRef, isOpen);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -20,16 +23,17 @@ function ModalConfirmAction({ isOpen, onClose, dataModal, onConfirmAction }) {
 				onClose();
 			}
 		};
-
 		window.addEventListener("keydown", handleEsc);
-		return () => {
-			window.removeEventListener("keydown", handleEsc);
-		};
+		return () => window.removeEventListener("keydown", handleEsc);
 	}, [onClose]);
 
 	return (
 		<>
 			<div
+				ref={modalRef}
+				role="dialog"
+				aria-modal="true"
+				tabIndex="-1"
 				className={`fixed lg:absolute left-[16px] lg:left-1/2 lg:-translate-x-1/2 bg-white shadow-lg rounded-[24px] w-full transition-all duration-300 ease flex flex-col gap-[24px] max-w-[calc(100vw-32px)] lg:max-w-[500px] p-[20px] z-1001 ${
 					isOpen
 						? "scale-100 opacity-100 bottom-1/2 translate-y-1/2 visible"

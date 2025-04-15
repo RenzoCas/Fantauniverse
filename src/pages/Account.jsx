@@ -281,7 +281,7 @@ function Account() {
 			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
 				<Logo />
 			</div>
-			<section className="flex flex-col gap-[16px] h-full relative">
+			<section className="flex flex-col gap-[16px] h-full relative lg:max-w-[840px] lg:mx-auto">
 				<h1 className="title-h4 font-medium">Impostazioni Account</h1>
 				<div className="flex flex-col gap-[12px]">
 					<div className="flex flex-col gap-[8px] w-full items-center">
@@ -312,7 +312,7 @@ function Account() {
 								<img
 									src={`${iconUrl}`}
 									alt="Icona utente"
-									className="w-full h-full object-cover"
+									className="w-full h-full object-cover  object-[center_top]"
 									loading="lazy"
 								/>
 							)}

@@ -105,15 +105,12 @@ h4,
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: var(--white);
+	background-color: var(--black-normal);
+	border-radius: 8px;
 }
 
 ::-webkit-scrollbar-track {
 	background-color: transparent;
-}
-
-.hide-scrollbar {
-	-ms-overflow-style: none;
-	scrollbar-width: thin;
-	overflow-x: auto;
+	margin-top: 8px;
+	margin-bottom: 8px;
 }

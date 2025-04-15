@@ -134,9 +134,9 @@ export default function SidebarDesktop() {
 		<>
 			{isLoading && <Loader />}
 			<nav
-				className={`hidden lg:flex h-full px-[16px] py-[24px] flex-col gap-[10px] max-w-[370px] flex-shrink-0`}
+				className={`hidden lg:flex h-full py-[24px] flex-col gap-[10px] max-w-[370px] flex-shrink-0`}
 			>
-				<div className="flex items-center justify-between gap-[8px]">
+				<div className="flex flex-col gap-[8px] px-[16px]">
 					<div className="flex gap-[20px] items-center">
 						<picture className="relative rounded-lg w-[50px] h-[50px] overflow-hidden">
 							{iconUrl == null ? (
@@ -168,9 +168,9 @@ export default function SidebarDesktop() {
 							</span>
 						</h3>
 					</div>
+					<div className="h-[1px] w-full border-t border-t-solid border-t-(--black-light-active) px-[16px]"></div>
 				</div>
-				<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
-				<div className="flex flex-col gap-[10px] flex-1 overflow-y-auto">
+				<div className="flex flex-col gap-[10px] flex-1 overflow-y-auto px-[16px]">
 					<div className="flex flex-col gap-[10px]">
 						<h2 className="body-regular text-[#B0B0B0] font-semibold">
 							Le tue leghe
@@ -312,7 +312,7 @@ export default function SidebarDesktop() {
 						</ul>
 					</div>
 				</div>
-				<div className="flex flex-col gap-[10px] sticky bottom-0 bg-white lg:bg-(--black-light)">
+				<div className="flex flex-col gap-[10px] sticky bottom-0 bg-white lg:bg-(--black-light) px-[16px] ">
 					<div className="h-[16px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
 					<ul className="flex flex-col gap-[10px]">
 						<li>
@@ -343,14 +343,14 @@ export default function SidebarDesktop() {
 					onConfirmAction={handleUnregister}
 					dataModal={dataModalConfirm}
 				/>
+				<GenericPopup
+					isOpen={popupData.isOpen}
+					type={popupData.type}
+					title={popupData.title}
+					message={popupData.message}
+					classOpt={`lg:left-1/2 lg:-translate-x-1/2`}
+				/>
 			</nav>
-			<GenericPopup
-				isOpen={popupData.isOpen}
-				type={popupData.type}
-				title={popupData.title}
-				message={popupData.message}
-				classOpt={`lg:left-1/2 lg:-translate-x-1/2`}
-			/>
 		</>
 	);
 }

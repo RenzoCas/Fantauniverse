@@ -5,7 +5,7 @@ function FixedPopup({ type, title, message, customIcon = false, children }) {
 	return (
 		<>
 			<div
-				className={`flex-col gap-[8px] bg-white rounded-[16px] p-[16px] mt-auto border border-(--black-light-active)/70 w-[calc(100vw-32px)] md:max-w-[528px] ransition-opacity duration-500 ease`}
+				className={`flex-col gap-[8px] bg-white rounded-[16px] p-[16px] border border-(--black-light-active)/70 w-[calc(100vw-32px)] md:max-w-[528px] ransition-opacity duration-500 ease lg:mx-auto`}
 			>
 				<div className="flex items-center gap-[12px]">
 					{!customIcon && (

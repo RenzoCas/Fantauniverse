@@ -39,7 +39,7 @@ export default function GenericRules() {
 				</>
 			)}
 
-			<section className="pt-8 lg:p-0 flex flex-col gap-4">
+			<section className="pt-8 lg:p-0 flex flex-col gap-4 lg:max-w-[840px] lg:mx-auto">
 				<h1 className="title-h4 font-medium text-(--black-normal)">
 					Regolamento
 				</h1>

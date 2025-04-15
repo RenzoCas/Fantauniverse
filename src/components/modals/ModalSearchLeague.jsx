@@ -5,6 +5,7 @@ import GenericInput from "../../atoms/Inputs/GenericInput";
 import { useModal } from "../../contexts/ModalContext";
 import League from "../League";
 import { useInView } from "react-intersection-observer";
+import FocusModal from "../../hooks/FocusModal";
 
 function ModalSearchLeague({ isOpen, onClose, onAddParticipant }) {
 	const { searchLeague } = useLeague();
@@ -17,22 +18,35 @@ function ModalSearchLeague({ isOpen, onClose, onAddParticipant }) {
 	const isLoadingRef = useRef(false);
 
 	const { ref: loadMoreRef, inView } = useInView({ rootMargin: "1000px" });
+	const modalRef = useRef(null);
+	FocusModal(modalRef, isOpen);
 
 	useEffect(() => {
 		isOpen ? openBackdrop() : closeBackdrop();
 	}, [isOpen]);
 
-	// Ogni volta che cambia la query, resetta e ricarica
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [onClose]);
+
 	useEffect(() => {
 		if (isOpen) {
 			resetAndLoad();
 		}
 	}, [formData.leagueName, isOpen]);
 
-	// Scroll infinito
 	useEffect(() => {
 		if (!isOpen || !inView || isLoadingRef.current || !hasMore) return;
-		loadLeagues(offset + 1, true); // Incremento offset su scroll
+		loadLeagues(offset + 1, true);
 	}, [inView]);
 
 	const handleChange = (e) => {
@@ -74,6 +88,10 @@ function ModalSearchLeague({ isOpen, onClose, onAddParticipant }) {
 
 	return (
 		<div
+			ref={modalRef}
+			role="dialog"
+			aria-modal="true"
+			tabIndex="-1"
 			className={`fixed h-dvh bottom-0 left-0 bg-white shadow-lg w-full transition-all duration-300 ease flex flex-col gap-4 z-1001 overflow-y-auto lg:rounded-none ${
 				isOpen
 					? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"

@@ -5,12 +5,13 @@ export default function Switch({ enabled, onChange, text, classOpt }) {
 				classOpt ? classOpt : ""
 			}`}
 		>
-			<div className="relative">
+			<div className="group relative rounded-full focus-within:ring-2 focus-within:ring-(--black-normal)">
 				<input
 					type="checkbox"
 					className="sr-only"
 					checked={enabled}
 					onChange={onChange}
+					tabIndex="0"
 				/>
 				<div
 					className={`w-[44px] h-[24px] rounded-full transition ${

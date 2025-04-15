@@ -25,7 +25,7 @@ export default function FantaUniverse() {
 			>
 				<SidebarDesktop />
 				<section className="w-full lg:bg-white lg:rounded-l-[24px] lg:pb-[20px] lg:pt-[88px] lg:flex lg:flex-col relative">
-					<div className="w-full lg:max-w-[840px] lg:max-h-full md:mx-auto lg:py-[55px] lg:px-[24px] lg:overflow-x-auto h-full">
+					<div className="w-full lg:max-h-full md:mx-auto lg:pt-[20px] lg:px-[24px] lg:overflow-x-auto h-full">
 						<Outlet />
 					</div>
 				</section>

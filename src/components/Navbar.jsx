@@ -414,7 +414,7 @@ export default function Navbar() {
 					/>
 				</div>
 				<div
-					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 flex flex-col gap-[10px] flex-1 z-2  overflow-y-auto ${
+					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 flex flex-col flex-1 z-2  overflow-y-auto ${
 						isNotifyVisible ? "translate-x-0" : "translate-x-full"
 					}`}
 				>
@@ -437,7 +437,7 @@ export default function Navbar() {
 						</div>
 						<div className="h-[1px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
 					</div>
-					<div className="flex flex-col gap-[10px] flex-1 py-[10px] px-[16px]">
+					<div className="flex flex-col gap-[10px] flex-1 pb-[16px] px-[16px]">
 						<NotificationComponent
 							onClose={() => setIsNotifyVisible(!isNotifyVisible)}
 						/>

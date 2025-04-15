@@ -200,7 +200,7 @@ function ViewLega() {
 						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
 						Torna alla dashboard
 					</button>
-					<section className="flex flex-col gap-[16px] h-full pt-[44px] lg:pt-0">
+					<section className="flex flex-col gap-[16px] h-full pt-[44px] lg:pt-0 lg:max-w-[840px] lg:mx-auto">
 						<div className="top flex flex-col gap-[16px] flex-1">
 							<div className="flex justify-center lg:items-center lg:gap-[20px]">
 								{status === "PENDING" && (

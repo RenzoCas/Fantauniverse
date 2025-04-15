@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"; // Aggiungi useEffect
+import { useEffect, useRef, useState } from "react"; // Aggiungi useEffect
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import { useModal } from "../../contexts/ModalContext";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../../contexts/LeagueContext";
 import GenericInput from "../../atoms/Inputs/GenericInput";
+import FocusModal from "../../hooks/FocusModal";
 
 function ModalAddPoints({
 	isOpen,
@@ -19,6 +20,8 @@ function ModalAddPoints({
 	const [filteredPlayers, setFilteredPlayers] = useState([]);
 	const [randomColors, setRandomColors] = useState([]);
 	const [selectedPlayers, setSelectedPlayers] = useState([]);
+	const modalRef = useRef(null);
+	FocusModal(modalRef, isOpen);
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -101,6 +104,10 @@ function ModalAddPoints({
 	return (
 		<>
 			<div
+				ref={modalRef}
+				role="dialog"
+				aria-modal="true"
+				tabIndex="-1"
 				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] px-[16px] pb-[16px] lg:px-[24px] lg:pb-[24px] w-full transition-all duration-300 ease flex flex-col z-1001 max-h-[calc(100dvh-80px)] lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:rounded-[12px] lg:max-w-[600px] lg:max-h-[600px] overflow-y-auto ${
 					isOpen
 						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"
