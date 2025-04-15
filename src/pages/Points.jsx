@@ -74,10 +74,8 @@ function Points() {
 	}, [tempDay.players]);
 
 	const groupRules = async () => {
-		// Raggruppa per regola
 		const groupedRules = tempDay.players.reduce((acc, item) => {
 			item.rules.forEach((rule) => {
-				// Se non esiste ancora la regola, la aggiungiamo
 				if (!acc[rule.id]) {
 					acc[rule.id] = {
 						rule: rule,
@@ -85,19 +83,16 @@ function Points() {
 					};
 				}
 
-				// Aggiungiamo il giocatore alla lista di quella regola
 				acc[rule.id].players.push({ id: item.player.id });
 			});
 			return acc;
 		}, {});
 
-		// Creiamo l'array delle regole finali
 		const updatedRules = Object.values(groupedRules).map((group) => ({
 			rule: group.rule,
 			players: group.players,
 		}));
 
-		// Aggiorniamo lo stato con le nuove regole
 		await setTempDay((prevState) => ({
 			...prevState,
 			rules: updatedRules,
@@ -115,6 +110,11 @@ function Points() {
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nel caricamento dei dati della giornata!",
+				"Ricarica la pagina e riprova."
+			);
 			console.error("Errore nel recupero di infoDay:", error);
 		}
 	};
@@ -144,22 +144,60 @@ function Points() {
 	};
 
 	const handleSubmit = async (formData) => {
-		setIsLoading(true);
-		setIsModalOpen(false);
-		let result = null;
-		if (isUpdateDay) {
-			const filteredData = Object.fromEntries(
-				Object.entries(tempDay).filter(([key]) => key !== "players")
-			);
-			result = await updateDay(filteredData);
-		} else {
-			result = await createDay(formData);
-			setActiveDay(result.days[result.days.length - 1]);
-		}
+		try {
+			setIsLoading(true);
+			setIsModalOpen(false);
+			let result = null;
+			if (isUpdateDay) {
+				const filteredData = Object.fromEntries(
+					Object.entries(tempDay).filter(([key]) => key !== "players")
+				);
+				result = await updateDay(filteredData);
+			} else {
+				result = await createDay(formData);
+				setActiveDay(result.days[result.days.length - 1]);
+			}
 
-		await setInfoDay(tempDay);
-		setIsLoading(false);
-		if (!result) {
+			await setInfoDay(tempDay);
+			setIsLoading(false);
+			if (isUpdateDay) {
+				showPopup(
+					"success",
+					"Giornata aggiornata!",
+					"La giornata é stata aggiornata correttamente."
+				);
+			} else {
+				showPopup(
+					"success",
+					"Giornata aggiunta!",
+					"La giornata é stata creata correttamente."
+				);
+			}
+
+			if (!isUpdateDay) {
+				setActiveIndex(() => {
+					const newIndex = result.days.length - 1;
+					setTempDay(result.days[newIndex]);
+					setTempDay((prev) => ({
+						...prev,
+						leagueId: league.id,
+						players: [],
+						rules: [],
+					}));
+
+					setTimeout(() => {
+						if (swiperInstance) {
+							swiperInstance.slideTo(newIndex);
+						}
+					}, 100);
+
+					return newIndex;
+				});
+			}
+			setIsUpdateDay(false);
+		} catch (error) {
+			console.log(error.message);
+			setIsLoading(false);
 			if (isUpdateDay) {
 				showPopup(
 					"error",
@@ -170,47 +208,10 @@ function Points() {
 				showPopup(
 					"error",
 					"Errore nella creazione della giornata!",
-					"La giornata non é stata aggiunta correttamente. Riprova."
+					"La giornata non é stata creata correttamente. Riprova."
 				);
 			}
-			return;
 		}
-
-		if (isUpdateDay) {
-			showPopup(
-				"success",
-				"Giornata aggiornata!",
-				"La giornata é stata aggiornata correttamente."
-			);
-		} else {
-			showPopup(
-				"success",
-				"Giornata aggiunta!",
-				"La giornata é stata creata correttamente."
-			);
-		}
-
-		if (!isUpdateDay) {
-			setActiveIndex(() => {
-				const newIndex = result.days.length - 1;
-				setTempDay(result.days[newIndex]);
-				setTempDay((prev) => ({
-					...prev,
-					leagueId: league.id,
-					players: [],
-					rules: [],
-				}));
-
-				setTimeout(() => {
-					if (swiperInstance) {
-						swiperInstance.slideTo(newIndex);
-					}
-				}, 100);
-
-				return newIndex;
-			});
-		}
-		setIsUpdateDay(false);
 	};
 
 	const handleDeleteDay = async () => {
@@ -615,22 +616,21 @@ function Points() {
 								)}
 							</>
 						)}
+						<ModalCreateDay
+							isOpen={isModalOpen}
+							onClose={() => setIsModalOpen(false)}
+							handleSubmit={handleSubmit}
+						/>
+
+						<GenericPopup
+							isOpen={popupData.isOpen}
+							type={popupData.type}
+							title={popupData.title}
+							message={popupData.message}
+						/>
 					</div>
 				</>
 			)}
-
-			<ModalCreateDay
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				handleSubmit={handleSubmit}
-			/>
-
-			<GenericPopup
-				isOpen={popupData.isOpen}
-				type={popupData.type}
-				title={popupData.title}
-				message={popupData.message}
-			/>
 		</>
 	);
 }

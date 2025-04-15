@@ -360,7 +360,7 @@ function LeagueProvider({ children }) {
 			return true;
 		} catch (error) {
 			console.error(error.message);
-			return false;
+			return { error: "Errore nella creazione della lega. Riprova." };
 		}
 	};
 

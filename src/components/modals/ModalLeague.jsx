@@ -163,11 +163,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						? "Aggiornamento non eseguito."
 						: "Creazione non eseguita."
 				}`,
-				`${
-					initialState
-						? "Errore nell'aggiornamento della lega. Riprova."
-						: "Errore nella creazione della lega. Riprova."
-				}`
+				`${initialState ? `${result.error}` : `${result.error}`}`
 			);
 		}
 	};
