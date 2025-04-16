@@ -29,7 +29,6 @@ export default function FocusModal(ref, isActive) {
 		});
 
 		observer.observe(ref.current, {
-			childList: true,
 			subtree: true,
 			attributes: true,
 			attributeFilter: ["disabled"],

@@ -178,8 +178,8 @@ function Points() {
 
 			if (!isUpdateDay) {
 				setActiveIndex(() => {
-					const newIndex = result.days.length - 1;
-					setTempDay(result.days[newIndex]);
+					const newIndex = league.days.length;
+					setTempDay(result);
 					setTempDay((prev) => ({
 						...prev,
 						leagueId: league.id,
@@ -386,7 +386,6 @@ function Points() {
 	};
 
 	const handleTabChange = (tab) => {
-		setIsUpdateDay(false);
 		setTabActive(tab);
 	};
 
