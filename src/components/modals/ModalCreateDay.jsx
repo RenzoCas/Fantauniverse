@@ -106,6 +106,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 						text="Conferma"
 						action={handleSubmitData}
 						disabled={!isFormValid()}
+						icon={false}
 					/>
 				</form>
 			</div>

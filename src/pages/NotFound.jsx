@@ -16,7 +16,11 @@ export default function NotFound() {
 			<p className="body-regular text-center font-semibold">
 				La pagina che cercavi non &egrave; disponibile.
 			</p>
-			<NormalButton text="Torna alla home" action={() => navigate("/")} />
+			<NormalButton
+				text="Torna alla home"
+				action={() => navigate("/")}
+				icon={false}
+			/>
 		</main>
 	);
 }
