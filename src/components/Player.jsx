@@ -74,7 +74,7 @@ function Player({
 				>
 					<div className="flex gap-[20px]">
 						<picture
-							className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] relative ${
+							className={`rounded-[3px] h-[38px] min-w-[38px] max-w-[38px] flex-shrink-1 overflow-hidden relative ${
 								!createTeam
 									? "opacity-100"
 									: canAdd || isActive
@@ -84,14 +84,14 @@ function Player({
 						>
 							{icon == null ? (
 								<div
-									className={`rounded-[3px] h-[38px] w-[38px] object-cover`}
+									className={`rounded-[3px] h-full w-full object-cover`}
 									style={{ backgroundColor: randomColor }}
 								></div>
 							) : (
 								<img
 									src={`data:image/png;base64,${icon}`}
 									alt={`immagine player`}
-									className="rounded-[3px] h-[38px] w-[38px] object-cover"
+									className="rounded-[3px] h-full w-full object-cover"
 									loading="lazy"
 								/>
 							)}

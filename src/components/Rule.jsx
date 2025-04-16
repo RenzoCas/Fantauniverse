@@ -117,10 +117,10 @@ function Rule({
 									key={idx}
 									className="flex gap-[20px] items-center w-full"
 								>
-									<picture className="rounded-[3px] min-w-[32px] max-w-[32px] h-[32px] overflow-hidden">
+									<picture className="rounded-[3px] min-w-[32px] max-w-[32px] h-[32px] flex-shrink-1 overflow-hidden">
 										{player.player.icon == null ? (
 											<div
-												className={`h-full object-cover`}
+												className={`h-full w-full object-cover`}
 												style={{
 													backgroundColor:
 														randomColors[idx],
@@ -130,7 +130,7 @@ function Rule({
 											<img
 												src={`data:image/png;base64,${player.player.icon}`}
 												alt={`Icona utente`}
-												className="h-full object-cover"
+												className="h-full w-full object-cover"
 												loading="lazy"
 											/>
 										)}

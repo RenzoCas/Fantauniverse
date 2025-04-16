@@ -80,10 +80,10 @@ function Participant({
 						<p className="body-normal font-black">{idx + 1}&deg;</p>
 					</div>
 				)}
-				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px] cursor-pointer relative">
+				<picture className="rounded-[3px] h-[48px] min-w-[48px] max-w-[48px] flex-shrink-1 overflow-hidden cursor-pointer relative">
 					{iconUrl == null ? (
 						<div
-							className={`rounded-[3px] h-[48px] w-[48px] object-cover`}
+							className={`h-full w-full object-cover`}
 							style={{ backgroundColor: randomColor }}
 						>
 							<div className="body-regular font-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white flex items-center justify-center w-full h-full">
@@ -94,7 +94,7 @@ function Participant({
 						<img
 							src={`${iconUrl}`}
 							alt={`immagine giocatore`}
-							className="rounded-[3px] h-[48px] w-[48px] object-cover"
+							className="rounded-[3px] h-full w-full object-cover"
 							loading="lazy"
 						/>
 					)}

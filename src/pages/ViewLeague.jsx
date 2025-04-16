@@ -215,12 +215,12 @@ function ViewLega() {
 									/>
 								)}
 								<picture
-									className="relative w-full aspect-video rounded-[8px] max-w-[371px]"
+									className="relative w-full max-w-[371px] h-[271px] aspect-video flex-shrink-1 overflow-hidden rounded-[8px] cursor-pointer"
 									onClick={handleUpdateImage}
 								>
 									{iconUrl == null ? (
 										<div
-											className={`w-full h-full rounded-[8px]`}
+											className={`w-full h-full object-cover rounded-[8px]`}
 											style={{
 												backgroundColor: randomColor,
 											}}
@@ -229,7 +229,7 @@ function ViewLega() {
 										<img
 											src={`${iconUrl}`}
 											alt={`Logo lega`}
-											className="w-full rounded-[8px] h-auto object-cover cursor-pointer"
+											className="w-full rounded-[8px] h-full object-cover"
 											loading="lazy"
 										/>
 									)}

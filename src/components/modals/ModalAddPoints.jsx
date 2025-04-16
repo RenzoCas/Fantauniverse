@@ -164,10 +164,10 @@ function ModalAddPoints({
 											: "bg-white"
 									}`}
 								></button>
-								<picture className="rounded-lg min-w-[32px] max-w-[32px] h-[32px] overflow-hidden">
+								<picture className="rounded-lg min-w-[32px] max-w-[32px] h-[32px] flex-shrink-1 overflow-hidden">
 									{player.icon == null ? (
 										<div
-											className="h-full object-cover"
+											className="h-full w-full object-cover"
 											style={{
 												backgroundColor:
 													randomColors[idx],
@@ -177,7 +177,7 @@ function ModalAddPoints({
 										<img
 											src={`data:image/png;base64,${player.icon}`}
 											alt={`Icona utente`}
-											className="h-full object-cover"
+											className="h-full w-full object-cover"
 											loading="lazy"
 										/>
 									)}

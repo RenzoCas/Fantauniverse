@@ -48,11 +48,13 @@ export default function League({ league, onAddParticipant, classOpt }) {
 
 	return (
 		<li
-			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white cursor-pointer lg:max-w-[400px] ${classOpt}`}
+			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white ${
+				isRegistered ? "cursor-pointer" : ""
+			} lg:max-w-[400px] ${classOpt}`}
 			onClick={isRegistered ? handleClick : undefined}
 			tabIndex={isRegistered ? 0 : undefined}
 		>
-			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative">
+			<picture className="relative z-2 rounded-lg min-w-[80px] max-w-[80px] h-[80px] overflow-hidden">
 				{isAdmin && (
 					<span className="absolute top-[8px] left-[8px] p-[2px] bg-white rounded-[4px]">
 						<Cog6ToothIcon className="w-[20px] h-[20px]" />
@@ -60,14 +62,14 @@ export default function League({ league, onAddParticipant, classOpt }) {
 				)}
 				{iconUrl == null ? (
 					<div
-						className={`h-full object-cover`}
+						className={`h-full w-full object-cover`}
 						style={{ backgroundColor: randomColors[0] }}
 					></div>
 				) : (
 					<img
 						src={`${iconUrl}`}
 						alt={`Logo lega ${name}`}
-						className="h-full object-cover"
+						className="h-full w-full object-cover"
 						loading="lazy"
 					/>
 				)}

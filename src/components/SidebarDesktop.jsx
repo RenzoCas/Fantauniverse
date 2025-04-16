@@ -138,7 +138,7 @@ export default function SidebarDesktop() {
 			>
 				<div className="flex flex-col gap-[8px] px-[16px]">
 					<div className="flex gap-[20px] items-center">
-						<picture className="relative rounded-lg w-[50px] h-[50px] overflow-hidden">
+						<picture className="relative rounded-lg w-[50px] h-[50px] flex-shrink-1 overflow-hidden">
 							{iconUrl == null ? (
 								<div
 									className="h-full w-full object-cover"
@@ -188,11 +188,11 @@ export default function SidebarDesktop() {
 												}
 											>
 												<button className="flex items-center gap-[20px] cursor-pointer w-full">
-													<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] overflow-hidden">
+													<picture className="rounded-lg min-w-[50px] max-w-[50px] h-[50px] flex-shrink-1 overflow-hidden">
 														{league.iconUrl ==
 														null ? (
 															<div
-																className={`h-full object-cover`}
+																className={`h-full w-full object-cover`}
 																style={{
 																	backgroundColor:
 																		randomColors[
@@ -204,7 +204,7 @@ export default function SidebarDesktop() {
 															<img
 																src={`${league.iconUrl}`}
 																alt={`Icona utente`}
-																className="h-full object-cover"
+																className="h-full w-full object-cover"
 																loading="lazy"
 															/>
 														)}
