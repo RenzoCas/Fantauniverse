@@ -217,7 +217,11 @@ function ViewLega() {
 				<Loader />
 			) : (
 				<>
-					<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:items-center lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+					<div
+						className={`hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:items-center lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)] ${
+							status == "PENDING" ? "lg:justify-between" : ""
+						}`}
+					>
 						<Logo />
 						{status != "PENDING" && (
 							<BottomNavbar
@@ -234,7 +238,10 @@ function ViewLega() {
 						>
 							<Bell className="h-[24px] w-[24px] flex-shrink-0" />
 							{unreadCountNotifications > 0 && (
-								<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1 animate-ping"></span>
+								<>
+									<span className="absolute inline-flex w-[8px] h-[8px] animate-ping rounded-full bg-(--error-normal)/80 opacity-75 top-0 right-[2px]"></span>
+									<span className="absolute inline-flex w-[8px] h-[8px] rounded-full bg-(--error-normal) top-0 right-[2px]"></span>
+								</>
 							)}
 						</button>
 					</div>

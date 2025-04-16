@@ -310,7 +310,10 @@ function Dashboard() {
 				>
 					<Bell className="h-[24px] w-[24px] flex-shrink-0" />
 					{unreadCountNotifications > 0 && (
-						<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1 animate-ping"></span>
+						<>
+							<span className="absolute inline-flex w-[8px] h-[8px] animate-ping rounded-full bg-(--error-normal)/80 opacity-75 top-0 right-[2px]"></span>
+							<span className="absolute inline-flex w-[8px] h-[8px] rounded-full bg-(--error-normal) top-0 right-[2px]"></span>
+						</>
 					)}
 				</button>
 			</div>
