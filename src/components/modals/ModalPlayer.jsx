@@ -6,7 +6,14 @@ import GhostButton from "../../atoms/Buttons/GhostButton";
 import { useModal } from "../../contexts/ModalContext";
 import FocusModal from "../../hooks/FocusModal";
 
-function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
+function ModalPlayer({
+	isOpen,
+	isEdit,
+	playerObj,
+	onClose,
+	onSubmit,
+	onDelete,
+}) {
 	const [formData, setFormData] = useState({
 		name: "",
 		price: "",
@@ -58,12 +65,7 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 				file &&
 				(file.type === "image/jpeg" || file.type === "image/png")
 			) {
-				const reader = new FileReader();
-				reader.onloadend = async () => {
-					const base64Image = reader.result.split(",")[1];
-					formData.icon = base64Image;
-				};
-				reader.readAsDataURL(file);
+				formData.icon = file;
 			} else {
 				throw new Error("Per favore seleziona un file JPEG o PNG.");
 			}
@@ -217,4 +219,4 @@ function ModalRule({ isOpen, isEdit, playerObj, onClose, onSubmit, onDelete }) {
 	);
 }
 
-export default ModalRule;
+export default ModalPlayer;

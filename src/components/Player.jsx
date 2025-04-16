@@ -26,7 +26,7 @@ function Player({
 	viewTeam = false,
 	handleTabChange,
 }) {
-	const { name, price, points, icon } = playerObj;
+	const { name, price, points, iconUrl } = playerObj;
 	const { league } = useLeague();
 	const { coinName, status, enableCaptain } = league;
 	const { user } = useUser();
@@ -82,14 +82,14 @@ function Player({
 									: "opacity-50"
 							}`}
 						>
-							{icon == null ? (
+							{iconUrl == null ? (
 								<div
 									className={`rounded-[3px] h-full w-full object-cover`}
 									style={{ backgroundColor: randomColor }}
 								></div>
 							) : (
 								<img
-									src={`data:image/png;base64,${icon}`}
+									src={`${iconUrl}`}
 									alt={`immagine player`}
 									className="rounded-[3px] h-full w-full object-cover"
 									loading="lazy"
@@ -181,14 +181,14 @@ function Player({
 								: "opacity-50"
 						}`}
 					>
-						{icon == null ? (
+						{iconUrl == null ? (
 							<div
 								className={`rounded-[3px] h-[38px] w-[38px] object-cover`}
 								style={{ backgroundColor: randomColor }}
 							></div>
 						) : (
 							<img
-								src={`data:image/png;base64,${icon}`}
+								src={`${iconUrl}`}
 								alt={`immagine player`}
 								className="rounded-[3px] h-[38px] w-[38px] object-cover"
 								loading="lazy"

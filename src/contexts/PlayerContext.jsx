@@ -30,7 +30,7 @@ function PlayerProvider({ children }) {
 				type: "addPlayer",
 				payload: newPlayer[0],
 			});
-			return true;
+			return newPlayer[0];
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -56,7 +56,7 @@ function PlayerProvider({ children }) {
 				type: "updatePlayer",
 				payload: updatedPlayer,
 			});
-			return true;
+			return updatedPlayer;
 		} catch (error) {
 			console.error(error.message);
 			return false;
@@ -87,12 +87,43 @@ function PlayerProvider({ children }) {
 		}
 	};
 
+	const uploadImage = async (file, uploadUrl, id) => {
+		const { tempUrl, publicUrl } = uploadUrl;
+		try {
+			const response = await fetch(tempUrl, {
+				method: "PUT",
+				headers: {
+					"x-amz-acl": "public-read",
+					"Content-Type": file.type,
+				},
+				body: file,
+			});
+
+			if (!response.ok) {
+				throw {
+					status: response.status,
+					message: "Errore nel upload dell'immagine.",
+				};
+			}
+
+			dispatchLeague({
+				type: "updateIconPlayer",
+				payload: { publicUrl, id },
+			});
+			return true;
+		} catch (error) {
+			console.error(error.message);
+			return false;
+		}
+	};
+
 	return (
 		<PlayerContext.Provider
 			value={{
 				addPlayer,
 				updatePlayer,
 				deletePlayer,
+				uploadImage,
 			}}
 		>
 			{children}

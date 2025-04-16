@@ -7,6 +7,7 @@ import ModalPlayer from "../components/modals/ModalPlayer";
 import NormalButton from "../atoms/Buttons/NormalButton";
 import Loader from "../components/Loader";
 import { usePlayer } from "../contexts/PlayerContext";
+import { useUser } from "../contexts/UserContext";
 
 function Players() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +22,8 @@ function Players() {
 		message: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
-	const { addPlayer, deletePlayer, updatePlayer } = usePlayer();
+	const { getUrlImage } = useUser();
+	const { addPlayer, deletePlayer, updatePlayer, uploadImage } = usePlayer();
 
 	const showPopup = (type, title, message) => {
 		setPopupData({ isOpen: true, type, title, message });
@@ -66,9 +68,11 @@ function Players() {
 	const handleSubmitAdd = async (formData) => {
 		setIsLoading(true);
 		setIsModalOpen(false);
-		const result = await addPlayer(formData);
-		setIsLoading(false);
+		const tempFormData = { ...formData, icon: "" };
+		const result = await addPlayer(tempFormData);
+
 		if (!result) {
+			setIsLoading(false);
 			showPopup(
 				"error",
 				"Errore nell'aggiunta del player",
@@ -76,6 +80,26 @@ function Players() {
 			);
 			return;
 		}
+
+		const filename = `${formData.icon.name}`;
+		const urlImage = await getUrlImage({
+			id: result.id,
+			fileName: filename,
+			referredTo: "PLAYER",
+		});
+
+		if (!urlImage) {
+			setIsLoading(false);
+			showPopup(
+				"error",
+				"Errore nell'aggiunta dell'immagine!",
+				"Il player é stato correttamente aggiunto, ma l'immagine non é stata caricata. Riprova."
+			);
+			return;
+		}
+
+		await uploadImage(formData.icon, urlImage, result.id);
+		setIsLoading(false);
 		showPopup(
 			"success",
 			"Player aggiunto",
@@ -86,7 +110,29 @@ function Players() {
 	const handleSubmitEdit = async (formData) => {
 		setIsLoading(true);
 		setIsModalOpen(false);
-		const result = await updatePlayer(formData);
+		let result = null;
+		const tempFormData = { ...formData, icon: "" };
+		result = await updatePlayer(tempFormData);
+		if (formData.icon) {
+			const filename = `${formData.icon.name}`;
+			const urlImage = await getUrlImage({
+				id: result.id,
+				fileName: filename,
+				referredTo: "PLAYER",
+			});
+			if (!urlImage) {
+				setIsLoading(false);
+				showPopup(
+					"error",
+					"Errore nella modifica dell'immagine!",
+					"L'immagine non é stata aggiornata. Riprova."
+				);
+				return;
+			}
+
+			await uploadImage(formData.icon, urlImage, result.id);
+		}
+
 		setIsLoading(false);
 		if (!result) {
 			showPopup(

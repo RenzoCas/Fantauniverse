@@ -119,6 +119,16 @@ function leagueReducer(state, action) {
 				),
 			};
 
+		case "updateIconPlayer":
+			return {
+				...state,
+				players: state.players.map((player) =>
+					player.id === action.payload.id
+						? { ...player, iconUrl: action.payload.publicUrl }
+						: player
+				),
+			};
+
 		case "deletePlayer":
 			return {
 				...state,
