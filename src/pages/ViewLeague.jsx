@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useLeague } from "../contexts/LeagueContext";
 import Rules from "../pages/Rules";
 import Tab from "../components/Tab";
@@ -17,8 +17,12 @@ import ModalConfirmAction from "../components/modals/ModalConfirmAction";
 import BottomNavbar from "../components/BottomNavbar";
 import MyTeam from "./MyTeam";
 import Logo from "../atoms/Logo";
-import { ChevronLeft } from "lucide-react";
+import { Bell, ChevronLeft } from "lucide-react";
 import { useUser } from "../contexts/UserContext";
+import NotificationComponent from "../components/Notification";
+import { useNotification } from "../contexts/NotificationContext";
+import { useModal } from "../contexts/ModalContext";
+import FocusModal from "../hooks/FocusModal";
 
 function ViewLega() {
 	const navigate = useNavigate();
@@ -46,6 +50,11 @@ function ViewLega() {
 		conferma: "",
 		annulla: "",
 	});
+	const [isNotifyVisible, setIsNotifyVisible] = useState(false);
+	const { unreadCountNotifications } = useNotification();
+	const { openBackdrop, closeBackdrop } = useModal();
+	const notifyRef = useRef(null);
+	FocusModal(notifyRef, isNotifyVisible);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -175,13 +184,40 @@ function ViewLega() {
 		setRandomColor(randomLightColor());
 	}, []);
 
+	useEffect(() => {
+		if (isNotifyVisible) {
+			openBackdrop();
+		} else {
+			closeBackdrop();
+		}
+	}, [isNotifyVisible]);
+
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				if (isNotifyVisible) {
+					setIsNotifyVisible(false);
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [isNotifyVisible]);
+
+	const toggleNotify = () => {
+		setIsNotifyVisible(!isNotifyVisible);
+	};
+
 	return (
 		<>
 			{isLoading ? (
 				<Loader />
 			) : (
 				<>
-					<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+					<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:items-center lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
 						<Logo />
 						{status != "PENDING" && (
 							<BottomNavbar
@@ -192,6 +228,50 @@ function ViewLega() {
 								classOpt="hidden lg:flex md:mx-auto lg:static lg:mt-0 lg:gap-[22px]"
 							/>
 						)}
+						<button
+							onClick={toggleNotify}
+							className="cursor-pointer relative h-fit"
+						>
+							<Bell className="h-[24px] w-[24px] flex-shrink-0" />
+							{unreadCountNotifications > 0 && (
+								<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1 animate-ping"></span>
+							)}
+						</button>
+					</div>
+					<div
+						ref={notifyRef}
+						className={`fixed top-0 right-0 h-full w-[370px] bg-white shadow-lg transform transition-transform duration-500 flex flex-col flex-1 z-100 overflow-y-auto ${
+							isNotifyVisible
+								? "translate-x-0"
+								: "translate-x-full"
+						}`}
+					>
+						<div className="flex flex-col gap-[10px] sticky top-0 bg-white z-1 p-[16px] lg:p-[24px]">
+							<div className="flex items-center justify-between gap-[8px]">
+								<div className="flex flex-col">
+									<p className="body-small">
+										Gestisci le tue notifiche
+									</p>
+									<h3 className="body-normal font-medium">
+										Centro notifiche
+									</h3>
+								</div>
+								<button
+									onClick={toggleNotify}
+									className="p-[8px] rounded-[4px] border border-solid border-(--black-light) cursor-pointer"
+								>
+									<XMarkIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+								</button>
+							</div>
+							<div className="h-[1px] w-full border-t border-t-solid border-t-(--black-light-active)"></div>
+						</div>
+						<div className="flex flex-col gap-[10px] flex-1 pb-[16px] px-[16px] lg:pb-[24px] lg:px-[24px]">
+							<NotificationComponent
+								onClose={() =>
+									setIsNotifyVisible(!isNotifyVisible)
+								}
+							/>
+						</div>
 					</div>
 					<button
 						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-10 cursor-pointer"

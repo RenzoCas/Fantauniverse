@@ -9,7 +9,7 @@ import {
 	TrashIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router";
 import Logo from "../atoms/Logo";
@@ -20,6 +20,7 @@ import ModalConfirmAction from "./modals/ModalConfirmAction";
 import { Bell } from "lucide-react";
 import NotificationComponent from "./Notification";
 import { useNotification } from "../contexts/NotificationContext";
+import FocusModal from "../hooks/FocusModal";
 
 export default function Navbar() {
 	const navigate = useNavigate();
@@ -49,6 +50,8 @@ export default function Navbar() {
 	});
 
 	const { unreadCountNotifications } = useNotification();
+	const notifyRef = useRef(null);
+	FocusModal(notifyRef, isNotifyVisible);
 
 	useEffect(() => {
 		const numColors = myLeagues?.length + 1;
@@ -70,6 +73,21 @@ export default function Navbar() {
 			document.body.style.overflow = "auto";
 		};
 	}, [isMenuOpen, isNotifyVisible]);
+
+	useEffect(() => {
+		const handleEsc = (e) => {
+			if (e.key === "Escape") {
+				if (isNotifyVisible) {
+					setIsNotifyVisible(false);
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleEsc);
+		return () => {
+			window.removeEventListener("keydown", handleEsc);
+		};
+	}, [isNotifyVisible]);
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -176,7 +194,7 @@ export default function Navbar() {
 					>
 						<Bell className="h-[24px] w-[24px] flex-shrink-0" />
 						{unreadCountNotifications > 0 && (
-							<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1"></span>
+							<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1 animate-ping"></span>
 						)}
 					</button>
 
@@ -414,6 +432,7 @@ export default function Navbar() {
 					/>
 				</div>
 				<div
+					ref={notifyRef}
 					className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-500 flex flex-col flex-1 z-2  overflow-y-auto ${
 						isNotifyVisible ? "translate-x-0" : "translate-x-full"
 					}`}

@@ -23,6 +23,7 @@ import { useNotification } from "../contexts/NotificationContext";
 import { Bell } from "lucide-react";
 import NotificationComponent from "../components/Notification";
 import { useModal } from "../contexts/ModalContext";
+import FocusModal from "../hooks/FocusModal";
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,6 +61,8 @@ function Dashboard() {
 	const { unreadCountNotifications } = useNotification();
 	const [isNotifyVisible, setIsNotifyVisible] = useState(false);
 	const { openBackdrop, closeBackdrop } = useModal();
+	const notifyRef = useRef(null);
+	FocusModal(notifyRef, isNotifyVisible);
 
 	useEffect(() => {
 		if (deleteLeague !== null) {
@@ -299,7 +302,7 @@ function Dashboard() {
 	return (
 		<>
 			{isLoading && <Loader />}
-			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:justify-between lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:justify-between lg:w-full lg:items-center lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
 				<Logo />
 				<button
 					onClick={toggleNotify}
@@ -307,11 +310,12 @@ function Dashboard() {
 				>
 					<Bell className="h-[24px] w-[24px] flex-shrink-0" />
 					{unreadCountNotifications > 0 && (
-						<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1"></span>
+						<span className="w-[8px] h-[8px] bg-(--error-normal) rounded-full absolute top-0 right-[2px] z-1 animate-ping"></span>
 					)}
 				</button>
 			</div>
 			<div
+				ref={notifyRef}
 				className={`fixed top-0 right-0 h-full w-[370px] bg-white shadow-lg transform transition-transform duration-500 flex flex-col flex-1 z-100 overflow-y-auto ${
 					isNotifyVisible ? "translate-x-0" : "translate-x-full"
 				}`}
