@@ -109,7 +109,7 @@ function leagueReducer(state, action) {
 			};
 
 		case "addPlayer":
-			return { ...state, players: action.payload };
+			return { ...state, players: [...state.players, action.payload] };
 
 		case "updatePlayer":
 			return {
@@ -128,7 +128,7 @@ function leagueReducer(state, action) {
 			};
 
 		case "addRule":
-			return { ...state, rules: action.payload };
+			return { ...state, rules: [...state.rules, action.payload] };
 
 		case "updateRule":
 			return {
@@ -145,7 +145,7 @@ function leagueReducer(state, action) {
 			};
 
 		case "addDay":
-			return { ...state, days: action.payload };
+			return { ...state, days: [...state.days, action.payload] };
 
 		case "updateDay":
 			return {

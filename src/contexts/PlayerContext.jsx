@@ -25,10 +25,10 @@ function PlayerProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del player");
 
-			const updatedPlayers = await response.json();
+			const newPlayer = await response.json();
 			dispatchLeague({
 				type: "addPlayer",
-				payload: updatedPlayers.players,
+				payload: newPlayer[0],
 			});
 			return true;
 		} catch (error) {

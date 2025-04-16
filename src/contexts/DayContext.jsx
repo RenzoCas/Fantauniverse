@@ -47,14 +47,14 @@ function DayProvider({ children }) {
 				throw new Error("Errore nella creazione della giornata.");
 			}
 
-			const updatedLeagueData = await response.json();
+			const newDays = await response.json();
 
 			dispatchLeague({
-				type: "updateLeague",
-				payload: updatedLeagueData,
+				type: "addDay",
+				payload: newDays[0],
 			});
 
-			return updatedLeagueData;
+			return newDays[0];
 		} catch (error) {
 			console.error(error.message);
 			return false;

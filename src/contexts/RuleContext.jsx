@@ -50,10 +50,10 @@ function RuleProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta della regola");
 
-			const updatedRules = await response.json();
+			const newRule = await response.json();
 			dispatchLeague({
 				type: "addRule",
-				payload: updatedRules.rules,
+				payload: newRule[0],
 			});
 
 			return true;

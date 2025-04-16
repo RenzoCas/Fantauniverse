@@ -157,7 +157,7 @@ function Points() {
 				result = await updateDay(filteredData);
 			} else {
 				result = await createDay(formData);
-				setActiveDay(result.days[result.days.length - 1]);
+				setActiveDay(result);
 			}
 
 			await setInfoDay(tempDay);
