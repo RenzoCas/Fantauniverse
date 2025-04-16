@@ -136,7 +136,7 @@ export default function SidebarDesktop() {
 			<nav
 				className={`hidden lg:flex h-full py-[24px] flex-col gap-[10px] max-w-[370px] flex-shrink-0`}
 			>
-				<div className="flex flex-col gap-[8px] px-[16px]">
+				<div className="flex flex-col gap-[12px] px-[16px]">
 					<div className="flex gap-[20px] items-center">
 						<picture className="relative rounded-lg w-[50px] h-[50px] flex-shrink-1 overflow-hidden">
 							{iconUrl == null ? (
