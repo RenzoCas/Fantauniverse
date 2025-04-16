@@ -1,10 +1,15 @@
-import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+	PencilSquareIcon,
+	TrashIcon,
+	XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import NormalButton from "../../atoms/Buttons/NormalButton";
 import GenericInput from "../../atoms/Inputs/GenericInput";
 import GhostButton from "../../atoms/Buttons/GhostButton";
 import { useModal } from "../../contexts/ModalContext";
 import FocusModal from "../../hooks/FocusModal";
+import { PlusIcon } from "lucide-react";
 
 function ModalPlayer({
 	isOpen,
@@ -202,7 +207,14 @@ function ModalPlayer({
 							setFileKey(Date.now());
 						}}
 						disabled={!isFormValid()}
-					/>
+						customIcon={true}
+					>
+						{isEdit ? (
+							<PencilSquareIcon className="h-[24px] w-[24px] flex-shrink-0" />
+						) : (
+							<PlusIcon className="h-[24px] w-[24px] flex-shrink-0" />
+						)}
+					</NormalButton>
 					{isEdit && (
 						<GhostButton
 							text="Elimina Player"
