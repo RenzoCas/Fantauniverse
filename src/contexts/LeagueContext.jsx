@@ -171,10 +171,10 @@ function leagueReducer(state, action) {
 				days: state.days.filter((day) => day.id !== action.payload),
 			};
 
-		case "updateParticipants":
+		case "addParticipant":
 			return {
 				...state,
-				participants: action.payload,
+				participants: [...state.participants, action.payload],
 			};
 
 		default:

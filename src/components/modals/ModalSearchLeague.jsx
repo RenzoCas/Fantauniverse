@@ -69,6 +69,7 @@ function ModalSearchLeague({ isOpen, onClose, onAddParticipant }) {
 				nameOrCode: formData.leagueName,
 				status: ["NOT_STARTED", "STARTED", "FINISHED"],
 				pagination: { offset: offsetToUse, limit: 10 },
+				visibility: formData.leagueName === "" ? ["PUBLIC"] : [],
 			});
 
 			const newLeagues = result?.leagues || [];

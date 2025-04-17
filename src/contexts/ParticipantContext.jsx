@@ -24,11 +24,11 @@ function ParticipantProvider({ children }) {
 			if (!response.ok)
 				throw new Error("Errore nell'aggiunta del partecipante.");
 
-			const updatedLeagueData = await response.json();
+			const newParticipant = await response.json();
 
 			dispatchLeague({
-				type: "updateLeague",
-				payload: updatedLeagueData,
+				type: "addParticipant",
+				payload: newParticipant,
 			});
 			return true;
 		} catch (error) {
