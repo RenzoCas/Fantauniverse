@@ -242,7 +242,7 @@ export default function GenericRulesNoAuth() {
 					</div>
 				</section>
 
-				<section className="relative hidden lg:block max-w-[708px] max-h-[calc(100dvh-136px)] bg-[url(https://main.djli7xgqeongu.amplifyapp.com/bgHome.jpg)] bg-centre bg-no-repeat bg-cover rounded-[24px] sticky top-[62px]">
+				<section className="relative hidden lg:block max-w-[708px] max-h-[calc(100dvh-136px)] bg-[url('/images/bgHome.jpg')] bg-centre bg-no-repeat bg-cover rounded-[24px] sticky top-[62px]">
 					<div className="flex flex-col gap-[8px] px-[32px] md:px-0 absolute bottom-[30px] left-[30px]">
 						<div
 							className={`relative rounded-full h-[46px] w-[46px] bg-white`}
