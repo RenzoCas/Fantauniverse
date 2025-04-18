@@ -155,13 +155,25 @@ function GeneralSettings() {
 					break;
 				}
 				case "STARTED": {
-					const isDisabled = participants.length <= 1;
+					const nessunTeamAttivo = participants.every(
+						(participant) => participant.team === null
+					);
+					const isDisabled =
+						participants.length <= 1 || nessunTeamAttivo;
 					if (isDisabled) {
-						showPopup(
-							"alert",
-							"Attenzione!",
-							"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
-						);
+						if (nessunTeamAttivo) {
+							showPopup(
+								"alert",
+								"Attenzione!",
+								"Nessun partecipante ha creato la propria squadra. Per poter avviare la lega almeno 1 partecipante deve creare una squadra."
+							);
+						} else {
+							showPopup(
+								"alert",
+								"Attenzione!",
+								"Per poter avviare la lega deve essere pubblicata e devono esserci almeno 2 partecipanti iscritti."
+							);
+						}
 					} else {
 						setTempValue(value);
 						setDataModalConfirm({
@@ -222,6 +234,7 @@ function GeneralSettings() {
 		setIsModalConfirmOpen({ action: "select", value: false });
 		setIsLoading(true);
 		await changeStatus(tempValue);
+
 		setIsLoading(false);
 	};
 
