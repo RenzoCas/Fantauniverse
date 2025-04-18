@@ -320,6 +320,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						disabled={!isFormValid()}
 						classOpt={`md:w-1/2 md:mx-auto`}
 						icon={false}
+						type="submit"
 					/>
 				</form>
 			</div>

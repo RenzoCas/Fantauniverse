@@ -118,10 +118,7 @@ export default function Registrazione() {
 					</h2>
 					<form
 						className="flex flex-col gap-[32px]"
-						onSubmit={(e) => {
-							e.preventDefault();
-							handleSubmit();
-						}}
+						onSubmit={handleSubmit}
 					>
 						<div className="flex flex-col gap-[10px]">
 							{serverError && (
@@ -199,6 +196,7 @@ export default function Registrazione() {
 								action={handleSubmit}
 								disabled={!isFormValid() || isLoading}
 								icon={false}
+								type="submit"
 							/>
 
 							<GhostButton
@@ -207,16 +205,13 @@ export default function Registrazione() {
 								icon={false}
 							/>
 							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
-							{/* <GhostButton
-								text="Oppure accedi con google."
-								action={() => handleGoogleLogin()}
-								icon={false}
-							/> */}
 							<div className="flex justify-center">
 								<GoogleLogin
 									onSuccess={(credentialResponse) => {
 										googleLogin(credentialResponse);
+										navigate("/app");
 									}}
+									text="signup_with"
 									theme="filled_blue"
 									shape="circle"
 									width="300"

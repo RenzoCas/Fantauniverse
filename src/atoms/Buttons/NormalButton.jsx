@@ -9,12 +9,13 @@ export default function NormalButton({
 	customIcon = false,
 	children,
 	roundedFull = true,
+	type = "button",
 }) {
 	return (
 		<button
 			onClick={action}
 			disabled={disabled}
-			type="button"
+			type={type}
 			className={`group flex items-center justify-center gap-[8px] px-[24px] py-[12px] cursor-pointer ${
 				roundedFull ? "rounded-full" : ""
 			}

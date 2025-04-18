@@ -154,7 +154,13 @@ function Player({
 									<p className="body-normal font-semibold flex flex-1">
 										{pd.day?.name}
 									</p>
-									<p className="body-normal font-semibold whitespace-nowrap">
+									<p
+										className={`body-normal font-semibold whitespace-nowrap ${
+											pd.points < 0
+												? "text-(--error-normal)"
+												: ""
+										}`}
+									>
 										{pd.points} pnt.{" "}
 										{isCaptain && (
 											<span className="text-(--black-light-active)">

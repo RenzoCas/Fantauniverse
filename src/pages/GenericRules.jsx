@@ -1,43 +1,21 @@
 import { useNavigate } from "react-router";
-// import Navbar from "../components/Navbar";
-import { useUser } from "../contexts/UserContext";
 import Logo from "../atoms/Logo";
 import { Book, ChevronLeft } from "lucide-react";
 
 export default function GenericRules() {
 	const navigate = useNavigate();
-	const { user } = useUser();
 	return (
 		<>
-			{user.id != "" ? (
-				<>
-					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1 cursor-pointer"
-						onClick={() => navigate("/app")}
-					>
-						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
-						Torna alla dashboard
-					</button>
-					<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
-						<Logo />
-					</div>
-				</>
-			) : (
-				<>
-					<header className="relative h-[46px] border-b-[2px] border-b-black">
-						<div className="absolute left-1/2 -translate-x-1/2 bottom-[-10px]">
-							<Logo />
-						</div>
-					</header>
-					<button
-						className="flex items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal cursor-pointer"
-						onClick={() => navigate("/registration")}
-					>
-						<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
-						Vai alla registrazione
-					</button>
-				</>
-			)}
+			<button
+				className="flex items-center gap-[10px] w-full p-[10px] bg-(--black-light) body-normal lg:hidden fixed top-[64px] left-0 z-1 cursor-pointer"
+				onClick={() => navigate("/app")}
+			>
+				<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
+				Torna alla dashboard
+			</button>
+			<div className="hidden lg:fixed lg:top-[8px] lg:left-[370px] lg:flex lg:w-full lg:px-[20px] lg:py-[20px] lg:border-b-2 lg:border-b-solid lg:border-b-(--black-light-hover) lg:max-w-[calc(100vw-370px)]">
+				<Logo />
+			</div>
 
 			<section className="pt-8 lg:p-0 flex flex-col gap-4 lg:max-w-[840px] lg:mx-auto">
 				<h1 className="title-h4 font-medium text-(--black-normal)">

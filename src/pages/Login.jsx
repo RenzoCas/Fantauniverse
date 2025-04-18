@@ -126,6 +126,7 @@ export default function Login() {
 								action={handleSubmit}
 								disabled={!isFormValid()}
 								icon={false}
+								type="submit"
 							/>
 							<GhostButton
 								text="Non sei registrato? Registrati"
@@ -133,11 +134,6 @@ export default function Login() {
 								icon={false}
 							/>
 							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
-							{/* <GhostButton
-								text="Oppure accedi con google."
-								action={() => handleGoogleLogin()}
-								icon={false}
-							/> */}
 							<div className="flex justify-center">
 								<GoogleLogin
 									onSuccess={(credentialResponse) => {

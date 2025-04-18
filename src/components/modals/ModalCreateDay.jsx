@@ -107,6 +107,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 						action={handleSubmitData}
 						disabled={!isFormValid()}
 						icon={false}
+						type="submit"
 					/>
 				</form>
 			</div>

@@ -228,6 +228,7 @@ function ModalRule({
 							}}
 							disabled={!isFormValid()}
 							icon={false}
+							type="submit"
 						/>
 						{isEdit && (
 							<GhostButton

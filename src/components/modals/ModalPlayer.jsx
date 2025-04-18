@@ -208,6 +208,7 @@ function ModalPlayer({
 						}}
 						disabled={!isFormValid()}
 						customIcon={true}
+						type="submit"
 					>
 						{isEdit ? (
 							<PencilSquareIcon className="h-[24px] w-[24px] flex-shrink-0" />

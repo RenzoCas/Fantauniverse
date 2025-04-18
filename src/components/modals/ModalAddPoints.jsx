@@ -196,6 +196,7 @@ function ModalAddPoints({
 					icon={false}
 					text="Conferma"
 					classOpt="sticky bottom-0"
+					type="submit"
 				/>
 			</div>
 		</>

@@ -161,6 +161,7 @@ function ModalChangePassword({ isOpen, onClose, handleChangePassword }) {
 						text="Aggiorna la password"
 						disabled={!isFormValid()}
 						action={handleSubmit}
+						type="submit"
 					/>
 				</form>
 			</div>

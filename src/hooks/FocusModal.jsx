@@ -9,26 +9,23 @@ export default function FocusModal(ref, isActive) {
 
 		let firstEl, lastEl;
 
-		const focusFirstElement = () => {
+		const updateFocusableElements = () => {
 			const focusableEls =
 				ref.current.querySelectorAll(focusableSelectors);
-			if (focusableEls.length === 0) {
-				return;
-			}
-
+			if (focusableEls.length === 0) return;
 			firstEl = focusableEls[0];
 			lastEl = focusableEls[focusableEls.length - 1];
-
-			firstEl?.focus();
 		};
 
-		focusFirstElement();
+		updateFocusableElements();
+		firstEl?.focus();
 
 		const observer = new MutationObserver(() => {
-			focusFirstElement();
+			updateFocusableElements();
 		});
 
 		observer.observe(ref.current, {
+			childList: true,
 			subtree: true,
 			attributes: true,
 			attributeFilter: ["disabled"],

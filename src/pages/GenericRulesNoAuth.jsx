@@ -12,11 +12,11 @@ export default function GenericRulesNoAuth() {
 				</div>
 			</header>
 			<button
-				className="flex lg:hidden items-center gap-[10px] justify-center w-full p-[10px] bg-(--black-light) body-normal cursor-pointer"
-				onClick={() => navigate("/")}
+				className="flex lg:hidden items-center gap-[10px] w-full p-[10px] bg-(--black-light) body-normal cursor-pointer"
+				onClick={() => navigate("/registration")}
 			>
 				<ChevronLeft className="h-[24px] w-[24px] flex-shrink-0" />
-				Vai alla registrazione
+				Registrati
 			</button>
 			<main className="flex lg:grid lg:grid-cols-2 py-[40px] px-[16px]">
 				<section className="flex flex-col justify-center gap-[16px] mx-auto">
