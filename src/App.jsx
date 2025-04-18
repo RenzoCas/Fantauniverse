@@ -7,6 +7,7 @@ import { PlayerProvider } from "./contexts/PlayerContext";
 
 import Homepage from "./pages/Homepage";
 import FAQPage from "./pages/Faq";
+import PrivacyPage from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 import FantaUniverse from "./pages/FantaUniverse";
 import ProtectedRoute from "./guards/ProtectedRoute";
@@ -25,6 +26,7 @@ import { ModalProvider } from "./contexts/ModalContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GenericRulesNoAuth from "./pages/GenericRulesNoAuth";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import PrivacyPageNoAuth from "./pages/PrivacyPolicyNoAuth";
 
 function App() {
 	return (
@@ -57,6 +59,12 @@ function App() {
 															path="rules"
 															element={
 																<GenericRulesNoAuth />
+															}
+														/>
+														<Route
+															path="privacyPolicy"
+															element={
+																<PrivacyPageNoAuth />
 															}
 														/>
 														<Route
@@ -100,6 +108,12 @@ function App() {
 																path="faq"
 																element={
 																	<FAQPage />
+																}
+															/>
+															<Route
+																path="privacyPolicy"
+																element={
+																	<PrivacyPage />
 																}
 															/>
 															<Route

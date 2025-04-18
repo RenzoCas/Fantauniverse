@@ -1,0 +1,33 @@
+{
+	"privacys": [
+		{
+			"title": "Come utilizziamo le tue informazioni:",
+			"text": "Durante la registrazione (permessa a chi abbia più di quattordici anni) alla piattaforma e la creazione dell'account, saranno richiesti alcuni dati personali, quali username e indirizzo e-mail. È possibile registrarsi e autenticarsi anche tramite account di servizi social (Google). In questo caso, saranno acquisiti esclusivamente i dati strettamente necessari (email), senza includere credenziali di accesso o ulteriori informazioni. È possibile caricare un'immagine a tuo piacimento a patto che non sia lesiva di diritti di terzi e non devono presentare contenuti cruenti, o tali da provocare turbamento; non devono avere contenuto offensivo, ingiurioso, denigratorio, discriminatorio. Trattiamo i seguenti dati personali:",
+			"lista": [
+				"Indirizzo e-mail",
+				"Immagine - se identificativa",
+				"Username"
+			]
+		},
+		{
+			"title": "I tuoi diritti:",
+			"text": "Potrai scriverci all'indirizzo mail fantauniverse.privacy@gmail.com, in qualsiasi momento e gratuitamente per:",
+			"lista": [
+				"Accedere ai tuoi dati personali, rettificarli o riceverne una copia",
+				"Ottenere la cancellazione dei dati personali"
+			]
+		},
+		{
+			"title": "Sicurezza:",
+			"text": "La sicurezza delle tue informazioni è importante per noi e adotteremo misure di sicurezza ragionevoli per prevenire la perdita, l'uso improprio o l'alterazione non autorizzata delle tue informazioni sotto il nostro controllo. Tuttavia, dati i rischi intrinseci, non possiamo garantire la sicurezza assoluta e, di conseguenza, non possiamo assicurare o garantire la sicurezza di alcuna informazione che ci trasmetti, e lo fai a tuo rischio e pericolo."
+		},
+		{
+			"title": "Link di terze parti e utilizzo delle tue informazioni:",
+			"text": "Il nostro Servizio potrebbe contenere link ad altri siti web non gestiti da noi. La presente Informativa sulla privacy non riguarda l'informativa sulla privacy e altre pratiche di terze parti, incluse quelle che gestiscono siti web o servizi accessibili tramite un link presente sul Servizio. Ti consigliamo vivamente di consultare l'informativa sulla privacy di ogni sito che visiti. Non abbiamo alcun controllo e non ci assumiamo alcuna responsabilità per il contenuto, le informative sulla privacy o le pratiche di siti o servizi di terze parti."
+		},
+		{
+			"title": "Responsabile dei reclami/della protezione dei dati:",
+			"text": "In caso di domande o dubbi sul trattamento dei tuoi dati personali in nostro possesso, puoi inviare un'e-mail al nostro Responsabile dei Reclami indirizzo e-mail: fantauniverse.privacy@gmail.com. Risponderemo alle tue richieste in conformità con la legge applicabile."
+		}
+	]
+}

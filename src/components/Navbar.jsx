@@ -17,7 +17,7 @@ import { useLeague } from "../contexts/LeagueContext";
 import Loader from "./Loader";
 import GenericPopup from "./popups/GenericPopup";
 import ModalConfirmAction from "./modals/ModalConfirmAction";
-import { Bell } from "lucide-react";
+import { Bell, Newspaper } from "lucide-react";
 import NotificationComponent from "./Notification";
 import { useNotification } from "../contexts/NotificationContext";
 import FocusModal from "../hooks/FocusModal";
@@ -397,6 +397,20 @@ export default function Navbar() {
 										<span className="body-normal font-medium text-(--black-normal) self-center">
 											Hai bisogno di aiuto? Controlla le
 											nostre FAQ
+										</span>
+										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
+									</button>
+								</li>
+								<li>
+									<button
+										className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
+										onClick={() =>
+											handleClickLink("privacyPolicy")
+										}
+									>
+										<Newspaper className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+										<span className="body-normal font-medium text-(--black-normal) self-center">
+											Privacy Policy
 										</span>
 										<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 									</button>

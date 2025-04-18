@@ -14,6 +14,7 @@ import { useLeague } from "../contexts/LeagueContext";
 import Loader from "./Loader";
 import GenericPopup from "./popups/GenericPopup";
 import ModalConfirmAction from "./modals/ModalConfirmAction";
+import { Newspaper } from "lucide-react";
 
 export default function SidebarDesktop() {
 	const navigate = useNavigate();
@@ -261,7 +262,7 @@ export default function SidebarDesktop() {
 							{myLeagues?.length > 0 && (
 								<li>
 									<button
-										className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
+										className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 										onClick={() => handleClickLink("/app")}
 									>
 										<HomeIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
@@ -274,7 +275,7 @@ export default function SidebarDesktop() {
 							)}
 							<li>
 								<button
-									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
+									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 									onClick={() => handleClickLink("account")}
 								>
 									<Cog6ToothIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
@@ -286,7 +287,7 @@ export default function SidebarDesktop() {
 							</li>
 							<li>
 								<button
-									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
+									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 									onClick={() => handleClickLink("rules")}
 								>
 									<ExclamationCircleIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
@@ -298,13 +299,27 @@ export default function SidebarDesktop() {
 							</li>
 							<li>
 								<button
-									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer w-full"
+									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
 									onClick={() => handleClickLink("faq")}
 								>
 									<ChatBubbleOvalLeftEllipsisIcon className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
 									<span className="body-normal font-medium text-(--black-normal) self-center">
 										Hai bisogno di aiuto? Controlla le
 										nostre FAQ
+									</span>
+									<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
+								</button>
+							</li>
+							<li>
+								<button
+									className="flex gap-[20px] text-(--black-normal) w-full text-left cursor-pointer"
+									onClick={() =>
+										handleClickLink("privacyPolicy")
+									}
+								>
+									<Newspaper className="h-[24px] w-[24px] stroke-2 flex-shrink-0" />
+									<span className="body-normal font-medium text-(--black-normal) self-center">
+										Privacy Policy
 									</span>
 									<ChevronRightIcon className="h-[24px] w-[24px] ml-auto stroke-2 flex-shrink-0" />
 								</button>

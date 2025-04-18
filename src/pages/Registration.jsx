@@ -8,6 +8,7 @@ import Logo from "../atoms/Logo";
 // import Checkbox from "../atoms/Inputs/Checkbox";
 import Loader from "../components/Loader";
 import { GoogleLogin } from "@react-oauth/google";
+import { Link } from "react-router-dom";
 
 export default function Registrazione() {
 	const messageError = "Campo obbligatorio";
@@ -204,6 +205,13 @@ export default function Registrazione() {
 								action={() => navigate("/login")}
 								icon={false}
 							/>
+							<p className="body-xsmall text-center">
+								Registrandoti confermi di aver letto la nostra{" "}
+								<Link to="/privacyPolicy" className="underline">
+									privacy policy
+								</Link>
+								.
+							</p>
 							<div className="h-[1px] w-[243px] bg-(--black-light) mx-auto"></div>
 							<div className="flex justify-center">
 								<GoogleLogin
