@@ -425,14 +425,16 @@ function Points() {
 							<h2 className="title-h4 font-medium break-all lg:hidden">
 								{league.name}
 							</h2>
-							{isAdmin && status != "FINISHED" && (
-								<button
-									className="flex gap-[4px] body-small font-semibold whitespace-nowrap cursor-pointer"
-									onClick={() => setIsModalOpen(true)}
-								>
-									Aggiungi giornata
-								</button>
-							)}
+							{isAdmin &&
+								status != "FINISHED" &&
+								!isUpdateDay && (
+									<button
+										className="flex gap-[4px] body-small font-semibold whitespace-nowrap cursor-pointer"
+										onClick={() => setIsModalOpen(true)}
+									>
+										Aggiungi giornata
+									</button>
+								)}
 						</div>
 						<div className="flex flex-col gap-[12px] relative">
 							<button
