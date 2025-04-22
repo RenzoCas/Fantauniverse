@@ -202,10 +202,6 @@ function ModalPlayer({
 					</div>
 					<NormalButton
 						text={isEdit ? "Modifica Player" : "Aggiungi Player"}
-						action={() => {
-							onSubmit(formData);
-							setFileKey(Date.now());
-						}}
 						disabled={!isFormValid()}
 						customIcon={true}
 						type="submit"

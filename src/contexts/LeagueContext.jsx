@@ -28,6 +28,7 @@ const initialStateLeague = {
 	isRegistered: true,
 	enableCaptain: false,
 	teamMaxPlayers: 0,
+	admins: [],
 	rules: [],
 	participants: [],
 	players: [],
@@ -175,6 +176,13 @@ function leagueReducer(state, action) {
 			return {
 				...state,
 				participants: [...state.participants, action.payload],
+				isRegistered: true,
+			};
+
+		case "addAdmin":
+			return {
+				...state,
+				admins: [...state.admins, action.payload],
 			};
 
 		default:
