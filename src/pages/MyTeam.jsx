@@ -207,7 +207,7 @@ function MyTeam() {
 	const handleSubmitTeam = async () => {
 		setIsLoading(true);
 		let res = null;
-		if (team) {
+		if (tempTeam.id != null) {
 			res = await updateTeam(tempTeam);
 		} else {
 			res = await createTeam(tempTeam);
@@ -227,7 +227,7 @@ function MyTeam() {
 		setTempMaxCoins(maxCoins - totalCost);
 		setTempTeam(res);
 
-		if (team) {
+		if (tempTeam.id != null) {
 			showPopup(
 				"success",
 				"Squadra aggiornata!",
