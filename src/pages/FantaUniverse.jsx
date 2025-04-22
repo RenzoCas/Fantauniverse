@@ -2,9 +2,16 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import SidebarDesktop from "../components/SidebarDesktop";
 import { useModal } from "../contexts/ModalContext";
+import { useNotification } from "../contexts/NotificationContext";
+import { useEffect } from "react";
 
 export default function FantaUniverse() {
 	const { isOpenBackdrop } = useModal();
+    const { getNotifications } = useNotification();
+
+    useEffect(()=>{
+        getNotifications();
+    }, [])
 
 	return (
 		<>

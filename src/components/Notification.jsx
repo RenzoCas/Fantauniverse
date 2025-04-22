@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNotification } from "../contexts/NotificationContext";
 import { BellOff } from "lucide-react";
 import { useNavigate } from "react-router";
@@ -6,16 +5,11 @@ import { useNavigate } from "react-router";
 function NotificationComponent({ onClose }) {
 	const {
 		notifications,
-		getNotifications,
 		readNotification,
 		readAllNotifications,
 		unreadCountNotifications,
 	} = useNotification();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		getNotifications();
-	}, []);
 
 	const handleClick = (notification) => {
 		if (!notification.read) {
