@@ -711,7 +711,7 @@ function GeneralSettings() {
 									<div className="flex gap-[10px]">
 										<UserGroupIcon className="stroke-(--black-light-active) w-[24px] h-[24px] flex-shrink-0" />
 										<p className="body-normal text-(--black-normal) self-center">
-											5 players
+											{teamMaxPlayers}
 										</p>
 									</div>
 								</div>
