@@ -175,7 +175,7 @@ function ModalRule({
 								name: "",
 								rule: "",
 								value: "",
-								malus: false,
+								malus: startTabActive == "Malus" ? true : false,
 							});
 						}}
 						className="flex flex-col gap-4"
@@ -223,7 +223,7 @@ function ModalRule({
 									name: "",
 									rule: "",
 									value: "",
-									malus: false,
+									malus: startTabActive == "Malus" ? true : false,
 								});
 							}}
 							disabled={!isFormValid()}

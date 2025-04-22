@@ -80,25 +80,28 @@ function Players() {
 			);
 			return;
 		}
-
-		const filename = `${formData.icon.name}`;
-		const urlImage = await getUrlImage({
-			id: result.id,
-			fileName: filename,
-			referredTo: "PLAYER",
-		});
-
-		if (!urlImage) {
-			setIsLoading(false);
-			showPopup(
-				"error",
-				"Errore nell'aggiunta dell'immagine!",
-				"Il player é stato correttamente aggiunto, ma l'immagine non é stata caricata. Riprova."
-			);
-			return;
-		}
-
-		await uploadImage(formData.icon, urlImage, result.id);
+        
+        if (formData.icon != "") {
+            const filename = `${formData.icon.name}`;
+            const urlImage = await getUrlImage({
+                id: result.id,
+                fileName: filename,
+                referredTo: "PLAYER",
+            });
+    
+            if (!urlImage) {
+                setIsLoading(false);
+                showPopup(
+                    "error",
+                    "Errore nell'aggiunta dell'immagine!",
+                    "Il player é stato correttamente aggiunto, ma l'immagine non é stata caricata. Riprova."
+                );
+                return;
+            }
+    
+            await uploadImage(formData.icon, urlImage, result.id);
+        }
+		
 		setIsLoading(false);
 		showPopup(
 			"success",
