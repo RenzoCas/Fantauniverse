@@ -18,7 +18,7 @@ function Ranking({ handleTabChange }) {
 			await getRanking(id);
 			setIsLoading(false);
 		};
-
+		resetParticipant();
 		fetchData();
 	}, []);
 

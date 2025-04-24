@@ -179,6 +179,12 @@ function leagueReducer(state, action) {
 				isRegistered: true,
 			};
 
+		case "updateParticipants":
+			return {
+				...state,
+				participants: action.payload,
+			};
+
 		case "addAdmin":
 			return {
 				...state,
