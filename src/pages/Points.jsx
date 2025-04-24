@@ -219,6 +219,22 @@ function Points() {
 	const handleDeleteDay = async () => {
 		setIsLoading(true);
 		const result = await deleteDay(activeDay.id);
+		await setTempDay({
+			leagueId: league.id,
+			id: null,
+			name: "",
+			date: Date.now(),
+			players: [],
+			rules: [],
+		});
+		await setInfoDay({
+			leagueId: league.id,
+			id: null,
+			name: "",
+			date: Date.now(),
+			players: [],
+			rules: [],
+		});
 		setIsLoading(false);
 
 		if (!result) {
