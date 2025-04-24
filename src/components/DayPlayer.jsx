@@ -70,6 +70,12 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 									</h6>
 									<p className="body-normal font-semibold break-all">
 										{el.value}
+										{el.counter > 1 && (
+											<span className="body-small text-(--black-light-active)">
+												{" "}
+												x{el.counter}
+											</span>
+										)}
 									</p>
 								</div>
 								<p className="body-normal font-light line-clamp-2 break-all text-left">

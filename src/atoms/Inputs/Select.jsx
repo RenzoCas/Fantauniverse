@@ -14,7 +14,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 	};
 
 	return (
-		<div className="relative">
+		<div className="relative w-full">
 			{label && (
 				<label className="block text-sm font-semibold mb-2">
 					{label}

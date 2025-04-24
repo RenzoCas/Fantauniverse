@@ -6,6 +6,7 @@ import TabButton from "../../atoms/Buttons/TabButton";
 import GhostButton from "../../atoms/Buttons/GhostButton";
 import { useModal } from "../../contexts/ModalContext";
 import FocusModal from "../../hooks/FocusModal";
+import Switch from "../../atoms/Inputs/Switch";
 
 function ModalRule({
 	isOpen,
@@ -21,6 +22,7 @@ function ModalRule({
 		rule: "",
 		value: "",
 		malus: startTabActive == "Malus" ? true : false,
+		cumulative: false,
 	});
 	const [errors, setErrors] = useState({});
 	const [tabActive, setTabActive] = useState(startTabActive);
@@ -58,6 +60,7 @@ function ModalRule({
 				rule: "",
 				value: "",
 				malus: startTabActive == "Malus" ? true : false,
+				cumulative: false,
 			});
 		}
 	}, [ruleObj, startTabActive]);
@@ -131,6 +134,10 @@ function ModalRule({
 		}));
 	};
 
+	const handleChangeSwitch = () => {
+		setFormData({ ...formData, cumulative: !formData.cumulative });
+	};
+
 	return (
 		<>
 			<div
@@ -176,6 +183,7 @@ function ModalRule({
 								rule: "",
 								value: "",
 								malus: startTabActive == "Malus" ? true : false,
+								cumulative: false,
 							});
 						}}
 						className="flex flex-col gap-4"
@@ -213,6 +221,16 @@ function ModalRule({
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
+						<div className="flex flex-col gap-[8px]">
+							<p className="body-normal text-(--black-light-active) font-medium">
+								Regola cumulativa:
+							</p>
+							<Switch
+								text="Attiva se questa regola puó essere cumulabile."
+								enabled={formData.cumulative}
+								onChange={handleChangeSwitch}
+							/>
+						</div>
 						<NormalButton
 							text={
 								isEdit ? "Modifica Regola" : "Aggiungi Regola"
@@ -223,7 +241,11 @@ function ModalRule({
 									name: "",
 									rule: "",
 									value: "",
-									malus: startTabActive == "Malus" ? true : false,
+									malus:
+										startTabActive == "Malus"
+											? true
+											: false,
+									cumulative: false,
 								});
 							}}
 							disabled={!isFormValid()}
