@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -57,6 +57,7 @@ function Points() {
 	const [tabActive, setTabActive] = useState("Bonus");
 	const hasBonus = rules.some((rule) => rule.malus === false);
 	const hasMalus = rules.some((rule) => rule.malus === true);
+	const tempDayRef = useRef(null);
 
 	useEffect(() => {
 		const changeIndex = async () => {
@@ -150,17 +151,21 @@ function Points() {
 			setIsLoading(true);
 			setIsModalOpen(false);
 			let result = null;
+			const finalDay = tempDayRef.current || tempDay;
 			if (isUpdateDay) {
 				const filteredData = Object.fromEntries(
-					Object.entries(tempDay).filter(([key]) => key !== "players")
+					Object.entries(finalDay).filter(
+						([key]) => key !== "players"
+					)
 				);
 				result = await updateDay(filteredData);
+				await setInfoDay(result);
 			} else {
 				result = await createDay(formData);
+				await setInfoDay(tempDay);
 				setActiveDay(result);
 			}
 
-			await setInfoDay(tempDay);
 			setIsLoading(false);
 			if (isUpdateDay) {
 				showPopup(
@@ -275,126 +280,143 @@ function Points() {
 	const confirmRuleForPlayers = async (
 		ruleObj,
 		selectedPlayers,
-		isDelete = false
+		isDelete = false,
+		counterPlayers = []
 	) => {
-		await setTempDay((prev) => {
-			const updatedRules = [...prev.rules];
-			let updatedPlayers = [...prev.players];
-			const ruleIndex = updatedRules.findIndex(
-				(r) => r.rule.id === ruleObj.id
-			);
+		const updatedRules = tempDayRef.current?.rules
+			? [...tempDayRef.current.rules]
+			: [...tempDay.rules];
 
-			// Se selectedPlayers è vuoto e non è delete, si intende come "rimuovi tutti i player da questa regola"
-			if (!isDelete && selectedPlayers.length === 0 && ruleIndex !== -1) {
-				// Rimuove la regola del tutto
-				const ruleToRemove = updatedRules[ruleIndex];
-				updatedRules.splice(ruleIndex, 1);
+		let updatedPlayers = tempDayRef.current?.players
+			? [...tempDayRef.current.players]
+			: [...tempDay.players];
 
-				// Rimuove la regola da tutti i player coinvolti
-				const playerIdsToUpdate = ruleToRemove.players.map((p) => p.id);
-				updatedPlayers = updatedPlayers.filter((p) => {
-					if (playerIdsToUpdate.includes(p.player.id)) {
-						const newRules = p.rules.filter(
-							(r) => r.id !== ruleObj.id
-						);
-						if (newRules.length === 0) return false;
-						p.rules = newRules;
-						p.points = newRules.reduce(
-							(acc, r) => acc + (r.malus ? -r.value : r.value),
-							0
-						);
-					}
-					return true;
-				});
-			} else if (isDelete) {
-				// Rimuove i player passati dalla regola
-				if (ruleIndex !== -1) {
-					updatedRules[ruleIndex].players = updatedRules[
-						ruleIndex
-					].players.filter(
-						(p) =>
-							!selectedPlayers.some(
-								(sp) => sp.id === p.id || sp.player?.id === p.id
-							)
+		const ruleIndex = updatedRules.findIndex(
+			(r) => r.rule.id === ruleObj.id
+		);
+
+		// Rimuovi tutti i player da questa regola se selectedPlayers è vuoto
+		if (!isDelete && selectedPlayers.length === 0 && ruleIndex !== -1) {
+			const ruleToRemove = updatedRules[ruleIndex];
+			updatedRules.splice(ruleIndex, 1);
+
+			const playerIdsToUpdate = ruleToRemove.players.map((p) => p.id);
+			updatedPlayers = updatedPlayers.filter((p) => {
+				if (playerIdsToUpdate.includes(p.player.id)) {
+					const newRules = p.rules.filter((r) => r.id !== ruleObj.id);
+					if (newRules.length === 0) return false;
+					p.rules = newRules;
+					p.points = newRules.reduce(
+						(acc, r) => acc + (r.malus ? -r.value : r.value),
+						0
 					);
-
-					if (updatedRules[ruleIndex].players.length === 0) {
-						updatedRules.splice(ruleIndex, 1);
-					}
 				}
-
-				selectedPlayers.forEach((playerWrapper) => {
-					const playerId =
-						playerWrapper.player?.id || playerWrapper.id;
-					const existing = updatedPlayers.find(
-						(p) => p.player.id === playerId
-					);
-
-					if (existing) {
-						existing.rules = existing.rules.filter(
-							(r) => r.id !== ruleObj.id
-						);
-
-						if (existing.rules.length === 0) {
-							updatedPlayers = updatedPlayers.filter(
-								(p) => p.player.id !== playerId
-							);
-						} else {
-							existing.points = existing.rules.reduce(
-								(acc, r) =>
-									acc + (r.malus ? -r.value : r.value),
-								0
-							);
-						}
-					}
-				});
-			} else {
-				// Aggiunta o aggiornamento della regola con nuovi player
-				if (ruleIndex !== -1) {
-					updatedRules[ruleIndex].players = selectedPlayers.map(
-						(p) => ({
-							id: p.id,
-						})
-					);
-				} else {
-					updatedRules.push({
-						rule: ruleObj,
-						players: selectedPlayers.map((p) => ({ id: p.id })),
-					});
+				return true;
+			});
+		} else if (isDelete) {
+			// Elimina i player specificati dalla regola
+			if (ruleIndex !== -1) {
+				updatedRules[ruleIndex].players = updatedRules[
+					ruleIndex
+				].players.filter(
+					(p) =>
+						!selectedPlayers.some(
+							(sp) => sp.id === p.id || sp.player?.id === p.id
+						)
+				);
+				if (updatedRules[ruleIndex].players.length === 0) {
+					updatedRules.splice(ruleIndex, 1);
 				}
+			}
 
-				selectedPlayers.forEach((player) => {
-					const existing = updatedPlayers.find(
-						(p) => p.player.id === player.id
+			selectedPlayers.forEach((playerWrapper) => {
+				const playerId = playerWrapper.player?.id || playerWrapper.id;
+				const existing = updatedPlayers.find(
+					(p) => p.player.id === playerId
+				);
+				if (existing) {
+					existing.rules = existing.rules.filter(
+						(r) => r.id !== ruleObj.id
 					);
-
-					if (existing) {
-						existing.rules = existing.rules.filter(
-							(r) => r.id !== ruleObj.id
+					if (existing.rules.length === 0) {
+						updatedPlayers = updatedPlayers.filter(
+							(p) => p.player.id !== playerId
 						);
-						existing.rules.push(ruleObj);
+					} else {
 						existing.points = existing.rules.reduce(
 							(acc, r) => acc + (r.malus ? -r.value : r.value),
 							0
 						);
-					} else {
-						updatedPlayers.push({
-							player,
-							rules: [ruleObj],
-							points: ruleObj.malus
-								? -ruleObj.value
-								: ruleObj.value,
-						});
 					}
-				});
+				}
+			});
+		} else {
+			// Aggiungi o aggiorna la regola con i player raggruppati per counter
+
+			// Rimuovi tutte le vecchie regole con questa rule id
+			for (let i = updatedRules.length - 1; i >= 0; i--) {
+				if (updatedRules[i].rule.id === ruleObj.id) {
+					updatedRules.splice(i, 1);
+				}
 			}
 
-			return {
-				...prev,
-				players: updatedPlayers,
-				rules: updatedRules,
-			};
-		});
+			// Raggruppa i player per counter
+			const counterMap = {};
+			selectedPlayers.forEach((player) => {
+				const match = counterPlayers.find((cp) => cp.id === player.id);
+				const counter = match ? match.counter : 1;
+				if (!counterMap[counter]) counterMap[counter] = [];
+				counterMap[counter].push(player);
+			});
+
+			// Crea nuove regole per ogni gruppo
+			Object.entries(counterMap).forEach(([counter, players]) => {
+				updatedRules.push({
+					rule: ruleObj,
+					players: players.map((p) => ({ id: p.id })),
+					counter: Number(counter),
+				});
+			});
+
+			// Aggiorna il blocco dei player
+			selectedPlayers.forEach((player) => {
+				const existing = updatedPlayers.find(
+					(p) => p.player.id === player.id
+				);
+				if (existing) {
+					existing.rules = existing.rules.filter(
+						(r) => r.id !== ruleObj.id
+					);
+					existing.rules.push(ruleObj);
+					existing.points = existing.rules.reduce(
+						(acc, r) => acc + (r.malus ? -r.value : r.value),
+						0
+					);
+				} else {
+					updatedPlayers.push({
+						player,
+						rules: [ruleObj],
+						points: ruleObj.malus ? -ruleObj.value : ruleObj.value,
+					});
+				}
+			});
+		}
+
+		const updatedDay = {
+			...tempDay,
+			players: updatedPlayers,
+			rules: updatedRules,
+		};
+
+		setTempDay((prev) => ({
+			...prev,
+			players: updatedPlayers,
+			rules: updatedRules,
+		}));
+
+		tempDayRef.current = updatedDay;
+
+		console.log(tempDayRef);
 	};
 
 	const handleRemovePlayer = async (player, rule) => {

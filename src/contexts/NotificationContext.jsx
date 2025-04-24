@@ -93,6 +93,49 @@ function NotificationProvider({ children }) {
 		}
 	};
 
+	const deleteNotification = async (notificationId) => {
+		try {
+			const response = await fetch(
+				`${urlServer}/notifications/${notificationId}`,
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Errore nella cancellazione della notifica.");
+			}
+
+			setNotifications((prev) =>
+				prev.filter((n) => n.id !== notificationId)
+			);
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+
+	const deleteAllNotifications = async () => {
+		try {
+			const response = await fetch(`${urlServer}/notifications`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error("Errore nella cancellazione delle notifiche.");
+			}
+
+			setNotifications([]);
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+
 	const unreadCountNotifications = notifications.filter(
 		(n) => !n.read
 	).length;
@@ -104,6 +147,8 @@ function NotificationProvider({ children }) {
 				getNotifications,
 				readNotification,
 				readAllNotifications,
+				deleteNotification,
+				deleteAllNotifications,
 				unreadCountNotifications,
 			}}
 		>

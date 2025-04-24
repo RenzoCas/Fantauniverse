@@ -7,6 +7,8 @@ function NotificationComponent({ onClose }) {
 		notifications,
 		readNotification,
 		readAllNotifications,
+		deleteNotification,
+		deleteAllNotifications,
 		unreadCountNotifications,
 	} = useNotification();
 	const navigate = useNavigate();
@@ -16,8 +18,8 @@ function NotificationComponent({ onClose }) {
 			readNotification(notification.id);
 		}
 		onClose();
-		const parsedPayload = JSON.parse(notification.actionPayload);
-		navigate(`/app/${parsedPayload.url}`);
+		const { actionPayload } = notification.actions[0];
+		navigate(`/app/${actionPayload.url}`);
 	};
 
 	const readAll = () => {
@@ -42,7 +44,10 @@ function NotificationComponent({ onClose }) {
 							Segna come lette
 						</button>
 					)}
-					<button className="body-small text-(--error-normal) cursor-pointer self-end">
+					<button
+						className="body-small text-(--error-normal) cursor-pointer self-end"
+						onClick={() => deleteAllNotifications()}
+					>
 						Cancella tutte
 					</button>
 				</div>
@@ -84,7 +89,10 @@ function NotificationComponent({ onClose }) {
 								<p className="body-small text-left">
 									{noti.description}
 								</p>
-								<button className="body-small text-right text-(--error-normal) w-fit self-end">
+								<button
+									className="body-small text-right text-(--error-normal) w-fit self-end"
+									onClick={() => deleteNotification(noti.id)}
+								>
 									Cancella
 								</button>
 							</div>
