@@ -6,7 +6,7 @@ import TabButton from "../../atoms/Buttons/TabButton";
 import GhostButton from "../../atoms/Buttons/GhostButton";
 import { useModal } from "../../contexts/ModalContext";
 import FocusModal from "../../hooks/FocusModal";
-import Switch from "../../atoms/Inputs/Switch";
+// import Switch from "../../atoms/Inputs/Switch";
 
 function ModalRule({
 	isOpen,
@@ -134,9 +134,9 @@ function ModalRule({
 		}));
 	};
 
-	const handleChangeSwitch = () => {
-		setFormData({ ...formData, cumulative: !formData.cumulative });
-	};
+	// const handleChangeSwitch = () => {
+	// 	setFormData({ ...formData, cumulative: !formData.cumulative });
+	// };
 
 	return (
 		<>
@@ -221,7 +221,7 @@ function ModalRule({
 							handleChange={handleChange}
 							handleBlur={handleBlur}
 						/>
-						<div className="flex flex-col gap-[8px]">
+						{/* <div className="flex flex-col gap-[8px]">
 							<p className="body-normal text-(--black-light-active) font-medium">
 								Regola cumulativa:
 							</p>
@@ -230,7 +230,7 @@ function ModalRule({
 								enabled={formData.cumulative}
 								onChange={handleChangeSwitch}
 							/>
-						</div>
+						</div> */}
 						<NormalButton
 							text={
 								isEdit ? "Modifica Regola" : "Aggiungi Regola"
