@@ -57,7 +57,7 @@ function Points() {
 	const [tabActive, setTabActive] = useState("Bonus");
 	const hasBonus = rules.some((rule) => rule.malus === false);
 	const hasMalus = rules.some((rule) => rule.malus === true);
-	const tempDayRef = useRef(null);
+	let tempDayRef = useRef(null);
 
 	useEffect(() => {
 		const changeIndex = async () => {
@@ -273,6 +273,7 @@ function Points() {
 	};
 
 	const handleCancelUpdate = async () => {
+		tempDayRef.current = null;
 		await fetchInfoDay(days[activeIndex]?.id);
 		setIsUpdateDay(false);
 	};
@@ -415,8 +416,6 @@ function Points() {
 		}));
 
 		tempDayRef.current = updatedDay;
-
-		console.log(tempDayRef);
 	};
 
 	const handleRemovePlayer = async (player, rule) => {
@@ -598,6 +597,7 @@ function Points() {
 									}
 									playersSelected={tempDay.players}
 									onConfirm={confirmRuleForPlayers}
+									tempDayRef={tempDayRef}
 								/>
 							</div>
 						) : (
