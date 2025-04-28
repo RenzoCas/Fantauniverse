@@ -48,7 +48,7 @@ function Points() {
 		leagueId: league.id,
 		id: days[activeIndex]?.id || null,
 		name: days[activeIndex]?.name || "",
-		date: days[activeIndex]?.date || Date.now(),
+		date: days[activeIndex]?.date || new Date().toISOString(),
 		players: days[activeIndex]?.players || [],
 		rules: days[activeIndex]?.rules || [],
 	});
@@ -228,7 +228,7 @@ function Points() {
 			leagueId: league.id,
 			id: null,
 			name: "",
-			date: Date.now(),
+			date: new Date().toISOString(),
 			players: [],
 			rules: [],
 		});
@@ -236,7 +236,7 @@ function Points() {
 			leagueId: league.id,
 			id: null,
 			name: "",
-			date: Date.now(),
+			date: new Date().toISOString(),
 			players: [],
 			rules: [],
 		});

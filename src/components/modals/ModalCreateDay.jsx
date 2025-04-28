@@ -10,7 +10,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 	const { league } = useLeague();
 	const [formData, setFormData] = useState({
 		leagueId: league.id,
-		days: [{ name: "", date: new Date().toISOString().split("T")[0] }],
+		days: [{ name: "", date: new Date().toISOString() }],
 	});
 	const { openBackdrop, closeBackdrop } = useModal();
 	const modalRef = useRef(null);
@@ -53,7 +53,7 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 			days: [
 				{
 					name: "",
-					date: new Date().toISOString().split("T")[0],
+					date: new Date().toISOString(),
 				},
 			],
 		});
