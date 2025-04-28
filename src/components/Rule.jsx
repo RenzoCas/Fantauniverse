@@ -5,7 +5,7 @@ import {
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { SquarePlus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Rule({
 	ruleObj,
@@ -20,6 +20,9 @@ function Rule({
 	const [expanded, setExpanded] = useState(false);
 	const [randomColors, setRandomColors] = useState([]);
 	const [players, setPlayers] = useState([]);
+	const [showChevron, setShowChevron] = useState(false);
+
+	const ruleRef = useRef(null);
 
 	const randomLightColor = () => {
 		const getRandomValue = () => Math.floor(Math.random() * 128) + 128;
@@ -46,6 +49,19 @@ function Rule({
 		}
 	}, [playersRule, ruleObj]);
 
+	useEffect(() => {
+		const pElement = ruleRef.current;
+		if (pElement) {
+			const lineHeight = parseFloat(
+				getComputedStyle(pElement).lineHeight
+			);
+			const maxLines = 2;
+			const shouldShowChevron =
+				pElement.scrollHeight > lineHeight * maxLines;
+			setShowChevron(shouldShowChevron);
+		}
+	}, [rule]);
+
 	return (
 		<li
 			className={`flex flex-col border-b border-(--black-light) pb-[8px] gap-[8px] transform transition-all duration-300 has-disabled:opacity-[0.5]`}
@@ -69,6 +85,7 @@ function Rule({
 					{!isAddPoints && (
 						<div className="flex items-end gap-[8px]">
 							<p
+								ref={ruleRef}
 								className={`body-small text-(--black-normal)/70 transition-all ${
 									expanded
 										? "line-clamp-none"
@@ -77,7 +94,7 @@ function Rule({
 							>
 								{rule}
 							</p>
-							{rule.length > 80 && (
+							{showChevron && (
 								<button
 									className="flex cursor-pointer"
 									onClick={() => setExpanded(!expanded)}
