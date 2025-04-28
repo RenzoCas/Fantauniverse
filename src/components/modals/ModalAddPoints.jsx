@@ -23,11 +23,6 @@ function ModalAddPoints({
 	const [randomColors, setRandomColors] = useState([]);
 	const [selectedPlayers, setSelectedPlayers] = useState([]);
 	const [counterPlayers, setCounterPlayers] = useState([]);
-	const playerRules =
-		tempDayRef.current?.rules?.filter((el) => el.rule.id === ruleObj?.id) ||
-		[];
-
-	const playerIds = playerRules.flatMap((r) => r.players.map((p) => p.id));
 
 	const modalRef = useRef(null);
 	FocusModal(modalRef, isOpen);
@@ -61,8 +56,6 @@ function ModalAddPoints({
 	}, [tempDayRef, ruleObj]); // Esegui l'effetto quando cambia tempDayRef o ruleObj
 
 	useEffect(() => {
-		console.log(playerRules);
-		console.log(playerIds);
 		if (players && players.length > 0) {
 			setRandomColors(players.map(() => randomLightColor()));
 		}
@@ -74,22 +67,72 @@ function ModalAddPoints({
 	}, [isOpen]);
 
 	useEffect(() => {
-		if (playersSelected && ruleObj) {
-			const filtered = playersSelected
-				.filter((entry) =>
-					entry.rules.some((rule) => rule.id === ruleObj.id)
-				)
-				.map((entry) => {
-					const rule = entry.rules.find((r) => r.id === ruleObj.id);
-					return {
-						player: entry.player,
-						counter: rule?.counter || 1,
-					};
-				});
-
-			setSelectedPlayers(filtered.map((item) => item.player));
+		if (
+			!tempDayRef?.current &&
+			(!playersSelected || playersSelected.length === 0)
+		) {
+			setSelectedPlayers([]);
+			setCounterPlayers([]);
+			return;
 		}
-	}, [playersSelected, ruleObj]);
+
+		if (ruleObj) {
+			let selected = [];
+			let counters = [];
+
+			if (tempDayRef?.current) {
+				// Se tempDayRef è presente, usiamo i dati da tempDayRef
+				const matchingRules = tempDayRef.current.rules.filter(
+					(r) => r.rule.id === ruleObj.id
+				);
+
+				selected = matchingRules.flatMap(
+					(r) =>
+						r.players
+							.map((p) => {
+								// Trova il player completo da tempDayRef
+								const playerObj =
+									tempDayRef.current.players.find(
+										(pl) => pl.player.id === p.id
+									);
+								return playerObj?.player; // Prende solo player
+							})
+							.filter(Boolean) // Rimuove eventuali undefined
+				);
+
+				counters = matchingRules.flatMap((r) =>
+					r.players.map((p) => ({
+						id: p.id,
+						counter: r.counter || 1,
+					}))
+				);
+			} else if (playersSelected && playersSelected.length > 0) {
+				// Se tempDayRef non c'è, usiamo playersSelected
+				selected = playersSelected
+					.filter((entry) =>
+						entry.rules.some((rule) => rule.id === ruleObj.id)
+					)
+					.map((entry) => entry.player);
+
+				counters = playersSelected
+					.filter((entry) =>
+						entry.rules.some((rule) => rule.id === ruleObj.id)
+					)
+					.map((entry) => {
+						const rule = entry.rules.find(
+							(r) => r.id === ruleObj.id
+						);
+						return {
+							id: entry.player.id,
+							counter: rule?.counter || 1,
+						};
+					});
+			}
+
+			setSelectedPlayers(selected);
+			setCounterPlayers(counters);
+		}
+	}, [playersSelected, ruleObj, tempDayRef]);
 
 	useEffect(() => {
 		if (players) {
