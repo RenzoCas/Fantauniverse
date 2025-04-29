@@ -333,54 +333,67 @@ function Account() {
 							</button>
 						</div>
 					</div>
-					{["username", "email"].map((field) => (
-						<div key={field} className="flex flex-col gap-[8px]">
-							<label
-								htmlFor={field}
-								className="body-small text-(--black-light-active) font-medium capitalize"
-							>
-								{field}:
-							</label>
-							<div className="flex gap-[10px]">
-								<button
-									className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
-									onClick={() => toggleEditing(field)}
+					{["username", "email"].map((field) => {
+						const shouldRenderField =
+							!user.provider ||
+							(user.provider && field !== "email");
+
+						return (
+							shouldRenderField && (
+								<div
+									key={field}
+									className="flex flex-col gap-[8px]"
 								>
-									{isEditing[field] ? (
-										<Save className="h-[20px] w-[20px]" />
-									) : (
-										<PencilSquareIcon className="h-[20px] w-[20px]" />
-									)}
-								</button>
-								{isEditing[field] ? (
-									<GenericInput
-										type="text"
-										required
-										placeholder={`Inserisci ${field}`}
-										name={field}
-										value={formData[field]}
-										handleChange={handleChange}
-										handleBlur={handleBlur}
-										messageError={errors[field]}
-										autoFocus={true}
-										maxLength={
-											field === "username" ? 20 : 1000
-										}
-									/>
-								) : (
-									<p
-										className={`break-all self-center ${
-											field === "name"
-												? "body-regular font-medium"
-												: "body-normal"
-										}`}
+									<label
+										htmlFor={field}
+										className="body-small text-(--black-light-active) font-medium capitalize"
 									>
-										{formData[field]}
-									</p>
-								)}
-							</div>
-						</div>
-					))}
+										{field}:
+									</label>
+									<div className="flex gap-[10px]">
+										<button
+											className="p-[10px] bg-(--black-light) rounded-full max-h-fit cursor-pointer"
+											onClick={() => toggleEditing(field)}
+										>
+											{isEditing[field] ? (
+												<Save className="h-[20px] w-[20px]" />
+											) : (
+												<PencilSquareIcon className="h-[20px] w-[20px]" />
+											)}
+										</button>
+										{isEditing[field] ? (
+											<GenericInput
+												type="text"
+												required
+												placeholder={`Inserisci ${field}`}
+												name={field}
+												value={formData[field]}
+												handleChange={handleChange}
+												handleBlur={handleBlur}
+												messageError={errors[field]}
+												autoFocus={true}
+												maxLength={
+													field === "username"
+														? 20
+														: 1000
+												}
+											/>
+										) : (
+											<p
+												className={`break-all self-center ${
+													field === "name"
+														? "body-regular font-medium"
+														: "body-normal"
+												}`}
+											>
+												{formData[field]}
+											</p>
+										)}
+									</div>
+								</div>
+							)
+						);
+					})}
 
 					{!user.provider && (
 						<div className="flex flex-col gap-[8px]">
