@@ -147,64 +147,23 @@ function Points() {
 	};
 
 	const handleSubmit = async (formData) => {
-		try {
-			setIsLoading(true);
-			setIsModalOpen(false);
-			let result = null;
-			const finalDay = tempDayRef.current || tempDay;
-			if (isUpdateDay) {
-				const filteredData = Object.fromEntries(
-					Object.entries(finalDay).filter(
-						([key]) => key !== "players"
-					)
-				);
-				result = await updateDay(filteredData);
-				await setInfoDay(result);
-			} else {
-				result = await createDay(formData);
-				await setInfoDay(tempDay);
-				setActiveDay(result);
-			}
-
-			setIsLoading(false);
-			if (isUpdateDay) {
-				showPopup(
-					"success",
-					"Giornata aggiornata!",
-					"La giornata é stata aggiornata correttamente."
-				);
-			} else {
-				showPopup(
-					"success",
-					"Giornata aggiunta!",
-					"La giornata é stata creata correttamente."
-				);
-			}
-
-			if (!isUpdateDay) {
-				setActiveIndex(() => {
-					const newIndex = league.days.length;
-					setTempDay(result);
-					setTempDay((prev) => ({
-						...prev,
-						leagueId: league.id,
-						players: [],
-						rules: [],
-					}));
-
-					setTimeout(() => {
-						if (swiperInstance) {
-							swiperInstance.slideTo(newIndex);
-						}
-					}, 100);
-
-					return newIndex;
-				});
-			}
-			setIsUpdateDay(false);
-		} catch (error) {
-			console.log(error.message);
-			setIsLoading(false);
+		setIsLoading(true);
+		setIsModalOpen(false);
+		let result = null;
+		const finalDay = tempDayRef.current || tempDay;
+		if (isUpdateDay) {
+			const filteredData = Object.fromEntries(
+				Object.entries(finalDay).filter(([key]) => key !== "players")
+			);
+			result = await updateDay(filteredData);
+			await setInfoDay(result);
+		} else {
+			result = await createDay(formData);
+			await setInfoDay(tempDay);
+			setActiveDay(result);
+		}
+		setIsLoading(false);
+		if (!result) {
 			if (isUpdateDay) {
 				showPopup(
 					"error",
@@ -218,7 +177,44 @@ function Points() {
 					"La giornata non é stata creata correttamente. Riprova."
 				);
 			}
+			return;
 		}
+
+		if (isUpdateDay) {
+			showPopup(
+				"success",
+				"Giornata aggiornata!",
+				"La giornata é stata aggiornata correttamente."
+			);
+		} else {
+			showPopup(
+				"success",
+				"Giornata aggiunta!",
+				"La giornata é stata creata correttamente."
+			);
+		}
+
+		if (!isUpdateDay) {
+			setActiveIndex(() => {
+				const newIndex = league.days.length;
+				setTempDay(result);
+				setTempDay((prev) => ({
+					...prev,
+					leagueId: league.id,
+					players: [],
+					rules: [],
+				}));
+
+				setTimeout(() => {
+					if (swiperInstance) {
+						swiperInstance.slideTo(newIndex);
+					}
+				}, 100);
+
+				return newIndex;
+			});
+		}
+		setIsUpdateDay(false);
 	};
 
 	const handleDeleteDay = async () => {

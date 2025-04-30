@@ -39,15 +39,27 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setFormData({
-			...formData,
-			days: [{ ...formData.days[0], [name]: value }],
-		});
+		if (name === "date") {
+			const originalDate = new Date(formData.days[0].date);
+			const timePart = originalDate.toISOString().split("T")[1];
+			const updatedDate = `${value}T${timePart}`;
+
+			setFormData({
+				...formData,
+				days: [{ ...formData.days[0], date: updatedDate }],
+			});
+		} else {
+			setFormData({
+				...formData,
+				days: [{ ...formData.days[0], [name]: value }],
+			});
+		}
 	};
 
 	const isFormValid = () => formData.days[0].name.trim() !== "";
 
 	const handleSubmitData = () => {
+		handleSubmit(formData);
 		setFormData({
 			leagueId: league.id,
 			days: [
@@ -57,7 +69,6 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 				},
 			],
 		});
-		handleSubmit(formData);
 	};
 
 	return (
@@ -90,7 +101,11 @@ function ModalCreateDay({ isOpen, onClose, handleSubmit }) {
 					<input
 						type="date"
 						name="date"
-						value={formData.days[0].date}
+						value={
+							new Date(formData.days[0].date)
+								.toISOString()
+								.split("T")[0]
+						}
 						onChange={handleChange}
 						className="py-[8px] px-[16px] border border-solid rounded-lg w-full"
 					/>
