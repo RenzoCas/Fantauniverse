@@ -80,28 +80,28 @@ function Players() {
 			);
 			return;
 		}
-        
-        if (formData.icon != "") {
-            const filename = `${formData.icon.name}`;
-            const urlImage = await getUrlImage({
-                id: result.id,
-                fileName: filename,
-                referredTo: "PLAYER",
-            });
-    
-            if (!urlImage) {
-                setIsLoading(false);
-                showPopup(
-                    "error",
-                    "Errore nell'aggiunta dell'immagine!",
-                    "Il player é stato correttamente aggiunto, ma l'immagine non é stata caricata. Riprova."
-                );
-                return;
-            }
-    
-            await uploadImage(formData.icon, urlImage, result.id);
-        }
-		
+
+		if (formData.icon != "") {
+			const filename = `${formData.icon.name}`;
+			const urlImage = await getUrlImage({
+				id: result.id,
+				fileName: filename,
+				referredTo: "PLAYER",
+			});
+
+			if (!urlImage) {
+				setIsLoading(false);
+				showPopup(
+					"error",
+					"Errore nell'aggiunta dell'immagine!",
+					"Il player é stato correttamente aggiunto, ma l'immagine non é stata caricata. Riprova."
+				);
+				return;
+			}
+
+			await uploadImage(formData.icon, urlImage, result.id);
+		}
+
 		setIsLoading(false);
 		showPopup(
 			"success",
@@ -180,7 +180,11 @@ function Players() {
 								key={idx}
 								playerObj={el}
 								onEdit={handleEditPlayer}
-								canEdit={isAdmin && status === "PENDING"}
+								canEdit={
+									isAdmin &&
+									(status === "PENDING" ||
+										status === "NOT_STARTED")
+								}
 								viewTeam={false}
 							/>
 						))}
@@ -202,7 +206,7 @@ function Players() {
 				</div>
 			)}
 
-			{isAdmin && status === "PENDING" && (
+			{isAdmin && (status === "PENDING" || status === "NOT_STARTED") && (
 				<>
 					<ModalPlayer
 						isOpen={isModalOpen}

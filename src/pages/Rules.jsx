@@ -129,22 +129,23 @@ function Rules() {
 						</TabButton>
 					</div>
 
-					{isAdmin && status === "PENDING" && (
-						<>
-							<div className="flex items-center gap-[8px] justify-between">
-								<h6 className="body-regular font-semibold">
-									Regole {tabActive}
-								</h6>
-								<button
-									onClick={handleAddRule}
-									className="flex items-center gap-[8px] justify-end body-small cursor-pointer"
-								>
-									Aggiungi regola
-									<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />
-								</button>
-							</div>
-						</>
-					)}
+					{isAdmin &&
+						(status === "PENDING" || status === "NOT_STARTED") && (
+							<>
+								<div className="flex items-center gap-[8px] justify-between">
+									<h6 className="body-regular font-semibold">
+										Regole {tabActive}
+									</h6>
+									<button
+										onClick={handleAddRule}
+										className="flex items-center gap-[8px] justify-end body-small cursor-pointer"
+									>
+										Aggiungi regola
+										<PlusIcon className="h-[24px] w-[24px] p-[4px] bg-(--black-light) rounded-full flex-shrink-0" />
+									</button>
+								</div>
+							</>
+						)}
 
 					<ul className="flex flex-col gap-[16px]">
 						{rules
@@ -156,7 +157,11 @@ function Rules() {
 									key={idx}
 									ruleObj={el}
 									onEdit={handleEditRule}
-									canEdit={isAdmin && status === "PENDING"}
+									canEdit={
+										isAdmin &&
+										(status === "PENDING" ||
+											status === "NOT_STARTED")
+									}
 								/>
 							))}
 					</ul>
@@ -176,7 +181,7 @@ function Rules() {
 				</div>
 			)}
 
-			{isAdmin && status === "PENDING" && (
+			{isAdmin && (status === "PENDING" || status === "NOT_STARTED") && (
 				<>
 					<ModalRule
 						isOpen={isModalOpen}

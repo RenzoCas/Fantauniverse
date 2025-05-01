@@ -251,14 +251,15 @@ function Player({
 						)}
 					</div>
 
-					{canEdit && status == "PENDING" && (
-						<button
-							className="flex cursor-pointer"
-							onClick={() => onEdit(playerObj)}
-						>
-							<PencilSquareIcon className="h-[20px] w-[20px]" />
-						</button>
-					)}
+					{canEdit &&
+						(status === "PENDING" || status === "NOT_STARTED") && (
+							<button
+								className="flex cursor-pointer"
+								onClick={() => onEdit(playerObj)}
+							>
+								<PencilSquareIcon className="h-[20px] w-[20px]" />
+							</button>
+						)}
 					{addPoints && (
 						<button
 							className="flex cursor-pointer"

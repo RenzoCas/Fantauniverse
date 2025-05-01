@@ -10,6 +10,7 @@ import GhostButton from "../../atoms/Buttons/GhostButton";
 import { useModal } from "../../contexts/ModalContext";
 import FocusModal from "../../hooks/FocusModal";
 import { PlusIcon } from "lucide-react";
+import { useLeague } from "../../contexts/LeagueContext";
 
 function ModalPlayer({
 	isOpen,
@@ -29,6 +30,8 @@ function ModalPlayer({
 	const { openBackdrop, closeBackdrop } = useModal();
 	const modalRef = useRef(null);
 	FocusModal(modalRef, isOpen);
+	const { league } = useLeague();
+	const { status } = league;
 
 	useEffect(() => {
 		if (isOpen) {
@@ -183,6 +186,7 @@ function ModalPlayer({
 						value={formData.price}
 						handleChange={handleChange}
 						handleBlur={handleBlur}
+						disabled={status === "NOT_STARTED"}
 					/>
 					<div className="flex flex-col gap-[8px] justify-end">
 						<label
