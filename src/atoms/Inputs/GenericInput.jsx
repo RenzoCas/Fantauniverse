@@ -97,7 +97,9 @@ export default function GenericInput({
 								: afterElement
 								? "pr-[60px]"
 								: "pr-[24px]"
-						} ${classOpt ? classOpt : ""}`}
+						} ${disabled ? "opacity-75" : ""} ${
+							classOpt ? classOpt : ""
+						}`}
 					/>
 				)}
 
