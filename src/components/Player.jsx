@@ -26,16 +26,13 @@ function Player({
 	viewTeam = false,
 	handleTabChange,
 }) {
-	const { name, price, points, iconUrl } = playerObj;
+	const { name, price, points, iconUrl, isCaptain } = playerObj;
 	const { league } = useLeague();
 	const { coinName, status, enableCaptain } = league;
 	const { user } = useUser();
 	const isActive =
 		playerActive || playersObj?.find((el) => el.id == playerObj.id);
 	const isCurrentUser = playerObj.id == user.id;
-	const isCaptain = playersObj?.some(
-		(p) => p.id === playerObj.id && p.isCaptain
-	);
 	const [randomColor, setRandomColor] = useState("#ffffff");
 	const totalPoints =
 		dataDay?.players?.find((p) => p.player.id === playerObj.id)?.points ||
