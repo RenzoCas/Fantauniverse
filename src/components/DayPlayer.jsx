@@ -2,7 +2,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
 function DayPlayer({ playerObj, rules, dayPoints }) {
-	const { name, icon } = playerObj;
+	const { name, iconUrl } = playerObj;
 	const [expanded, setExpanded] = useState(false);
 
 	const [randomColor, setRandomColor] = useState("#ffffff");
@@ -28,7 +28,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 		>
 			<div className="flex items-center gap-[20px]">
 				<picture className="relative rounded-[3px] h-[40px] min-w-[40px] max-w-[40px] flex-shrink-1 overflow-hidden">
-					{icon == null ? (
+					{iconUrl == null ? (
 						<div
 							className="h-full w-full object-cover"
 							style={{
@@ -37,7 +37,7 @@ function DayPlayer({ playerObj, rules, dayPoints }) {
 						></div>
 					) : (
 						<img
-							src={`data:image/png;base64,${icon}`}
+							src={`${iconUrl}`}
 							alt="Icona utente"
 							className="w-full h-full object-cover"
 							loading="lazy"

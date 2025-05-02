@@ -304,9 +304,8 @@ function MyTeam() {
 						{tempTeam.players.map((p, idx) => (
 							<Player
 								key={p.id}
-								playersObj={tempTeam.players}
 								playerDay={tempTeam.playerDay[idx]}
-								playerObj={p}
+								playerObj={tempTeam.playerDay[idx].player}
 								onSelect={handleSelectPlayer}
 								onDeselect={handleDeselectPlayer}
 								viewTeam={true}

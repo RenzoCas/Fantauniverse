@@ -291,7 +291,7 @@ function ModalAddPoints({
 							)}
 
 							<picture className="rounded-lg min-w-[32px] max-w-[32px] h-[32px] flex-shrink-1 overflow-hidden">
-								{player.icon == null ? (
+								{player.iconUrl == null ? (
 									<div
 										className="h-full w-full object-cover"
 										style={{
@@ -300,7 +300,7 @@ function ModalAddPoints({
 									></div>
 								) : (
 									<img
-										src={`data:image/png;base64,${player.icon}`}
+										src={`${player.iconUrl}`}
 										alt="Icona utente"
 										className="h-full w-full object-cover"
 										loading="lazy"
