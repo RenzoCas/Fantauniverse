@@ -61,9 +61,13 @@ function Ranking({ handleTabChange }) {
 								<Player
 									key={p.id}
 									playersObj={teamParticipant.players}
-									playerObj={p}
 									viewTeam={true}
-									playerDay={teamParticipant.playerDay[idx]}
+									dayPoints={
+										teamParticipant.playerDay[idx].dayPoints
+									}
+									playerObj={
+										teamParticipant.playerDay[idx].player
+									}
 								/>
 							))}
 						</div>
