@@ -18,7 +18,7 @@ function Player({
 	onDeselect,
 	onSelectCaptain,
 	playersObj,
-	playerDay,
+	dayPoints,
 	playerActive,
 	addPoints,
 	dataDay,
@@ -130,7 +130,7 @@ function Player({
 							<p className="body-normal font-semibold text-(--black-darker) whitespace-nowrap">
 								{points} pnt.
 							</p>
-							{playerDay?.dayPoints.length > 0 && (
+							{dayPoints?.length > 0 && (
 								<>
 									{isExpanded ? (
 										<ChevronUpIcon className="h-[20px] w-[20px]" />
@@ -141,9 +141,9 @@ function Player({
 							)}
 						</div>
 					</div>
-					{isExpanded && playerDay?.dayPoints.length > 0 && (
+					{isExpanded && dayPoints.length > 0 && (
 						<ul className="flex flex-col gap-[8px]">
-							{playerDay.dayPoints.map((pd, idx) => (
+							{dayPoints.map((pd, idx) => (
 								<li
 									key={idx}
 									className="flex items-center justify-between w-full"
