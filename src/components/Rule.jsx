@@ -135,7 +135,7 @@ function Rule({
 									className="flex gap-[20px] items-center w-full"
 								>
 									<picture className="rounded-[3px] min-w-[32px] max-w-[32px] h-[32px] flex-shrink-1 overflow-hidden">
-										{player.player.icon == null ? (
+										{player.player.iconUrl == null ? (
 											<div
 												className={`h-full w-full object-cover`}
 												style={{
@@ -145,7 +145,7 @@ function Rule({
 											></div>
 										) : (
 											<img
-												src={`data:image/png;base64,${player.player.icon}`}
+												src={`${player.player.iconUrl}`}
 												alt={`Icona utente`}
 												className="h-full w-full object-cover"
 												loading="lazy"
