@@ -110,6 +110,7 @@ function Points() {
 			await setTempDay(response);
 			await setTempDay((prev) => ({ ...prev, leagueId: league.id }));
 			await setActiveDay(response);
+            tempDayRef.current = null;
 			setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
@@ -269,7 +270,6 @@ function Points() {
 	};
 
 	const handleCancelUpdate = async () => {
-		tempDayRef.current = null;
 		await fetchInfoDay(days[activeIndex]?.id);
 		setIsUpdateDay(false);
 	};
