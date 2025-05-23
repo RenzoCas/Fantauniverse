@@ -152,9 +152,22 @@ function Rule({
 											/>
 										)}
 									</picture>
-									<p className="body-normal font-semibold flex-1">
-										{player.player.name}
-									</p>
+									<div className="flex gap-[8px] items-center flex-1">
+										<p className="body-normal font-semibold">
+											{player.player.name}
+										</p>
+										<p className="body-small text-(--black-light-active)">
+											{(() => {
+												const rule = player.rules.find(
+													(r) => r.id === ruleObj.id
+												);
+												return rule && rule.counter > 1
+													? `x${rule.counter}`
+													: null;
+											})()}
+										</p>
+									</div>
+
 									<button
 										onClick={() =>
 											onRemovePlayer(player, ruleObj)
