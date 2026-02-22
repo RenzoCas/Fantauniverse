@@ -624,7 +624,7 @@ function GeneralSettings() {
 					</>
 				) : (
 					<>
-						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover) lg:max-w-1/2 lg:min-w-fit md:mx-auto">
+						<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-light-hover) sm:max-w-1/2 sm:min-w-fit sm:mx-auto">
 							<TabButton
 								handleClick={() => setTabActive("Info")}
 								active={tabActive === "Info"}

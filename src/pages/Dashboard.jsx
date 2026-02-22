@@ -361,7 +361,7 @@ function Dashboard() {
 				</button>
 
 				<section className="flex flex-col gap-[16px]">
-					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
+					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) sm:w-1/2 sm:mx-auto">
 						<TabButton
 							handleClick={() => handleChangeTab(false)}
 							active={!searchLeague}
@@ -695,7 +695,7 @@ function Dashboard() {
 									</div>
 
 									{filteredLeague?.length > 0 ? (
-										<ul className="flex flex-col gap-[10px] lg:grid lg:grid-cols-2 lg:gap-[20px]">
+										<ul className="flex flex-col gap-[10px] sm:grid sm:grid-cols-2 sm:gap-[20px]">
 											{filteredLeague.map((el) => (
 												<League
 													key={el.id}

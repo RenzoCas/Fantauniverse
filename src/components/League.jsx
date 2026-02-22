@@ -50,7 +50,7 @@ export default function League({ league, onAddParticipant, classOpt }) {
 		<li
 			className={`relative flex gap-[8px] p-[12px] border border-gray-300 rounded-lg bg-white ${
 				isRegistered ? "cursor-pointer" : ""
-			} lg:max-w-[400px] ${classOpt}`}
+			} ${classOpt}`}
 			onClick={isRegistered ? handleClick : undefined}
 			tabIndex={isRegistered ? 0 : undefined}
 		>

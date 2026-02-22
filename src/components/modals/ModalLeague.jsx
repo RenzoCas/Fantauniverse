@@ -175,13 +175,13 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 				role="dialog"
 				aria-modal="true"
 				tabIndex="-1"
-				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 max-h-[calc(100dvh-80px)] overflow-y-auto lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:max-w-[600px] lg:max-h-[600px] lg:rounded-[12px] ${
+				className={`fixed bottom-0 left-0 bg-white shadow-lg rounded-t-[12px] w-full transition-all duration-300 ease flex flex-col gap-[16px] z-1001 max-h-[calc(100dvh-80px)] overflow-y-auto sm:absolute sm:left-1/2 sm:-translate-x-1/2 sm:max-w-[600px] sm:max-h-[600px] sm:rounded-[12px] ${
 					isOpen
-						? "scale-100 opacity-100 translate-y-0 lg:bottom-1/2 lg:translate-y-1/2 visible"
-						: "scale-80 opacity-30 translate-y-full lg:translate-y-0 invisible"
+						? "scale-100 opacity-100 translate-y-0 sm:bottom-1/2 sm:translate-y-1/2 visible"
+						: "scale-80 opacity-30 translate-y-full sm:translate-y-0 invisible"
 				}`}
 			>
-				<div className="flex items-center justify-between gap-[8px] w-full sticky top-0 bg-white p-[16px] lg:pt-[24px] z-2">
+				<div className="flex items-center justify-between gap-[8px] w-full sticky top-0 bg-white p-[16px] sm:pt-[24px] z-2">
 					<h4 className="font-semibold text-(--black-normal)">
 						{initialState ? "Aggiorna lega" : "Crea lega"}
 					</h4>
@@ -194,7 +194,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						e.preventDefault();
 						handleSubmit();
 					}}
-					className="flex flex-col gap-[16px] w-full px-[16px] pb-[16px] lg:pb-[24px]"
+					className="flex flex-col gap-[16px] w-full px-[16px] pb-[16px] sm:pb-[24px]"
 				>
 					<div className="flex flex-col gap-[8px]">
 						<label
@@ -248,8 +248,8 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 							handleBlur={handleBlur}
 						/>
 					</div>
-					<div className="flex flex-col gap-[16px] md:flex-row">
-						<div className="flex flex-col gap-[8px] md:w-full">
+					<div className="flex flex-col gap-[16px] sm:flex-row">
+						<div className="flex flex-col gap-[8px] sm:w-full">
 							<label
 								htmlFor="maxCoins"
 								className="body-small text-(--black-light-active) font-medium"
@@ -267,7 +267,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 								handleBlur={handleBlur}
 							/>
 						</div>
-						<div className="flex flex-col gap-[8px] md:w-full">
+						<div className="flex flex-col gap-[8px] sm:w-full">
 							<label
 								htmlFor="teamMaxPlayers"
 								className="body-small text-(--black-light-active) font-medium"
@@ -292,13 +292,12 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 							Capitano:
 						</p>
 						<Switch
-							text="Attiva la scelta del capitano alla
-                                                                creazione della squadra."
+							text="Attiva la scelta del capitano alla creazione della squadra."
 							enabled={isEnableCaptain}
 							onChange={handleChangeSwitch}
 						/>
 					</div>
-					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) md:w-1/2 md:mx-auto">
+					<div className="flex gap-[8px] p-[4px] rounded-[16px] bg-(--black-normal) sm:w-1/2 sm:mx-auto">
 						<TabButton
 							handleClick={() => handleChangeVisibility("PUBLIC")}
 							active={formData.visibility === "PUBLIC"}
@@ -318,7 +317,7 @@ function ModalLeague({ isOpen, onClose, onCreate, initialState }) {
 						text={initialState ? "Aggiorna lega" : "Crea lega"}
 						action={handleSubmit}
 						disabled={!isFormValid()}
-						classOpt={`md:w-1/2 md:mx-auto`}
+						classOpt={`sm:w-1/2 sm:mx-auto`}
 						icon={false}
 						type="submit"
 					/>

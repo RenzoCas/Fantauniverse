@@ -14,7 +14,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 	};
 
 	return (
-		<div className="relative w-full">
+		<div className="relative w-full flex justify-center">
 			{label && (
 				<label className="block text-sm font-semibold mb-2">
 					{label}
@@ -22,7 +22,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 			)}
 
 			<button
-				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px] w-full lg:max-w-1/2 md:mx-auto"
+				className="bg-(--black-light) rounded-[8px] p-[10px] cursor-pointer flex justify-center items-center gap-[4px] w-full sm:max-w-1/2 md:mx-auto sm:max-w-[300px]"
 				onClick={toggleMenu}
 			>
 				<span className="body-small font-semibold text-(--error-normal)">
@@ -37,7 +37,7 @@ function Select({ options, selectedValue, handleChange, label }) {
 			</button>
 
 			{isOpen && (
-				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full lg:max-w-1/2 lg:left-1/2 lg:-translate-x-1/2">
+				<div className="absolute top-full left-0 mt-2 bg-white border border-(--black-light) rounded-md shadow-md z-10 w-full sm:max-w-1/2 sm:left-1/2 sm:-translate-x-1/2">
 					{options.map((option) => (
 						<button
 							key={option.value}
