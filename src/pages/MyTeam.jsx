@@ -191,7 +191,7 @@ function MyTeam() {
 		setPopupData({ isOpen: true, type, title, message });
 		setTimeout(
 			() => setPopupData({ isOpen: false, type, title, message }),
-			2000
+			3000
 		);
 	};
 
@@ -305,7 +305,7 @@ function MyTeam() {
 							<Player
 								key={p.id}
 								dayPoints={tempTeam.playerDay[idx].dayPoints}
-								playerObj={tempTeam.playerDay[idx].player}
+								playerObj={tempTeam.players[idx]}
 								onSelect={handleSelectPlayer}
 								onDeselect={handleDeselectPlayer}
 								viewTeam={true}

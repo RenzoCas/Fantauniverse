@@ -102,7 +102,7 @@ export default function Navbar() {
 		setPopupData({ isOpen: true, type, title, message });
 		setTimeout(
 			() => setPopupData({ isOpen: false, type, title, message }),
-			2000
+			3000
 		);
 	};
 

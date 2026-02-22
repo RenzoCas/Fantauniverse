@@ -278,7 +278,7 @@ function Player({
 										>
 											<SparklesIcon
 												className={`h-[24px] w-[24px] stroke-1 flex-shrink-0 ${
-													isCaptain
+													isActive.isCaptain
 														? "fill-[#DCC939]"
 														: ""
 												}`}
